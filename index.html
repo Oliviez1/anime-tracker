@@ -416,8 +416,8 @@ a{color:var(--primary);text-decoration:none}
   </nav>
   <div class="topbar-right">
     <button class="icon-btn" id="themeBtn" title="Changer le thème">
-      <svg id="sunIco" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-      <svg id="moonIco" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg id="sunIco" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      <svg id="moonIco" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
     </button>
   </div>
 </div>
@@ -525,7 +525,6 @@ let currentTab='all';
 let searchPage=1,searchQuery='',searchTotal=0;
 let acTimer=null;
 let openAnimeId=null,pendingStatus=null;
-// Map Jikan mal_id -> AniList id (pour la modale)
 let jikanToAnilist={};
 
 // ---- PAGES ----
@@ -542,11 +541,15 @@ document.querySelectorAll('.nav-btn').forEach(btn=>{
 
 // ---- THEME ----
 let dark=true;
+function syncThemeIcon(){
+  document.getElementById('sunIco').style.display=dark?'none':'block';
+  document.getElementById('moonIco').style.display=dark?'block':'none';
+}
+syncThemeIcon();
 document.getElementById('themeBtn').addEventListener('click',()=>{
   dark=!dark;
   document.documentElement.setAttribute('data-theme',dark?'dark':'light');
-  document.getElementById('sunIco').style.display=dark?'none':'block';
-  document.getElementById('moonIco').style.display=dark?'block':'none';
+  syncThemeIcon();
 });
 
 // ---- TOAST ----
@@ -585,17 +588,21 @@ function highlightMatch(title,query){
   return h(title.slice(0,idx))+'<em>'+h(title.slice(idx,idx+query.length))+'</em>'+h(title.slice(idx+query.length));
 }
 
-// ---- AUTOCOMPLETE via JIKAN (accepte dès 1 caractère) ----
+// ---- AUTOCOMPLETE via JIKAN ----
 const searchInput=document.getElementById('searchInput');
 const acBox=document.getElementById('autocomplete');
 
 searchInput.addEventListener('input',()=>{
   clearTimeout(acTimer);
   const q=searchInput.value.trim();
-  if(q.length<1){acBox.classList.remove('open');acBox.innerHTML='';return;}
-  acBox.innerHTML='<div class="ac-loader">Recherche…</div>';
-  acBox.classList.add('open');
-  acTimer=setTimeout(()=>fetchAC(q),280);
+  // FIX: minimum 2 caractères avant de déclencher l'autocomplete
+  if(q.length < 2){
+    acBox.classList.remove('open');
+    acBox.innerHTML='';
+    return;
+  }
+  // FIX: on n'ouvre PAS le dropdown avant d'avoir la réponse
+  acTimer=setTimeout(()=>fetchAC(q), 400);
 });
 searchInput.addEventListener('keydown',e=>{
   if(e.key==='Enter'){acBox.classList.remove('open');doSearch(searchInput.value.trim(),1);}
@@ -604,14 +611,18 @@ searchInput.addEventListener('keydown',e=>{
 document.addEventListener('click',e=>{if(!e.target.closest('.search-box-wrap'))acBox.classList.remove('open');});
 
 async function fetchAC(q){
-  // Jikan v4 — pas de limite de longueur minimale
   try{
     const r=await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(q)}&limit=8&order_by=popularity&sort=asc`);
     const d=await r.json();
     let items=d?.data||[];
-    if(!items.length){acBox.innerHTML='<div class="ac-empty">Aucun résultat</div>';return;}
 
-    // Tri : titres commençant par la requête en premier
+    // FIX: on ouvre le dropdown seulement ici, après réponse réseau
+    if(!items.length){
+      acBox.innerHTML='<div class="ac-empty">Aucun résultat</div>';
+      acBox.classList.add('open');
+      return;
+    }
+
     const ql=q.toLowerCase();
     items=items.slice().sort((a,b)=>{
       const ta=(a.title||'').toLowerCase();
@@ -631,17 +642,19 @@ async function fetchAC(q){
       </div>`;
     }).join('');
 
+    acBox.classList.add('open');
+
     acBox.querySelectorAll('.ac-item').forEach(el=>{
       el.addEventListener('click',()=>{
         acBox.classList.remove('open');
         const title=el.dataset.title;
         searchInput.value=title;
-        // On lance la recherche AniList avec le titre exact pour ouvrir la modale
         openModalByTitle(title,parseInt(el.dataset.malid));
       });
     });
   }catch(e){
     acBox.innerHTML='<div class="ac-empty">Erreur réseau</div>';
+    acBox.classList.add('open');
   }
 }
 
@@ -652,7 +665,6 @@ async function openModalByTitle(title,malId){
     const d=await gql(Q,{s:title});
     const items=d?.data?.Page?.media||[];
     if(items.length){
-      // On stocke la correspondance malId -> anilistId si trouvée
       if(malId)jikanToAnilist[malId]=items[0].id;
       openModal(items[0].id);
     }else{
@@ -663,7 +675,7 @@ async function openModalByTitle(title,malId){
   }
 }
 
-// ---- SEARCH (AniList, inchangé) ----
+// ---- SEARCH (AniList) ----
 async function doSearch(q,page){
   if(!q)return;
   searchQuery=q;searchPage=page;
@@ -725,7 +737,7 @@ function renderPagination(pi){
   if(pn)pn.addEventListener('click',()=>doSearch(searchQuery,cur+1));
 }
 
-// ---- MODAL (AniList, inchangé) ----
+// ---- MODAL (AniList) ----
 async function openModal(id){
   openAnimeId=id;
   const ov=document.getElementById('overlay');
@@ -796,10 +808,11 @@ async function openModal(id){
       </div>`;
 
     const sg=mc.querySelector('#statusGrid');
+    // FIX: setStatus conserve bien la classe de base 'status-pick'
     function setStatus(s){
       pendingStatus=s;
       sg.querySelectorAll('.status-pick').forEach(p=>{
-        p.className='status-pick'+(p.dataset.s===s?' sel-'+s:'');
+        p.className='status-pick'+(p.dataset.s===s?' sel sel-'+s:'');
       });
     }
     setStatus(pendingStatus);
