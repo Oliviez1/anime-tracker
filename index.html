@@ -397,6 +397,7 @@
 const STORAGE_KEY = 'anitrack_v3';
 const JIKAN = 'https://api.jikan.moe/v4';
 const ANILIST = 'https://graphql.anilist.co';
+const KITSU = 'https://kitsu.app/api/edge';
 
 let animeList = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
 let currentFilter = 'all';
@@ -405,6 +406,7 @@ let currentView = 'library';
 let trendingCache = null;
 let seasonalCache = null;
 let recommendationCache = {};
+let detailsCache = {};
 let searchTimer = null;
 let currentModal = null;
 let isDark = document.documentElement.getAttribute('data-theme') === 'dark';
@@ -703,14 +705,28 @@ async function fetchAnimeDetails(id) {
       }
     }
   `;
-  const numericId = Number(id);
+    const numericId = Number(id);
+  if (detailsCache[numericId]) return detailsCache[numericId];
   const local = animeList.find(x => x.id === numericId || x.malId === numericId);
   const variables = local?.anilistId
     ? { id: local.anilistId }
     : { idMal: numericId };
-  const data = await anilistFetch(query, variables);  
+  const data = await anilistFetch(query, variables);
   if (!data.Media) throw new Error('Anime introuvable');
-  return normalizeAniList(data.Media);
+  const result = normalizeAniList(data.Media);
+  detailsCache[numericId] = result;
+  return result;
+}
+async function fetchSynopsisFR(malId) {
+  try {
+    const r = await fetch(`${KITSU}/anime?filter[malId]=${malId}&fields[anime]=synopsis`);
+    if (!r.ok) return null;
+    const json = await r.json();
+    const synopsis = json.data?.[0]?.attributes?.synopsis;
+    return synopsis && synopsis.length > 20 ? synopsis : null;
+  } catch {
+    return null;
+  }
 }
 
 function mergeSearchResults(local, jikan, anilist) {
@@ -1052,13 +1068,25 @@ async function openModalById(id) {
   const cover = document.getElementById('modalCover');
 
   overlay.classList.add('open');
+    // Si déjà en cache, pré-remplir l'image immédiatement
+  const cached = detailsCache[Number(id)];
+  if (cached) {
+    banner.src = cached.banner || cached.cover;
+    cover.src = cached.cover;
+    cover.alt = cached.title;
+  } else {
+    banner.src = '';
+    cover.src = '';
+  }
   body.innerHTML = `<div style="padding:var(--space-12);text-align:center;color:var(--text-muted)"><span class="search-spinner" style="width:28px;height:28px;border-width:3px"></span></div>`;
-  banner.src = '';
-  cover.src = '';
-
   try {
     const data = await fetchAnimeDetails(id);
     const local = animeList.find(x => x.id === id);
+    // Récupérer synopsis FR si dispo
+    if (data.malId) {
+      const synopsisFR = await fetchSynopsisFR(data.malId);
+      if (synopsisFR) data.synopsis = synopsisFR;
+    }
     banner.src = data.banner || data.cover;
     cover.src = data.cover;
     cover.alt = data.title;
