@@ -44,18 +44,28 @@
     button { cursor:pointer; background:none; border:none; }
     img { display:block; max-width:100%; }
     :focus-visible { outline:2px solid var(--primary); outline-offset:3px; border-radius:var(--radius-sm); }
+
     @keyframes fadeUp { from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)} }
     @keyframes fadeIn { from{opacity:0}to{opacity:1} }
     @keyframes slideInLeft { from{opacity:0;transform:translateX(-24px)}to{opacity:1;transform:translateX(0)} }
-    @keyframes cardEntrance { from{opacity:0;transform:scale(0.94)translateY(12px)}to{opacity:1;transform:scale(1)translateY(0)} }
+    @keyframes cardEntrance { from{opacity:0;transform:scale(0.94) translateY(12px)}to{opacity:1;transform:scale(1) translateY(0)} }
     @keyframes shimmer { 0%{background-position:-200% 0}100%{background-position:200% 0} }
     @keyframes floatIcon { 0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)} }
-    @keyframes toastIn { from{opacity:0;transform:translateX(40px)scale(0.9)}to{opacity:1;transform:translateX(0)scale(1)} }
-    @keyframes toastOut { to{opacity:0;transform:translateX(40px)scale(0.9)} }
+    @keyframes toastIn { from{opacity:0;transform:translateX(40px) scale(0.9)}to{opacity:1;transform:translateX(0) scale(1)} }
+    @keyframes toastOut { to{opacity:0;transform:translateX(40px) scale(0.9)} }
     @keyframes coverSlideUp { from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)} }
     @keyframes progressShine { 0%,100%{opacity:0}50%{opacity:1} }
     @keyframes starPop { 0%{transform:scale(1)}50%{transform:scale(1.45)}100%{transform:scale(1)} }
     @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.5} }
+    @keyframes spin { to{transform:rotate(360deg)} }
+    @keyframes confettiFall {
+      0%{transform:translateY(-20px) rotate(0deg);opacity:1}
+      100%{transform:translateY(110vh) rotate(720deg);opacity:0}
+    }
+    @keyframes ripple {
+      0%{transform:scale(0);opacity:0.6}
+      100%{transform:scale(2.5);opacity:0}
+    }
 
     /* ===== LAYOUT ===== */
     .app { display:grid; grid-template-columns:260px 1fr; min-height:100dvh; }
@@ -116,7 +126,6 @@
     .search-add-btn.added { background:rgba(52,211,153,0.15); color:var(--green); pointer-events:none; }
     .search-loading,.search-empty { padding:var(--space-6); text-align:center; color:var(--text-muted); font-size:var(--text-sm); }
     .search-spinner { display:inline-block; width:18px; height:18px; border:2px solid var(--border); border-top-color:var(--primary); border-radius:50%; animation:spin 0.7s linear infinite; vertical-align:middle; margin-right:var(--space-2); }
-    @keyframes spin { to{transform:rotate(360deg)} }
     .search-section-header { padding:var(--space-2) var(--space-3); font-size:var(--text-xs); font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-faint); background:var(--surface-2); border-bottom:1px solid var(--border); }
 
     /* ===== STATS ===== */
@@ -231,7 +240,7 @@
     .modal-section-title { font-size:var(--text-xs); font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-faint); margin-bottom:var(--space-2); display:flex; align-items:center; gap:var(--space-2); }
     .modal-section-title::after { content:''; flex:1; height:1px; background:var(--border); }
     .modal-synopsis { font-size:var(--text-sm); color:var(--text-muted); line-height:1.8; }
-    .modal-synopsis-fr { font-size:var(--text-sm); color:var(--text); line-height:1.8; padding:var(--space-4); background:var(--surface-2); border-radius:var(--radius-md); border:1px solid var(--border); margin-top:var(--space-2); display:none; }
+    .modal-synopsis-fr { font-size:var(--text-sm); color:var(--text); line-height:1.8; padding:var(--space-4); background:var(--surface-2); border-radius:var(--radius-md); border:1px solid var(--border); margin-top:var(--space-3); display:none; }
     .modal-synopsis-fr.visible { display:block; animation:fadeUp 0.3s ease; }
     .translate-btn { display:inline-flex; align-items:center; gap:var(--space-1); font-size:var(--text-xs); color:var(--primary); padding:3px 10px; border-radius:var(--radius-full); background:var(--primary-bg); margin-top:var(--space-3); font-weight:600; border:none; cursor:pointer; }
     .translate-btn:hover { background:var(--primary); color:#fff; }
@@ -245,7 +254,7 @@
     .modal-stat-val { font-weight:700; font-size:var(--text-sm); color:var(--text); }
     .modal-stat-lbl { font-size:var(--text-xs); color:var(--text-muted); margin-top:2px; }
 
-    /* ===== MY PROGRESS (dans modal) ===== */
+    /* ===== PROGRESS SECTION (modal) ===== */
     .modal-progress-section { background:var(--surface-2); border-radius:var(--radius-lg); border:1px solid var(--border); padding:var(--space-5); display:flex; flex-direction:column; gap:var(--space-4); }
     .modal-ep-row { display:flex; align-items:center; gap:var(--space-3); flex-wrap:wrap; }
     .modal-ep-label { font-size:var(--text-sm); color:var(--text-muted); font-weight:500; white-space:nowrap; }
@@ -265,7 +274,8 @@
     .rating-stars { display:flex; gap:3px; }
     .rating-star { font-size:1.35rem; cursor:pointer; transition:transform var(--transition),filter var(--transition); filter:grayscale(1) opacity(0.35); user-select:none; }
     .rating-star.active { filter:none; animation:starPop 0.25s ease; }
-    .rating-star:hover { transform:scale(1.2); filter:none; }
+    .rating-star:hover,
+    .rating-star.hovered { transform:scale(1.2); filter:none; }
     .rating-val { font-family:'Space Grotesk',sans-serif; font-size:var(--text-sm); font-weight:700; color:var(--gold); min-width:28px; }
 
     /* ===== COMMENT ===== */
@@ -273,14 +283,18 @@
     .comment-textarea { width:100%; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:var(--space-3); font-size:var(--text-sm); color:var(--text); resize:vertical; min-height:88px; line-height:1.6; }
     .comment-textarea::placeholder { color:var(--text-faint); }
     .comment-textarea:focus { outline:none; border-color:var(--primary); box-shadow:0 0 0 3px var(--primary-bg); }
-    .comment-save-btn { align-self:flex-end; padding:var(--space-2) var(--space-5); background:var(--primary); color:#fff; border-radius:var(--radius-full); font-size:var(--text-sm); font-weight:600; box-shadow:0 4px 14px var(--primary-glow); transition:background var(--transition),transform var(--transition),box-shadow var(--transition); }
+    .comment-save-btn { align-self:flex-end; padding:var(--space-2) var(--space-5); background:var(--primary); color:#fff; border-radius:var(--radius-full); font-size:var(--text-sm); font-weight:600; box-shadow:0 4px 14px var(--primary-glow); transition:background var(--transition),transform var(--transition),box-shadow var(--transition); position:relative; overflow:hidden; }
     .comment-save-btn:hover { background:var(--primary-hover); transform:translateY(-1px); box-shadow:0 6px 20px var(--primary-glow); }
     .comment-save-btn:active { transform:scale(0.97); }
+    .btn-ripple { position:absolute; border-radius:50%; background:rgba(255,255,255,0.35); animation:ripple 0.5s ease-out forwards; pointer-events:none; }
 
-    /* ===== ADD BUTTON (modal anime pas dans liste) ===== */
+    /* ===== ADD BUTTON ===== */
     .modal-add-btn { width:100%; padding:var(--space-3) var(--space-6); background:var(--primary); color:#fff; border-radius:var(--radius-lg); font-size:var(--text-sm); font-weight:700; display:flex; align-items:center; justify-content:center; gap:var(--space-2); box-shadow:0 4px 18px var(--primary-glow); transition:background var(--transition),transform var(--transition),box-shadow var(--transition); }
     .modal-add-btn:hover { background:var(--primary-hover); transform:translateY(-2px); box-shadow:0 8px 24px var(--primary-glow); }
     .modal-add-btn:active { transform:scale(0.98); }
+
+    /* ===== CONFETTI ===== */
+    .confetti-piece { position:fixed; width:8px; height:14px; border-radius:2px; pointer-events:none; z-index:9999; animation:confettiFall linear forwards; }
   </style>
 </head>
 <body>
@@ -330,7 +344,6 @@
 
   <!-- MAIN -->
   <main class="main">
-    <!-- Header -->
     <div class="page-header">
       <h1 class="page-title">Ma <span>liste</span></h1>
       <div class="search-wrap">
@@ -343,7 +356,6 @@
       </div>
     </div>
 
-    <!-- Stats -->
     <div class="stats">
       <div class="stat-card"><div class="stat-value" id="statTotal">0</div><div class="stat-label">Animés suivis</div></div>
       <div class="stat-card"><div class="stat-value" id="statEps">0</div><div class="stat-label">Épisodes vus</div></div>
@@ -351,7 +363,6 @@
       <div class="stat-card"><div class="stat-value" id="statCompleted">0</div><div class="stat-label">Terminés</div></div>
     </div>
 
-    <!-- Tendances -->
     <div class="trending-section">
       <div class="section-heading">
         <svg class="section-heading-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
@@ -360,7 +371,6 @@
       <div class="trending-scroll" id="trendingScroll"></div>
     </div>
 
-    <!-- Filters -->
     <div class="filters">
       <button class="filter-btn active" id="filter-all" onclick="setFilter('all')">Tous</button>
       <button class="filter-btn" id="filter-watching" onclick="setFilter('watching')">▶ En cours</button>
@@ -369,15 +379,12 @@
       <button class="filter-btn" id="filter-dropped" onclick="setFilter('dropped')">✗ Abandonnés</button>
     </div>
 
-    <!-- Grid -->
     <div class="anime-grid" id="animeGrid"></div>
   </main>
 </div>
 
-<!-- Toast -->
 <div class="toast-container" id="toastContainer"></div>
 
-<!-- Modal -->
 <div class="modal-overlay" id="modalOverlay" onclick="handleModalClick(event)">
   <div class="modal" id="modal">
     <div class="modal-hero">
@@ -398,6 +405,7 @@
 let animeList = JSON.parse(localStorage.getItem('anitrack_v2') || '[]');
 let currentFilter = 'all';
 let currentModal = null;
+let currentModalLocal = null;
 let trendingCache = null;
 let searchTimer = null;
 let isDark = document.documentElement.getAttribute('data-theme') === 'dark';
@@ -483,14 +491,14 @@ async function fetchAnimeDetails(id) {
 // =============================================
 async function loadTrending() {
   const scroll = document.getElementById('trendingScroll');
-  scroll.innerHTML = Array(10).fill(`<div class="trending-skeleton"><div class="skeleton sk-cover"></div><div class="skeleton sk-text"></div><div class="skeleton sk-text short"></div></div>`).join('');
+  scroll.innerHTML = Array(10).fill(`<div><div class="skeleton sk-cover"></div><div class="skeleton sk-text"></div><div class="skeleton sk-text short"></div></div>`).join('');
   try {
     const items = await fetchTrending();
     scroll.innerHTML = '';
     items.forEach((a, i) => {
       const inList = animeList.find(x => x.id === a.id);
       const title = a.title.french || a.title.romaji;
-      const score = a.averageScore ? `⭐ ${(a.averageScore/10).toFixed(1)}/10` : '';
+      const score = a.averageScore ? `\u2B50 ${(a.averageScore/10).toFixed(1)}/10` : '';
       const card = document.createElement('div');
       card.className = 'trending-card';
       card.style.animationDelay = (i * 0.04) + 's';
@@ -502,16 +510,14 @@ async function loadTrending() {
         <div class="trending-info">
           <div class="trending-title">${title}</div>
           <div class="trending-score">${score}</div>
-          <button class="trending-add ${inList ? 'added' : ''}" data-id="${a.id}">
-            ${inList ? '✓ Dans ma liste' : '+ Ajouter'}
-          </button>
+          <button class="trending-add ${inList ? 'added' : ''}" data-id="${a.id}">${inList ? '\u2713 Dans ma liste' : '+ Ajouter'}</button>
         </div>`;
       card.querySelector('.trending-cover-wrap').addEventListener('click', () => openModalById(a.id));
       card.querySelector('.trending-add').addEventListener('click', (e) => {
         e.stopPropagation();
         if (!animeList.find(x => x.id === a.id)) {
           addToList(a);
-          e.target.textContent = '✓ Dans ma liste';
+          e.target.textContent = '\u2713 Dans ma liste';
           e.target.classList.add('added');
         }
       });
@@ -527,11 +533,9 @@ async function loadTrending() {
 // =============================================
 document.getElementById('searchInput').addEventListener('input', function() {
   const val = this.value.trim();
-  const clearBtn = document.getElementById('searchClear');
-  clearBtn.classList.toggle('visible', val.length > 0);
+  document.getElementById('searchClear').classList.toggle('visible', val.length > 0);
   clearTimeout(searchTimer);
   if (!val) { closeSearchResults(); return; }
-  if (val.length < 1) return;
   searchTimer = setTimeout(() => performSearch(val), 250);
 });
 
@@ -547,8 +551,9 @@ document.addEventListener('click', (e) => {
 });
 
 function closeSearchResults() {
-  document.getElementById('searchResults').classList.remove('open');
-  document.getElementById('searchResults').innerHTML = '';
+  const el = document.getElementById('searchResults');
+  el.classList.remove('open');
+  el.innerHTML = '';
 }
 
 function clearSearch() {
@@ -562,16 +567,11 @@ async function performSearch(term) {
   box.innerHTML = '<div class="search-loading"><span class="search-spinner"></span>Recherche...</div>';
   box.classList.add('open');
   try {
-    // Résultats locaux d'abord
-    const local = animeList.filter(a => {
-      const t = (a.title || '').toLowerCase();
-      return t.includes(term.toLowerCase());
-    });
-    // Résultats AniList
+    const local = animeList.filter(a => (a.title || '').toLowerCase().includes(term.toLowerCase()));
     const remote = await searchAnime(term);
     box.innerHTML = '';
     if (local.length > 0) {
-      box.insertAdjacentHTML('beforeend', '<div class="search-section-header">📚 Ma liste</div>');
+      box.insertAdjacentHTML('beforeend', '<div class="search-section-header">\uD83D\uDCDA Ma liste</div>');
       local.forEach(a => {
         const div = document.createElement('div');
         div.className = 'search-result-item';
@@ -579,7 +579,7 @@ async function performSearch(term) {
           <img class="search-result-img" src="${a.cover}" alt="${a.title}" loading="lazy">
           <div class="search-result-info">
             <div class="search-result-title">${a.title}</div>
-            <div class="search-result-meta">Ép. ${a.currentEp}/${a.totalEps||'?'}</div>
+            <div class="search-result-meta">\u00C9p. ${a.currentEp}/${a.totalEps||'?'}</div>
           </div>
           <span class="search-add-btn added">Dans ma liste</span>`;
         div.addEventListener('click', () => { clearSearch(); openModal(a); });
@@ -587,7 +587,7 @@ async function performSearch(term) {
       });
     }
     if (remote.length > 0) {
-      box.insertAdjacentHTML('beforeend', '<div class="search-section-header">🌐 AniList</div>');
+      box.insertAdjacentHTML('beforeend', '<div class="search-section-header">\uD83C\uDF10 AniList</div>');
       remote.forEach(a => {
         const inList = animeList.find(x => x.id === a.id);
         const title = a.title.french || a.title.romaji;
@@ -597,9 +597,9 @@ async function performSearch(term) {
           <img class="search-result-img" src="${a.coverImage?.medium || a.coverImage?.large}" alt="${title}" loading="lazy">
           <div class="search-result-info">
             <div class="search-result-title">${title}</div>
-            <div class="search-result-meta">${FORMAT_FR[a.format]||a.format||''} • ${a.seasonYear||''}</div>
+            <div class="search-result-meta">${FORMAT_FR[a.format]||a.format||''} \u2022 ${a.seasonYear||''}</div>
           </div>
-          <button class="search-add-btn ${inList?'added':''}" data-id="${a.id}">${inList?'✓ Ajouté':'+ Ajouter'}</button>`;
+          <button class="search-add-btn ${inList?'added':''}" data-id="${a.id}">${inList?'\u2713 Ajout\u00E9':'+ Ajouter'}</button>`;
         div.querySelector('.search-result-img').addEventListener('click', () => { clearSearch(); openModalById(a.id); });
         div.querySelector('.search-result-title').addEventListener('click', () => { clearSearch(); openModalById(a.id); });
         const addBtn = div.querySelector('.search-add-btn');
@@ -607,7 +607,7 @@ async function performSearch(term) {
           e.stopPropagation();
           if (!animeList.find(x => x.id === a.id)) {
             addToList(a);
-            e.target.textContent = '✓ Ajouté';
+            e.target.textContent = '\u2713 Ajout\u00E9';
             e.target.classList.add('added');
             updateTrendingAddButtons();
           }
@@ -616,10 +616,10 @@ async function performSearch(term) {
       });
     }
     if (local.length === 0 && remote.length === 0) {
-      box.innerHTML = '<div class="search-empty">Aucun résultat pour "' + term + '"</div>';
+      box.innerHTML = `<div class="search-empty">Aucun r\u00E9sultat pour \u00AB ${term} \u00BB</div>`;
     }
   } catch(e) {
-    box.innerHTML = '<div class="search-empty">Erreur de connexion à AniList.</div>';
+    box.innerHTML = '<div class="search-empty">Erreur de connexion \u00E0 AniList.</div>';
   }
 }
 
@@ -644,7 +644,7 @@ function addToList(anilistData) {
   save();
   renderGrid();
   updateStats();
-  toast('success', `« ${title} » ajouté à ta liste !');
+  toast('success', `\u00AB ${title} \u00BB ajout\u00E9 \u00E0 ta liste !`);
   return entry;
 }
 
@@ -655,14 +655,14 @@ function removeFromList(id) {
   save();
   renderGrid();
   updateStats();
-  toast('info', `« ${a.title} » retiré de ta liste.`);
+  toast('info', `\u00AB ${a.title} \u00BB retir\u00E9 de ta liste.`);
 }
 
 function updateTrendingAddButtons() {
   document.querySelectorAll('.trending-add').forEach(btn => {
     const id = parseInt(btn.dataset.id);
     if (animeList.find(x => x.id === id)) {
-      btn.textContent = '✓ Dans ma liste';
+      btn.textContent = '\u2713 Dans ma liste';
       btn.classList.add('added');
     }
   });
@@ -675,12 +675,13 @@ async function openModalById(id) {
   const local = animeList.find(x => x.id === id);
   const overlay = document.getElementById('modalOverlay');
   overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
   document.getElementById('modalBody').innerHTML = '<div style="padding:3rem;text-align:center;color:var(--text-muted)"><span class="search-spinner" style="width:32px;height:32px;border-width:3px"></span></div>';
   try {
     const data = await fetchAnimeDetails(id);
     buildModal(data, local);
   } catch(e) {
-    document.getElementById('modalBody').innerHTML = '<p style="padding:2rem;color:var(--text-muted)">Impossible de charger les détails.</p>';
+    document.getElementById('modalBody').innerHTML = '<p style="padding:2rem;color:var(--text-muted)">Impossible de charger les d\u00E9tails.</p>';
   }
 }
 
@@ -688,11 +689,29 @@ function openModal(localEntry) {
   openModalById(localEntry.id);
 }
 
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  currentModal = null;
+  currentModalLocal = null;
+}
+
+function handleModalClick(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeModal();
+});
+
 function buildModal(data, local) {
   currentModal = data;
+  currentModalLocal = local;
+
   const title = data.title.french || data.title.romaji;
   const cover = data.coverImage.extraLarge || data.coverImage.large;
   const banner = data.bannerImage || cover;
+
   document.getElementById('modalBanner').src = banner;
   document.getElementById('modalCover').src = cover;
   document.getElementById('modalCover').alt = title;
@@ -704,55 +723,103 @@ function buildModal(data, local) {
   const studio = data.studios?.nodes?.[0]?.name || '';
   const sourceFR = SOURCE_FR[data.source] || data.source || '';
   const genres = (data.genres || []).map(g => GENRES_FR[g] || g);
-  const synopsis = data.description ? data.description.replace(/<[^>]+>/g, '').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&#039;/g,"'").replace(/&quot;/g,'"') : null;
+
+  // Nettoyage du synopsis
+  let synopsis = '';
+  if (data.description) {
+    synopsis = data.description
+      .replace(/<br\s*\/?>/gi, '\n')
+      .replace(/<[^>]+>/g, '')
+      .replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>')
+      .replace(/&#039;/g,"'")
+      .replace(/&quot;/g,'"')
+      .replace(/&ndash;/g,'\u2013').replace(/&mdash;/g,'\u2014')
+      .trim();
+  }
 
   const isInList = !!local;
+  const statusChipClass = data.status === 'RELEASING' ? 'airing' : data.status === 'FINISHED' ? 'finished' : 'not-started';
 
+  // --- Synopsis section ---
+  let synopsisHTML = '';
+  if (synopsis) {
+    synopsisHTML = `
+      <div>
+        <div class="modal-section-title">Synopsis</div>
+        <p class="modal-synopsis" id="synopsisEN">${synopsis.replace(/\n/g,'<br>')}</p>
+        <div class="modal-synopsis-fr" id="synopsisFR"></div>
+        <button class="translate-btn" id="translateBtn" onclick="translateSynopsis()">
+          \uD83C\uDDEB\uD83C\uDDF7 Voir en fran\u00E7ais
+        </button>
+      </div>`;
+  }
+
+  // --- Genres ---
+  const genresHTML = genres.length ? `
+    <div>
+      <div class="modal-section-title">Genres</div>
+      <div class="modal-genres">${genres.map(g=>`<span class="modal-genre">${g}</span>`).join('')}</div>
+    </div>` : '';
+
+  // --- Stats ---
+  const statsItems = [
+    data.episodes ? `<div class="modal-stat"><div class="modal-stat-val">${data.episodes}</div><div class="modal-stat-lbl">\u00C9pisodes</div></div>` : '',
+    data.duration ? `<div class="modal-stat"><div class="modal-stat-val">${data.duration} min</div><div class="modal-stat-lbl">Dur\u00E9e/\u00E9p.</div></div>` : '',
+    sourceFR ? `<div class="modal-stat"><div class="modal-stat-val">${sourceFR}</div><div class="modal-stat-lbl">Adaptation</div></div>` : '',
+    studio ? `<div class="modal-stat"><div class="modal-stat-val">${studio}</div><div class="modal-stat-lbl">Studio</div></div>` : '',
+    score ? `<div class="modal-stat"><div class="modal-stat-val">\u2B50 ${score}/10</div><div class="modal-stat-lbl">Score AniList</div></div>` : ''
+  ].filter(Boolean).join('');
+  const statsHTML = statsItems ? `<div><div class="modal-section-title">Infos</div><div class="modal-stats-grid">${statsItems}</div></div>` : '';
+
+  // --- Progress / Add ---
   let progressHTML = '';
   if (isInList) {
     const rating = local.rating || 0;
-    const starsHTML = Array.from({length:10}, (_,i) => `<span class="rating-star ${i < rating ? 'active' : ''}" data-val="${i+1}" onclick="setRating(${i+1})">★</span>`).join('');
+    const starsHTML = Array.from({length:10}, (_,i) =>
+      `<span class="rating-star ${i < rating ? 'active' : ''}" data-val="${i+1}" onclick="setRating(${i+1})">\u2605</span>`
+    ).join('');
     progressHTML = `
-    <div class="modal-section-title">Mon avancement</div>
-    <div class="modal-progress-section">
-      <div class="modal-ep-row">
-        <span class="modal-ep-label">Épisode vu :</span>
-        <div class="modal-ep-btns">
-          <button class="modal-ep-btn" onclick="modalEpDelta(-1)">−</button>
+      <div>
+        <div class="modal-section-title">Mon avancement</div>
+        <div class="modal-progress-section">
+          <div class="modal-ep-row">
+            <span class="modal-ep-label">\u00C9pisode vu :</span>
+            <div class="modal-ep-btns"><button class="modal-ep-btn" onclick="modalEpDelta(-1)">&minus;</button></div>
+            <input class="modal-ep-input" id="modalEpInput" type="number" min="0" max="${data.episodes||9999}" value="${local.currentEp}" onchange="modalEpChange()">
+            <span class="modal-ep-sep">/</span>
+            <span class="modal-ep-total">${data.episodes || '?'}</span>
+            <div class="modal-ep-btns"><button class="modal-ep-btn" onclick="modalEpDelta(1)">+</button></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:var(--space-3);flex-wrap:wrap">
+            <span class="modal-ep-label">Statut :</span>
+            <select class="modal-status-select" id="modalStatusSelect" onchange="modalStatusChange()">
+              <option value="watching" ${local.status==='watching'?'selected':''}>\u25B6 En cours</option>
+              <option value="completed" ${local.status==='completed'?'selected':''}>\u2713 Termin\u00E9</option>
+              <option value="planned" ${local.status==='planned'?'selected':''}>\uD83D\uDCC5 \u00C0 voir</option>
+              <option value="dropped" ${local.status==='dropped'?'selected':''}>\u2717 Abandonn\u00E9</option>
+              <option value="catchup" ${local.status==='catchup'?'selected':''}>\u23E9 Rattrappage</option>
+            </select>
+          </div>
+          <div class="rating-row">
+            <span class="rating-label">Ma note :</span>
+            <div class="rating-stars" id="modalStars">${starsHTML}</div>
+            <span class="rating-val" id="ratingVal">${rating > 0 ? rating + '/10' : '\u2014'}</span>
+          </div>
         </div>
-        <input class="modal-ep-input" id="modalEpInput" type="number" min="0" max="${data.episodes||9999}" value="${local.currentEp}" onchange="modalEpChange()">
-        <span class="modal-ep-sep">/</span>
-        <span class="modal-ep-total">${data.episodes || '?'}</span>
-        <div class="modal-ep-btns">
-          <button class="modal-ep-btn" onclick="modalEpDelta(1)">+</button>
+      </div>
+      <div>
+        <div class="modal-section-title">Mon commentaire</div>
+        <div class="comment-wrap">
+          <textarea class="comment-textarea" id="commentTextarea" placeholder="Ton avis, tes impressions sur cet anim\u00E9...">${local.comment || ''}</textarea>
+          <button class="comment-save-btn" onclick="saveComment(this)">💾 Enregistrer</button>
         </div>
-      </div>
-      <div style="display:flex;align-items:center;gap:var(--space-3);flex-wrap:wrap">
-        <span class="modal-ep-label">Statut :</span>
-        <select class="modal-status-select" id="modalStatusSelect" onchange="modalStatusChange()">
-          <option value="watching" ${local.status==='watching'?'selected':''}>▶ En cours</option>
-          <option value="completed" ${local.status==='completed'?'selected':''}>✓ Terminé</option>
-          <option value="planned" ${local.status==='planned'?'selected':''}>📅 À voir</option>
-          <option value="dropped" ${local.status==='dropped'?'selected':''}>✗ Abandonné</option>
-          <option value="catchup" ${local.status==='catchup'?'selected':''}>⏩ Rattrappage</option>
-        </select>
-      </div>
-      <div class="rating-row">
-        <span class="rating-label">Ma note :</span>
-        <div class="rating-stars" id="modalStars">${starsHTML}</div>
-        <span class="rating-val" id="ratingVal">${rating > 0 ? rating + '/10' : '—'}</span>
-      </div>
-    </div>
-    <div class="modal-section-title">Mon commentaire</div>
-    <div class="comment-wrap">
-      <textarea class="comment-textarea" id="commentTextarea" placeholder="Ton avis, tes impressions sur cet animé...">${local.comment || ''}</textarea>
-      <button class="comment-save-btn" onclick="saveComment()">💾 Enregistrer</button>
-    </div>`;
+      </div>`;
   } else {
-    progressHTML = `<button class="modal-add-btn" onclick="addFromModal(${data.id})"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Ajouter à ma liste</button>`;
+    progressHTML = `<button class="modal-add-btn" onclick="addFromModal(${data.id})">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Ajouter \u00E0 ma liste
+    </button>`;
   }
-
-  const statusChipClass = data.status === 'RELEASING' ? 'airing' : data.status === 'FINISHED' ? 'finished' : 'not-started';
 
   document.getElementById('modalBody').innerHTML = `
     <div>
@@ -760,12 +827,373 @@ function buildModal(data, local) {
       ${data.title.native ? `<div class="modal-native">${data.title.native}</div>` : ''}
     </div>
     <div class="modal-meta-row">
-      ${score ? `<span class="modal-chip score">⭐ ${score}/10</span>` : ''}
+      ${score ? `<span class="modal-chip score">\u2B50 ${score}/10</span>` : ''}
       <span class="modal-chip ${statusChipClass}">${statusFR}</span>
       ${formatFR ? `<span class="modal-chip">${formatFR}</span>` : ''}
       ${season ? `<span class="modal-chip">${season}</span>` : ''}
-      ${data.episodes ? `<span class="modal-chip">${data.episodes} ép.</span>` : ''}
+      ${data.episodes ? `<span class="modal-chip">${data.episodes} \u00E9p.</span>` : ''}
       ${data.duration ? `<span class="modal-chip">${data.duration} min</span>` : ''}
       ${studio ? `<span class="modal-chip">${studio}</span>` : ''}
     </div>
-    ${genres.lengt
+    ${synopsisHTML}
+    ${genresHTML}
+    ${statsHTML}
+    ${progressHTML}
+    ${isInList ? `<button style="align-self:flex-start;padding:var(--space-1) var(--space-3);border-radius:var(--radius-full);font-size:var(--text-xs);color:var(--red);background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.2)" onclick="removeFromList(${data.id});closeModal()">\u2715 Retirer de ma liste</button>` : ''}
+  `;
+
+  // Hover stars
+  initStarHover();
+}
+
+// =============================================
+// TRANSLATE SYNOPSIS (via MyMemory API gratuite)
+// =============================================
+async function translateSynopsis() {
+  const btn = document.getElementById('translateBtn');
+  const frEl = document.getElementById('synopsisFR');
+  const enEl = document.getElementById('synopsisEN');
+
+  if (frEl.classList.contains('visible')) {
+    frEl.classList.remove('visible');
+    btn.textContent = '\uD83C\uDDEB\uD83C\uDDF7 Voir en fran\u00E7ais';
+    return;
+  }
+
+  if (frEl.dataset.loaded === '1') {
+    frEl.classList.add('visible');
+    btn.textContent = '\uD83C\uDDEC\uD83C\uDDE7 Voir en anglais';
+    return;
+  }
+
+  btn.classList.add('loading');
+  btn.textContent = 'Traduction en cours...';
+
+  // Essai 1 : titre français AniList (souvent dispo)
+  const frTitle = currentModal?.title?.french;
+  // Si AniList a déjà un synopsis en français on l'utilise
+  // Sinon on traduit via MyMemory
+  const rawText = enEl.innerText.substring(0, 500); // limite 500 chars gratuit
+  try {
+    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(rawText)}&langpair=en|fr`;
+    const resp = await fetch(url);
+    const json = await resp.json();
+    const translated = json.responseData?.translatedText;
+    if (translated && json.responseStatus === 200) {
+      frEl.textContent = translated;
+      frEl.dataset.loaded = '1';
+      frEl.classList.add('visible');
+      btn.textContent = '\uD83C\uDDEC\uD83C\uDDE7 Voir en anglais';
+    } else {
+      throw new Error('Traduction indisponible');
+    }
+  } catch(e) {
+    frEl.textContent = 'Traduction impossible pour le moment. R\u00E9essaie plus tard.';
+    frEl.dataset.loaded = '1';
+    frEl.classList.add('visible');
+    btn.textContent = '\uD83C\uDDEC\uD83C\uDDE7 Masquer';
+  }
+  btn.classList.remove('loading');
+}
+
+// =============================================
+// RATING
+// =============================================
+function initStarHover() {
+  const stars = document.querySelectorAll('.rating-star');
+  stars.forEach(star => {
+    star.addEventListener('mouseenter', () => {
+      const val = parseInt(star.dataset.val);
+      stars.forEach((s,i) => s.classList.toggle('hovered', i < val));
+    });
+    star.addEventListener('mouseleave', () => {
+      stars.forEach(s => s.classList.remove('hovered'));
+    });
+  });
+}
+
+function setRating(val) {
+  if (!currentModal) return;
+  const entry = animeList.find(x => x.id === currentModal.id);
+  if (!entry) return;
+  entry.rating = val;
+  save();
+  // Update stars UI
+  document.querySelectorAll('.rating-star').forEach((s,i) => {
+    s.classList.toggle('active', i < val);
+  });
+  document.getElementById('ratingVal').textContent = val + '/10';
+  renderGrid();
+  updateStats();
+  toast('success', `Note ${val}/10 enregistr\u00E9e !`);
+}
+
+// =============================================
+// EPISODE
+// =============================================
+function modalEpDelta(delta) {
+  const input = document.getElementById('modalEpInput');
+  if (!input || !currentModal) return;
+  const entry = animeList.find(x => x.id === currentModal.id);
+  if (!entry) return;
+  const max = currentModal.episodes || 99999;
+  let val = Math.max(0, Math.min(max, (parseInt(input.value) || 0) + delta));
+  input.value = val;
+  entry.currentEp = val;
+  if (val === max) {
+    entry.status = 'completed';
+    const sel = document.getElementById('modalStatusSelect');
+    if (sel) sel.value = 'completed';
+    launchConfetti();
+  }
+  save();
+  renderGrid();
+  updateStats();
+}
+
+function modalEpChange() {
+  const input = document.getElementById('modalEpInput');
+  if (!input || !currentModal) return;
+  const entry = animeList.find(x => x.id === currentModal.id);
+  if (!entry) return;
+  const max = currentModal.episodes || 99999;
+  let val = Math.max(0, Math.min(max, parseInt(input.value) || 0));
+  input.value = val;
+  entry.currentEp = val;
+  if (val === max) {
+    entry.status = 'completed';
+    const sel = document.getElementById('modalStatusSelect');
+    if (sel) sel.value = 'completed';
+    launchConfetti();
+  }
+  save();
+  renderGrid();
+  updateStats();
+}
+
+function modalStatusChange() {
+  const sel = document.getElementById('modalStatusSelect');
+  if (!sel || !currentModal) return;
+  const entry = animeList.find(x => x.id === currentModal.id);
+  if (!entry) return;
+  entry.status = sel.value;
+  save();
+  renderGrid();
+  updateStats();
+}
+
+// =============================================
+// COMMENT
+// =============================================
+function saveComment(btn) {
+  const textarea = document.getElementById('commentTextarea');
+  if (!textarea || !currentModal) return;
+  const entry = animeList.find(x => x.id === currentModal.id);
+  if (!entry) return;
+  entry.comment = textarea.value.trim();
+  save();
+  renderGrid();
+  // Ripple animation
+  if (btn) {
+    const r = document.createElement('span');
+    r.className = 'btn-ripple';
+    const rect = btn.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    r.style.cssText = `width:${size}px;height:${size}px;left:${rect.width/2 - size/2}px;top:${rect.height/2 - size/2}px`;
+    btn.appendChild(r);
+    setTimeout(() => r.remove(), 500);
+  }
+  toast('success', 'Commentaire enregistr\u00E9 !');
+}
+
+// =============================================
+// ADD FROM MODAL
+// =============================================
+function addFromModal(id) {
+  if (animeList.find(x => x.id === id)) return;
+  const a = currentModal;
+  addToList(a);
+  // Reopen modal with local entry
+  openModalById(id);
+}
+
+// =============================================
+// RENDER GRID
+// =============================================
+function renderGrid() {
+  const grid = document.getElementById('animeGrid');
+  let list = currentFilter === 'all' ? animeList : animeList.filter(a => a.status === currentFilter);
+  if (list.length === 0) {
+    const msgs = {
+      all: { h: 'Ta liste est vide', p: 'Recherche un anim\u00E9 en haut pour commencer.' },
+      watching: { h: 'Rien en cours', p: 'Tu ne regardes aucun anim\u00E9 pour le moment.' },
+      completed: { h: 'Aucun termin\u00E9', p: 'Termine un anim\u00E9 pour le voir appara\u00EEtre ici.' },
+      planned: { h: 'Aucun pr\u00E9vu', p: 'Ajoute des anim\u00E9s \u00E0 ta liste !' },
+      dropped: { h: 'Aucun abandonn\u00E9', p: 'Tu tiens bien le coup !' }
+    };
+    const m = msgs[currentFilter] || msgs.all;
+    grid.innerHTML = `<div class="empty-state">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      <h3>${m.h}</h3><p>${m.p}</p></div>`;
+    return;
+  }
+  grid.innerHTML = '';
+  list.forEach((a, i) => {
+    const pct = a.totalEps ? Math.round((a.currentEp / a.totalEps) * 100) : 0;
+    const statusLabels = { watching:'\u25B6 En cours', completed:'\u2713 Termin\u00E9', planned:'\uD83D\uDCC5 \u00C0 voir', dropped:'\u2717 Abandonn\u00E9', catchup:'\u23E9 Rattrappage' };
+    const starsPreview = a.rating > 0 ? `<div class="card-rating-preview">${Array.from({length:10},(_,i)=>`<span class="card-star-preview" style="color:${i<a.rating?'var(--gold)':'var(--text-faint)'}">\u2605</span>`).join('')}</div>` : '';
+    const notePreview = a.comment ? `<div class="card-note-preview">\u201C${a.comment}\u201D</div>` : '';
+
+    const card = document.createElement('div');
+    card.className = 'anime-card';
+    card.style.animationDelay = (i * 0.03) + 's';
+    card.innerHTML = `
+      <button class="card-delete" onclick="removeFromList(${a.id})" aria-label="Retirer">\u2715</button>
+      <div class="anime-cover-wrap" onclick="openModalById(${a.id})">
+        <img class="anime-cover" src="${a.cover}" alt="${a.title}" loading="lazy">
+        <div class="anime-cover-overlay">
+          <div class="cover-play-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="anime-card-body">
+        <div class="anime-card-title">${a.title}</div>
+        <span class="status-badge status-${a.status}">${statusLabels[a.status]||a.status}</span>
+        ${starsPreview}
+        ${notePreview}
+        <div class="progress-bar-wrap"><div class="progress-bar" style="width:${pct}%"></div></div>
+        <div class="episode-row">
+          <button class="ep-btn" onclick="quickEp(${a.id},-1)">\u2212</button>
+          <input class="ep-input" type="number" value="${a.currentEp}" min="0" max="${a.totalEps||9999}" onchange="quickEpSet(${a.id},this.value)">
+          <span class="ep-total">/ ${a.totalEps||'?'}</span>
+          <button class="ep-btn" onclick="quickEp(${a.id},1)">+</button>
+        </div>
+        <select class="status-select" onchange="quickStatus(${a.id},this.value)">
+          <option value="watching" ${a.status==='watching'?'selected':''}>\u25B6 En cours</option>
+          <option value="completed" ${a.status==='completed'?'selected':''}>\u2713 Termin\u00E9</option>
+          <option value="planned" ${a.status==='planned'?'selected':''}>\uD83D\uDCC5 \u00C0 voir</option>
+          <option value="dropped" ${a.status==='dropped'?'selected':''}>\u2717 Abandonn\u00E9</option>
+          <option value="catchup" ${a.status==='catchup'?'selected':''}>\u23E9 Rattrappage</option>
+        </select>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+function quickEp(id, delta) {
+  const a = animeList.find(x => x.id === id);
+  if (!a) return;
+  a.currentEp = Math.max(0, Math.min(a.totalEps||99999, (a.currentEp||0)+delta));
+  if (a.totalEps && a.currentEp === a.totalEps) { a.status='completed'; launchConfetti(); }
+  save(); renderGrid(); updateStats();
+}
+
+function quickEpSet(id, val) {
+  const a = animeList.find(x => x.id === id);
+  if (!a) return;
+  a.currentEp = Math.max(0, Math.min(a.totalEps||99999, parseInt(val)||0));
+  if (a.totalEps && a.currentEp === a.totalEps) { a.status='completed'; launchConfetti(); }
+  save(); renderGrid(); updateStats();
+}
+
+function quickStatus(id, status) {
+  const a = animeList.find(x => x.id === id);
+  if (!a) return;
+  a.status = status;
+  save(); renderGrid(); updateStats();
+}
+
+// =============================================
+// STATS
+// =============================================
+function updateStats() {
+  document.getElementById('statTotal').textContent = animeList.length;
+  document.getElementById('statEps').textContent = animeList.reduce((s,a)=>s+(a.currentEp||0),0);
+  const completed = animeList.filter(a=>a.status==='completed');
+  document.getElementById('statCompleted').textContent = completed.length;
+  const rated = animeList.filter(a=>a.rating>0);
+  document.getElementById('statRating').textContent = rated.length > 0 ? (rated.reduce((s,a)=>s+a.rating,0)/rated.length).toFixed(1)+'/10' : '\u2014';
+  const counts = {all:animeList.length, watching:0, completed:0, planned:0, dropped:0};
+  animeList.forEach(a=>{ if(counts[a.status]!==undefined) counts[a.status]++; });
+  Object.keys(counts).forEach(k=>{ const el=document.getElementById('badge-'+k); if(el)el.textContent=counts[k]; });
+}
+
+// =============================================
+// FILTER
+// =============================================
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.nav-btn,.filter-btn').forEach(el=>{
+    const id = el.id || '';
+    const isNav = id.startsWith('nav-');
+    const isFilter = id.startsWith('filter-');
+    if (isNav) el.classList.toggle('active', id === 'nav-'+f);
+    if (isFilter) el.classList.toggle('active', id === 'filter-'+f);
+  });
+  renderGrid();
+}
+
+// =============================================
+// THEME
+// =============================================
+function toggleTheme() {
+  isDark = !isDark;
+  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  const btn = document.getElementById('themeToggle');
+  if (isDark) {
+    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+  } else {
+    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+  }
+}
+
+// =============================================
+// CONFETTI
+// =============================================
+function launchConfetti() {
+  const colors = ['#7c6af7','#34d399','#f59e0b','#f472b6','#60a5fa','#f87171'];
+  for (let i = 0; i < 60; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    el.style.cssText = `
+      left:${Math.random()*100}vw;
+      top:-20px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      transform:rotate(${Math.random()*360}deg);
+      animation-duration:${0.8+Math.random()*1.4}s;
+      animation-delay:${Math.random()*0.4}s;
+      width:${6+Math.random()*8}px;
+      height:${10+Math.random()*10}px;
+    `;
+    document.body.appendChild(el);
+    el.addEventListener('animationend', () => el.remove());
+  }
+  toast('success', '\uD83C\uDF89 Anim\u00E9 termin\u00E9 !');
+}
+
+// =============================================
+// TOAST
+// =============================================
+function toast(type, msg) {
+  const container = document.getElementById('toastContainer');
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  const icons = { success: '\u2713', error: '\u2715', info: '\u2139' };
+  el.innerHTML = `<span style="color:${type==='success'?'var(--green)':type==='error'?'var(--red)':'var(--primary)'}">${icons[type]||''}</span> ${msg}`;
+  container.appendChild(el);
+  setTimeout(() => {
+    el.classList.add('out');
+    setTimeout(() => el.remove(), 300);
+  }, 2800);
+}
+
+// =============================================
+// INIT
+// =============================================
+renderGrid();
+updateStats();
+loadTrending();
+</script>
+</body>
+</html>
