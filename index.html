@@ -507,16 +507,26 @@ a{color:var(--primary);text-decoration:none}
 
 <script>
 (function(){
+// ---- STORAGE (mémoire + localStorage avec fallback) ----
 const SK='anitrack-v3';
+let _memStore=null;
+function loadList(){
+  if(_memStore!==null)return _memStore;
+  try{const d=JSON.parse(localStorage.getItem(SK));_memStore=Array.isArray(d)?d:[];return _memStore;}
+  catch{_memStore=[];return _memStore;}
+}
+function saveList(){
+  _memStore=list;
+  try{localStorage.setItem(SK,JSON.stringify(list));}catch(e){}
+}
+
 let list=loadList();
 let currentTab='all';
 let searchPage=1,searchQuery='',searchTotal=0;
 let acTimer=null;
 let openAnimeId=null,pendingStatus=null;
-
-// ---- STORAGE ----
-function loadList(){try{return JSON.parse(localStorage.getItem(SK))||[];}catch{return[];}}
-function saveList(){localStorage.setItem(SK,JSON.stringify(list));}
+// Map Jikan mal_id -> AniList id (pour la modale)
+let jikanToAnilist={};
 
 // ---- PAGES ----
 document.querySelectorAll('.nav-btn').forEach(btn=>{
@@ -567,15 +577,15 @@ async function gql(query,variables){
   return r.json();
 }
 
-// ---- HIGHLIGHT matching prefix ----
-function highlightMatch(title, query){
+// ---- HIGHLIGHT matching text ----
+function highlightMatch(title,query){
   if(!query)return h(title);
   const idx=title.toLowerCase().indexOf(query.toLowerCase());
   if(idx<0)return h(title);
   return h(title.slice(0,idx))+'<em>'+h(title.slice(idx,idx+query.length))+'</em>'+h(title.slice(idx+query.length));
 }
 
-// ---- AUTOCOMPLETE (dès 1 lettre, titres commençant par la lettre en premier) ----
+// ---- AUTOCOMPLETE via JIKAN (accepte dès 1 caractère) ----
 const searchInput=document.getElementById('searchInput');
 const acBox=document.getElementById('autocomplete');
 
@@ -583,7 +593,9 @@ searchInput.addEventListener('input',()=>{
   clearTimeout(acTimer);
   const q=searchInput.value.trim();
   if(q.length<1){acBox.classList.remove('open');acBox.innerHTML='';return;}
-  acTimer=setTimeout(()=>fetchAC(q),180);
+  acBox.innerHTML='<div class="ac-loader">Recherche…</div>';
+  acBox.classList.add('open');
+  acTimer=setTimeout(()=>fetchAC(q),280);
 });
 searchInput.addEventListener('keydown',e=>{
   if(e.key==='Enter'){acBox.classList.remove('open');doSearch(searchInput.value.trim(),1);}
@@ -592,44 +604,66 @@ searchInput.addEventListener('keydown',e=>{
 document.addEventListener('click',e=>{if(!e.target.closest('.search-box-wrap'))acBox.classList.remove('open');});
 
 async function fetchAC(q){
-  acBox.innerHTML='<div class="ac-loader">Recherche…</div>';
-  acBox.classList.add('open');
-  const Q=`query($s:String){Page(page:1,perPage:16){media(search:$s,type:ANIME,sort:POPULARITY_DESC){id title{userPreferred romaji english}episodes coverImage{medium}format seasonYear}}}`;
+  // Jikan v4 — pas de limite de longueur minimale
   try{
-    const d=await gql(Q,{s:q});
-    let items=d?.data?.Page?.media||[];
+    const r=await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(q)}&limit=8&order_by=popularity&sort=asc`);
+    const d=await r.json();
+    let items=d?.data||[];
     if(!items.length){acBox.innerHTML='<div class="ac-empty">Aucun résultat</div>';return;}
 
-    // Tri : titres commençant par la requête en premier, ensuite contient, ensuite le reste
+    // Tri : titres commençant par la requête en premier
     const ql=q.toLowerCase();
     items=items.slice().sort((a,b)=>{
-      const ta=(a.title.userPreferred||a.title.romaji||'').toLowerCase();
-      const tb=(b.title.userPreferred||b.title.romaji||'').toLowerCase();
-      const aStarts=ta.startsWith(ql)?0:1;
-      const bStarts=tb.startsWith(ql)?0:1;
-      return aStarts-bStarts;
+      const ta=(a.title||'').toLowerCase();
+      const tb=(b.title||'').toLowerCase();
+      return (ta.startsWith(ql)?0:1)-(tb.startsWith(ql)?0:1);
     });
-    // On garde les 8 premiers après tri
-    items=items.slice(0,8);
 
     acBox.innerHTML=items.map(it=>{
-      const t=it.title.userPreferred||it.title.romaji||'?';
-      return `<div class="ac-item" data-id="${it.id}">
-        <img class="ac-thumb" src="${h(it.coverImage?.medium||'')}" alt="" loading="lazy">
-        <div class="ac-info"><div class="ac-title">${highlightMatch(t,q)}</div><div class="ac-meta">${h(it.format||'?')} · ${it.episodes||'?'} ép. · ${it.seasonYear||'?'}</div></div>
+      const t=it.title||'?';
+      const thumb=it.images?.jpg?.small_image_url||it.images?.jpg?.image_url||'';
+      const eps=it.episodes?it.episodes+' ép.':'? ép.';
+      const yr=it.year||it.aired?.prop?.from?.year||'?';
+      const type=it.type||'?';
+      return `<div class="ac-item" data-malid="${it.mal_id}" data-title="${h(t)}">
+        <img class="ac-thumb" src="${h(thumb)}" alt="" loading="lazy">
+        <div class="ac-info"><div class="ac-title">${highlightMatch(t,q)}</div><div class="ac-meta">${h(type)} · ${eps} · ${yr}</div></div>
       </div>`;
     }).join('');
+
     acBox.querySelectorAll('.ac-item').forEach(el=>{
       el.addEventListener('click',()=>{
         acBox.classList.remove('open');
-        searchInput.value=el.querySelector('.ac-title').textContent;
-        openModal(parseInt(el.dataset.id));
+        const title=el.dataset.title;
+        searchInput.value=title;
+        // On lance la recherche AniList avec le titre exact pour ouvrir la modale
+        openModalByTitle(title,parseInt(el.dataset.malid));
       });
     });
-  }catch{acBox.innerHTML='<div class="ac-empty">Erreur réseau</div>';}
+  }catch(e){
+    acBox.innerHTML='<div class="ac-empty">Erreur réseau</div>';
+  }
 }
 
-// ---- SEARCH ----
+// Recherche AniList par titre pour ouvrir la modale
+async function openModalByTitle(title,malId){
+  const Q=`query($s:String){Page(page:1,perPage:5){media(search:$s,type:ANIME){id title{userPreferred}}}}`;
+  try{
+    const d=await gql(Q,{s:title});
+    const items=d?.data?.Page?.media||[];
+    if(items.length){
+      // On stocke la correspondance malId -> anilistId si trouvée
+      if(malId)jikanToAnilist[malId]=items[0].id;
+      openModal(items[0].id);
+    }else{
+      toast('Impossible de trouver cet anime sur AniList','warn');
+    }
+  }catch{
+    toast('Erreur réseau','err');
+  }
+}
+
+// ---- SEARCH (AniList, inchangé) ----
 async function doSearch(q,page){
   if(!q)return;
   searchQuery=q;searchPage=page;
@@ -691,7 +725,7 @@ function renderPagination(pi){
   if(pn)pn.addEventListener('click',()=>doSearch(searchQuery,cur+1));
 }
 
-// ---- MODAL ----
+// ---- MODAL (AniList, inchangé) ----
 async function openModal(id){
   openAnimeId=id;
   const ov=document.getElementById('overlay');
@@ -804,16 +838,12 @@ document.getElementById('overlay').addEventListener('click',e=>{if(e.target===do
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
 
 // ---- NOUVEAUTES ----
-let nouveautesCache={newEps:[],missing:[]};
-
 async function renderNouveautes(){
   const zone=document.getElementById('nouveautesContent');
   zone.innerHTML='<div class="spin-wrap"><div class="spin"></div> Vérification en cours…</div>';
 
-  // 1. Épisodes manquants (local, immédiat)
   const missing=list.filter(a=>a.episodes>0&&a.currentEpisode<a.episodes&&a.status!=='planned');
 
-  // 2. Nouveaux épisodes (API, animes "en cours" avec total connu)
   const watching=list.filter(a=>a.status==='watching'&&a.id);
   let newEps=[];
   if(watching.length){
@@ -826,7 +856,6 @@ async function renderNouveautes(){
         if(local&&f.episodes&&f.episodes>local.episodes){
           const diff=f.episodes-local.episodes;
           newEps.push({anime:local,diff,newTotal:f.episodes,oldTotal:local.episodes});
-          // Mise à jour silencieuse du total
           local.episodes=f.episodes;
         }
       });
@@ -834,14 +863,11 @@ async function renderNouveautes(){
     }catch(e){console.warn('nouveautes check failed',e);}
   }
 
-  nouveautesCache={newEps,missing};
-  // Badge
   const total=newEps.length+missing.length;
   const badge=document.getElementById('navBadge');
   if(total>0){badge.textContent=total>99?'99+':total;badge.classList.add('show');}
   else badge.classList.remove('show');
 
-  // Rendu
   if(!newEps.length&&!missing.length){
     zone.innerHTML=`
       <div class="new-empty">
@@ -853,7 +879,6 @@ async function renderNouveautes(){
   }
 
   let html='';
-
   if(newEps.length){
     html+=`<div class="new-section"><div class="new-section-title">✨ Nouveaux épisodes (${newEps.length})</div>`;
     newEps.forEach(({anime,diff,newTotal})=>{
@@ -868,7 +893,6 @@ async function renderNouveautes(){
     });
     html+=`</div>`;
   }
-
   if(missing.length){
     html+=`<div class="new-section"><div class="new-section-title">⚠ Épisodes non regardés (${missing.length})</div>`;
     missing.forEach(anime=>{
@@ -891,7 +915,6 @@ async function renderNouveautes(){
   });
 }
 
-// Badge auto au chargement si liste non vide
 function updateBadgeQuick(){
   const missing=list.filter(a=>a.episodes>0&&a.currentEpisode<a.episodes&&a.status!=='planned');
   const badge=document.getElementById('navBadge');
