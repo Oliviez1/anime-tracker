@@ -467,21 +467,6 @@ async function queryAniList(query, variables) {
   throw lastError || new Error('Impossible de contacter AniList');
 }
 
-  // Essaie d'abord en direct, bascule sur le proxy si CORS bloqué
-  for (const url of [ANILIST_DIRECT, ANILIST_PROXY]) {
-    try {
-      const r = await fetch(url, { method: 'POST', headers, body });
-      if (!r.ok) continue;
-      const d = await r.json();
-      if (d.errors) throw new Error(d.errors[0].message);
-      return d.data;
-    } catch(e) {
-      if (url === ANILIST_PROXY) throw e;
-      // Passe au proxy si l'appel direct échoue (CORS)
-    }
-  }
-}
-
 async function searchAnime(term) {
   const q = `query($s:String){Page(perPage:8){media(search:$s,type:ANIME,sort:SEARCH_MATCH){
     id title{romaji english french native} coverImage{large medium} bannerImage
@@ -786,7 +771,7 @@ function changeEp(id, delta) {
   let patch = { currentEp: newEp };
   if (a.totalEps && newEp === a.totalEps && a.status !== 'completed') {
     patch.status = 'completed';
-    toast('success', `🎉 "${a.title}" terminé !`);
+    toast('success', `"${a.title}" terminé ! 🎉`);
     launchConfetti();
   }
   updateEntry(id, patch);
@@ -799,7 +784,7 @@ function changeEpDirect(id, val) {
   let patch = { currentEp: newEp };
   if (a.totalEps && newEp === a.totalEps && a.status !== 'completed') {
     patch.status = 'completed';
-    toast('success', `🎉 "${a.title}" terminé !`);
+    toast('success', `"${a.title}" terminé ! 🎉`);
     launchConfetti();
   }
   updateEntry(id, patch);
@@ -816,7 +801,7 @@ function changeStatus(id, val) {
 
 function updateStats() {
   const total = animeList.length;
-  const eps = animeList.reduce((s, a) => s + (a.currentEp||0), 0);
+  const eps = animeList.reduce((s, a) => s + a.currentEp, 0);
   const rated = animeList.filter(a => a.rating > 0);
   const avg = rated.length ? (rated.reduce((s, a) => s + a.rating, 0) / rated.length).toFixed(1) : '—';
   const completed = animeList.filter(a => a.status === 'completed').length;
@@ -844,34 +829,27 @@ async function openModalById(id) {
   const cover = document.getElementById('modalCover');
   currentModal = id;
   currentModalLocal = animeList.find(x => x.id === id) || null;
-
-  body.innerHTML = '<div style="padding:var(--space-12);text-align:center;color:var(--text-muted)"><span class="search-spinner" style="width:28px;height:28px;border-width:3px"></span></div>';
-  banner.src = '';
-  cover.src = '';
+  body.innerHTML = `<div style="padding:var(--space-12);text-align:center;color:var(--text-muted)"><span class="search-spinner" style="width:28px;height:28px;border-width:3px"></span></div>`;
+  banner.src = ''; cover.src = '';
   overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
-
   try {
     const a = await fetchAnimeDetails(id);
     const local = animeList.find(x => x.id === id);
     const title = a.title.french || a.title.romaji;
-    const statusClass = { RELEASING:'airing', FINISHED:'finished', NOT_YET_RELEASED:'not-started' }[a.status] || '';
-
+    const statusClass = {RELEASING:'airing',FINISHED:'finished',NOT_YET_RELEASED:'not-started'}[a.status] || '';
     banner.src = a.bannerImage || a.coverImage.extraLarge || a.coverImage.large;
     cover.src = a.coverImage.extraLarge || a.coverImage.large;
     cover.alt = title;
-
     let nextEpInfo = '';
     if (a.nextAiringEpisode) {
       const h = Math.floor(a.nextAiringEpisode.timeUntilAiring / 3600);
       const d = Math.floor(h / 24);
-      nextEpInfo = `<div class="modal-chip airing">Ép. ${a.nextAiringEpisode.episode} dans ${d > 0 ? d + 'j' : h + 'h'}</div>`;
+      nextEpInfo = `<div class="modal-chip airing">Ép. ${a.nextAiringEpisode.episode} dans ${d > 0 ? d + 'j ' : ''}${h % 24}h</div>`;
     }
-
-    const synopsis = a.description ? a.description.replace(/<[^>]+>/g, '').replace(/\n/g, ' ').trim() : 'Aucun synopsis disponible.';
+    const synopsis = a.description ? a.description.replace(/<br>/g, '\n').replace(/<[^>]+>/g, '').trim() : 'Aucun synopsis disponible.';
     const genres = a.genres?.map(g => `<span class="modal-genre">${GENRES_FR[g]||g}</span>`).join('') || '';
     const studio = a.studios?.nodes?.[0]?.name || '?';
-
     body.innerHTML = `
       <div class="modal-title-row">
         <div>
@@ -911,13 +889,11 @@ async function openModalById(id) {
 }
 
 function buildProgressSection(local, apiData) {
-  const pct = local.totalEps ? Math.round((local.currentEp / local.totalEps) * 100) : 0;
+  const pct = local.totalEps ? Math.round(local.currentEp / local.totalEps * 100) : 0;
   const totalEps = apiData?.episodes || local.totalEps || '?';
   const ratingStars = Array.from({length:10}, (_, i) =>
-    `<span class="rating-star ${i < local.rating ? 'active' : ''}" data-val="${i+1}" onclick="setRating(${local.id},${i+1})"
-      onmouseenter="hoverStars(${i+1})" onmouseleave="unhoverStars(${local.rating})">⭐</span>`
+    `<span class="rating-star ${i < local.rating ? 'active' : ''}" data-val="${i+1}" onclick="setRating(${local.id},${i+1})" onmouseenter="hoverStars(${i+1})" onmouseleave="unhoverStars(${local.rating})">⭐</span>`
   ).join('');
-
   return `
     <div>
       <div class="modal-section-title">Mon suivi</div>
@@ -925,11 +901,10 @@ function buildProgressSection(local, apiData) {
         <div class="modal-ep-row">
           <span class="modal-ep-label">Épisode actuel</span>
           <div class="modal-ep-btns">
-            <button class="modal-ep-btn" onclick="changeEp(${local.id},-5);refreshModalEp(${local.id})">−5</button>
-            <button class="modal-ep-btn" onclick="changeEp(${local.id},-1);refreshModalEp(${local.id})">−1</button>
+            <button class="modal-ep-btn" onclick="changeEp(${local.id},-5);refreshModalEp(${local.id})">-5</button>
+            <button class="modal-ep-btn" onclick="changeEp(${local.id},-1);refreshModalEp(${local.id})">-1</button>
           </div>
-          <input class="modal-ep-input" id="modalEpInput" type="number" min="0" max="${totalEps}" value="${local.currentEp}"
-            onchange="changeEpDirect(${local.id},this.value);refreshModalEp(${local.id})">
+          <input class="modal-ep-input" id="modalEpInput" type="number" min="0" max="${totalEps}" value="${local.currentEp}" onchange="changeEpDirect(${local.id},this.value);refreshModalEp(${local.id})">
           <span class="modal-ep-sep">/</span>
           <span class="modal-ep-total">${totalEps}</span>
           <div class="modal-ep-btns">
@@ -938,7 +913,7 @@ function buildProgressSection(local, apiData) {
           </div>
         </div>
         ${local.totalEps ? `<div class="progress-bar-wrap"><div class="progress-bar" id="modalProgressBar" style="width:${pct}%"></div></div>` : ''}
-        <div style="display:flex;align-items:center;gap:var(--space-3);flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:var(--space-3);flex-wrap:wrap">
           <span style="font-size:var(--text-sm);color:var(--text-muted);font-weight:500">Statut</span>
           <select class="modal-status-select" onchange="changeStatus(${local.id},this.value)">
             <option value="watching" ${local.status==='watching'?'selected':''}>▶ En cours</option>
@@ -954,18 +929,18 @@ function buildProgressSection(local, apiData) {
       <div class="rating-row">
         <span class="rating-label">Note</span>
         <div class="rating-stars" id="modalStars">${ratingStars}</div>
-        <span class="rating-val" id="modalRatingVal">${local.rating ? local.rating+'/10' : '—'}</span>
+        <span class="rating-val" id="modalRatingVal">${local.rating ? local.rating+'/10' : ''}</span>
       </div>
     </div>
     <div>
       <div class="modal-section-title">Mon avis</div>
       <div class="comment-wrap">
-        <textarea class="comment-textarea" id="commentArea" placeholder="Écris ton avis, tes notes...">${local.note||''}</textarea>
+        <textarea class="comment-textarea" id="commentArea" placeholder="Écris ton avis, tes notes...">${local.note}</textarea>
         <button class="comment-save-btn" onclick="saveComment(${local.id})">Sauvegarder</button>
       </div>
     </div>
     <div style="padding-bottom:var(--space-2)">
-      <button onclick="removeFromList(${local.id});closeModal()" style="color:var(--red);font-size:var(--text-xs);opacity:0.7;padding:var(--space-2)">✕ Retirer de ma liste</button>
+      <button onclick="removeFromList(${local.id});closeModal()" style="color:var(--red);font-size:var(--text-xs);opacity:0.7;padding:var(--space-2)">Retirer de ma liste</button>
     </div>`;
 }
 
@@ -975,7 +950,7 @@ function refreshModalEp(id) {
   const inp = document.getElementById('modalEpInput');
   const bar = document.getElementById('modalProgressBar');
   if (inp) inp.value = local.currentEp;
-  if (bar && local.totalEps) bar.style.width = Math.round((local.currentEp/local.totalEps)*100) + '%';
+  if (bar && local.totalEps) bar.style.width = Math.round(local.currentEp/local.totalEps*100) + '%';
 }
 
 function addFromModal(id) {
@@ -1001,24 +976,20 @@ function setRating(id, val) {
 }
 
 function hoverStars(n) {
-  document.querySelectorAll('#modalStars .rating-star').forEach((s, i) => {
-    s.classList.toggle('hovered', i < n);
-  });
+  document.querySelectorAll('#modalStars .rating-star').forEach((s, i) => s.classList.toggle('hovered', i < n));
 }
 
 function unhoverStars(current) {
-  document.querySelectorAll('#modalStars .rating-star').forEach((s, i) => {
-    s.classList.remove('hovered');
-  });
+  document.querySelectorAll('#modalStars .rating-star').forEach(s => s.classList.remove('hovered'));
 }
 
 function saveComment(id) {
-  const txt = document.getElementById('commentArea')?.value || '';
+  const txt = document.getElementById('commentArea')?.value;
   updateEntry(id, { note: txt });
   const btn = document.querySelector('.comment-save-btn');
   if (btn) {
     const orig = btn.textContent;
-    btn.textContent = '✓ Sauvegardé !';
+    btn.textContent = 'Sauvegardé !';
     btn.style.background = 'var(--green)';
     setTimeout(() => { btn.textContent = orig; btn.style.background = ''; }, 1500);
   }
@@ -1044,35 +1015,24 @@ document.addEventListener('keydown', (e) => {
 // TOAST
 // =============================================
 function toast(type, msg) {
-  const icons = { success:'✓', error:'✕', info:'ℹ' };
+  const icons = {success:'✓',error:'✕',info:'ℹ'};
   const c = document.getElementById('toastContainer');
   const t = document.createElement('div');
-  t.className = `toast ${type}`;
-  t.innerHTML = `<span>${icons[type]||'•'}</span><span>${msg}</span>`;
+  t.className = 'toast ' + type;
+  t.innerHTML = `<span>${icons[type]}</span><span>${msg}</span>`;
   c.appendChild(t);
-  setTimeout(() => {
-    t.classList.add('out');
-    setTimeout(() => t.remove(), 300);
-  }, 3200);
+  setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 300); }, 3200);
 }
 
 // =============================================
 // CONFETTI
 // =============================================
 function launchConfetti() {
-  const colors = ['#7c6af7','#34d399','#f59e0b','#f472b6','#60a5fa','#f87171'];
+  const colors = ['7c6af7','34d399','f59e0b','f472b6','60a5fa','f87171'];
   for (let i = 0; i < 60; i++) {
     const p = document.createElement('div');
     p.className = 'confetti-piece';
-    p.style.cssText = `
-      left:${Math.random()*100}vw;
-      background:${colors[Math.floor(Math.random()*colors.length)]};
-      animation-duration:${2.5 + Math.random()*2}s;
-      animation-delay:${Math.random()*0.8}s;
-      transform:rotate(${Math.random()*360}deg);
-      width:${6 + Math.random()*8}px;
-      height:${10 + Math.random()*12}px;
-    `;
+    p.style.cssText = `left:${Math.random()*100}vw;background:#${colors[Math.floor(Math.random()*colors.length)]};animation-duration:${2.5+Math.random()*2}s;animation-delay:${Math.random()*0.8}s;transform:rotate(${Math.random()*360}deg);width:${6+Math.random()*8}px;height:${10+Math.random()*12}px`;
     document.body.appendChild(p);
     setTimeout(() => p.remove(), 5000);
   }
