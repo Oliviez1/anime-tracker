@@ -330,7 +330,12 @@
       </button>
     </nav>
     <div class="sidebar-footer">
-      <span style="font-size:var(--text-xs);color:var(--text-faint)">AniTrack v2</span>
+        <div style="display:flex;flex-direction:column;gap:var(--space-2);width:100%">
+            <button onclick="exportList()" style="width:100%;padding:var(--space-2);background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-md);font-size:var(--text-xs);color:var(--text-muted);font-weight:600">📤 Exporter ma liste</button>
+            <button onclick="document.getElementById('importFile').click()" style="width:100%;padding:var(--space-2);background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-md);font-size:var(--text-xs);color:var(--text-muted);font-weight:600">📥 Importer</button>
+            <input type="file" id="importFile" accept=".json" style="display:none" onchange="importList(event)">
+            <span style="font-size:var(--text-xs);color:var(--text-faint);text-align:center">AniTrack v2</span>
+        </div>
       <button class="theme-toggle" id="themeToggle" aria-label="Changer le thème" onclick="toggleTheme()">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
       </button>
@@ -352,10 +357,12 @@
     </div>
 
     <div class="stats">
-      <div class="stat-card"><div class="stat-value" id="statTotal">0</div><div class="stat-label">Animés suivis</div></div>
-      <div class="stat-card"><div class="stat-value" id="statEps">0</div><div class="stat-label">Épisodes vus</div></div>
-      <div class="stat-card"><div class="stat-value" id="statRating">—</div><div class="stat-label">Note moyenne</div></div>
-      <div class="stat-card"><div class="stat-value" id="statCompleted">0</div><div class="stat-label">Terminés</div></div>
+    <div class="stat-card"><div class="stat-value" id="statTotal">0</div><div class="stat-label">Animés suivis</div></div>
+    <div class="stat-card"><div class="stat-value" id="statEps">0</div><div class="stat-label">Épisodes vus</div></div>
+    <div class="stat-card"><div class="stat-value" id="statRating">—</div><div class="stat-label">Note moyenne</div></div>
+    <div class="stat-card"><div class="stat-value" id="statCompleted">0</div><div class="stat-label">Terminés</div></div>
+    <div class="stat-card"><div class="stat-value" id="statHours">0h</div><div class="stat-label">Temps regardé</div></div>
+    <div class="stat-card"><div class="stat-value" id="statFavorites">0</div><div class="stat-label">Favoris</div></div>
     </div>
 
     <div class="trending-section">
@@ -377,6 +384,8 @@
     <div class="anime-grid" id="animeGrid"></div>
   </main>
 </div>
+
+<div class="filters" id="genreFilters" style="flex-wrap:wrap"></div>
 
 <div class="toast-container" id="toastContainer"></div>
 
@@ -409,6 +418,7 @@ let recommendationCache = {};
 let detailsCache = {};
 let searchTimer = null;
 let currentModal = null;
+let currentGenre = null;
 let isDark = document.documentElement.getAttribute('data-theme') === 'dark';
 
 const GENRES_FR = {
@@ -438,6 +448,42 @@ const STATUS_COLORS = {
 
 function save() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(animeList));
+}
+
+function exportList() {
+  const data = JSON.stringify(animeList, null, 2);
+  const blob = new Blob([data], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `anitrack_backup_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  toast('success', 'Liste exportée avec succès !');
+}
+
+function importList(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const imported = JSON.parse(e.target.result);
+      if (!Array.isArray(imported)) throw new Error('Format invalide');
+      const merged = [...animeList];
+      imported.forEach(item => {
+        if (!merged.find(x => x.id === item.id)) merged.push(item);
+      });
+      animeList = merged;
+      save();
+      renderGrid();
+      updateStats();
+      updateBadges();
+      toast('success', `${imported.length} animés importés !`);
+    } catch {
+      toast('error', 'Fichier invalide.');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
 }
 
 function safeText(value) {
@@ -807,6 +853,7 @@ function updateEntry(id, patch) {
 
 function removeFromList(id) {
   const anime = animeList.find(x => x.id === id);
+  if (!confirm(`Retirer « ${anime?.title} » de ta liste ?`)) return;
   animeList = animeList.filter(x => x.id !== id);
   save();
   renderGrid();
@@ -814,7 +861,6 @@ function removeFromList(id) {
   updateBadges();
   if (anime) toast('info', `« ${anime.title} » retiré de ta liste.`);
 }
-
 function toggleFavorite(id) {
   const anime = animeList.find(x => x.id === id);
   if (!anime) return;
@@ -871,6 +917,14 @@ function updateStats() {
   if (statEps) statEps.textContent = eps;
   if (statRating) statRating.textContent = avg;
   if (statCompleted) statCompleted.textContent = completed;
+  const hours = Math.round(animeList.reduce((s, a) => {
+  const mins = parseInt(a.duration) || 24;
+  return s + (a.currentEp || 0) * mins;
+}, 0) / 60);
+const statHours = document.getElementById('statHours');
+const statFavorites = document.getElementById('statFavorites');
+if (statHours) statHours.textContent = hours + 'h';
+if (statFavorites) statFavorites.textContent = animeList.filter(a => a.favorite).length;
 }
 
 function updateBadges() {
@@ -887,9 +941,26 @@ function updateBadges() {
   });
 }
 
+function renderGenreFilters() {
+  const container = document.getElementById('genreFilters');
+  if (!container) return;
+  const allGenres = [...new Set(animeList.flatMap(a => a.genres || []))].sort();
+  if (!allGenres.length) { container.innerHTML = ''; return; }
+  container.innerHTML = `
+    <button class="filter-btn ${!currentGenre ? 'active' : ''}" onclick="setGenre(null)">Tous genres</button>
+    ${allGenres.map(g => `<button class="filter-btn ${currentGenre === g ? 'active' : ''}" onclick="setGenre('${g}')">${window.GENRES_FR?.[g] || g}</button>`).join('')}
+  `;
+}
+
+function setGenre(genre) {
+  currentGenre = genre;
+  renderGenreFilters();
+  renderGrid();
+}
 function getFilteredList() {
   let list = [...animeList];
   if (currentFilter === 'favorites') list = list.filter(a => a.favorite);
+  if (currentGenre) list = list.filter(a => (a.genres || []).includes(currentGenre));
   else if (currentFilter !== 'all') list = list.filter(a => a.userStatus === currentFilter);
 
   switch (currentSort) {
@@ -978,6 +1049,7 @@ function renderGrid() {
       </article>
     `;
   }).join('');
+  renderGenreFilters();
 }
 
 async function performSearch(term) {
