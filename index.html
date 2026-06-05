@@ -394,526 +394,751 @@
 </div>
 
 <script>
-// =============================================
-// DATA
-// =============================================
-let animeList = JSON.parse(localStorage.getItem('anitrack_v2') || '[]');
-let currentFilter = 'all';
-let currentModal = null;
-let currentModalLocal = null;
-let trendingCache = null;
-let searchTimer = null;
-let isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+const STORAGE_KEY = 'anitrack_v3';
+const JIKAN = 'https://api.jikan.moe/v4';
+const ANILIST = 'https://graphql.anilist.co';
 
-// jikan_id_map: mappe anilist_id -> jikan_id pour les détails
-const jikanIdCache = {};
+let animeList = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+let currentFilter = 'all';
+let currentSort = 'recent';
+let currentView = 'library';
+let trendingCache = null;
+let seasonalCache = null;
+let recommendationCache = {};
+let searchTimer = null;
+let currentModal = null;
+let isDark = document.documentElement.getAttribute('data-theme') === 'dark';
 
 const GENRES_FR = {
   'Action':'Action','Adventure':'Aventure','Comedy':'Comédie','Drama':'Drame',
   'Ecchi':'Ecchi','Fantasy':'Fantasy','Horror':'Horreur','Mahou Shoujo':'Mahou Shoujo',
-  'Mecha':'Mecha','Music':'Musique','Mystery':'Mystère','Psychological':'Psychologique',
-  'Romance':'Romance','Sci-Fi':'Science-Fiction','Slice of Life':'Tranche de vie',
-  'Sports':'Sport','Supernatural':'Surnaturel','Thriller':'Thriller','Hentai':'Hentai',
-  'Shounen':'Shounen','Shoujo':'Shoujo','Seinen':'Seinen','Josei':'Josei'
+  'Mecha':'Mecha','Music':'Musique','Mystery':'Mystère','Psychologique':'Psychologique',
+  'Psychological':'Psychologique','Romance':'Romance','Sci-Fi':'Science-Fiction',
+  'Slice of Life':'Tranche de vie','Sports':'Sport','Supernatural':'Surnaturel',
+  'Thriller':'Thriller','Shounen':'Shounen','Shoujo':'Shoujo','Seinen':'Seinen','Josei':'Josei'
 };
-const STATUS_FR_JIKAN = {
-  'Finished Airing':'Terminé','Currently Airing':'En diffusion','Not yet aired':'Pas encore sorti'
+
+const STATUS_LABELS = {
+  watching: 'En cours',
+  completed: 'Terminé',
+  planned: 'À voir',
+  dropped: 'Abandonné',
+  paused: 'En pause'
 };
-const FORMAT_FR_JIKAN = {
-  'TV':'Série TV','Movie':'Film','Special':'Spécial','OVA':'OVA','ONA':'ONA','Music':'Clip Musical'
+
+const STATUS_COLORS = {
+  watching: 'status-watching',
+  completed: 'status-completed',
+  planned: 'status-planned',
+  dropped: 'status-dropped',
+  paused: 'status-catchup'
 };
 
 function save() {
-  localStorage.setItem('anitrack_v2', JSON.stringify(animeList));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(animeList));
 }
 
-// =============================================
-// JIKAN API (MAL) — REST, sans CORS
-// =============================================
-const JIKAN = 'https://api.jikan.moe/v4';
+function safeText(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
 
-// Rate limiter simple : 3 req/sec max pour Jikan
+function statusLabel(status) {
+  return STATUS_LABELS[status] || status;
+}
+
+function getCurrentSeason() {
+  const month = new Date().getMonth() + 1;
+  if (month <= 3) return 'WINTER';
+  if (month <= 6) return 'SPRING';
+  if (month <= 9) return 'SUMMER';
+  return 'FALL';
+}
+
+function getCurrentYear() {
+  return new Date().getFullYear();
+}
+
+async function anilistFetch(query, variables = {}) {
+  const res = await fetch(ANILIST, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({ query, variables })
+  });
+  if (!res.ok) throw new Error('Erreur AniList ' + res.status);
+  const json = await res.json();
+  if (json.errors) throw new Error(json.errors[0]?.message || 'Erreur GraphQL');
+  return json.data;
+}
+
 const jikanQueue = [];
 let jikanBusy = false;
+
 function jikanFetch(url) {
   return new Promise((resolve, reject) => {
     jikanQueue.push({ url, resolve, reject });
     processJikanQueue();
   });
 }
+
 async function processJikanQueue() {
-  if (jikanBusy || jikanQueue.length === 0) return;
+  if (jikanBusy || !jikanQueue.length) return;
   jikanBusy = true;
   const { url, resolve, reject } = jikanQueue.shift();
   try {
     const r = await fetch(url);
     if (r.status === 429) {
-      // Rate limited — on remet en queue et on attend
       jikanQueue.unshift({ url, resolve, reject });
       setTimeout(() => { jikanBusy = false; processJikanQueue(); }, 1200);
       return;
     }
     if (!r.ok) throw new Error('HTTP ' + r.status);
-    const d = await r.json();
-    resolve(d);
-  } catch(e) {
+    resolve(await r.json());
+  } catch (e) {
     reject(e);
   }
   setTimeout(() => { jikanBusy = false; processJikanQueue(); }, 350);
 }
 
-async function searchAnime(term) {
-  const d = await jikanFetch(`${JIKAN}/anime?q=${encodeURIComponent(term)}&limit=10&sfw=false`);
-  return (d.data || []).map(normalizeJikan);
-}
-
-async function fetchTrending() {
-  if (trendingCache) return trendingCache;
-  const d = await jikanFetch(`${JIKAN}/top/anime?filter=airing&limit=20`);
-  trendingCache = (d.data || []).map(normalizeJikan);
-  return trendingCache;
-}
-
-async function fetchAnimeDetails(id) {
-  // id peut être un mal_id direct (from jikan) ou un id stocké
-  const d = await jikanFetch(`${JIKAN}/anime/${id}/full`);
-  return normalizeJikanFull(d.data);
-}
-
-// Normalise un item Jikan en format interne
 function normalizeJikan(a) {
   return {
     id: a.mal_id,
+    malId: a.mal_id,
+    anilistId: null,
     title: a.title_french || a.title_english || a.title,
-    title_romaji: a.title,
-    title_native: a.title_japanese,
+    titleRomaji: a.title || '',
+    titleNative: a.title_japanese || '',
     cover: a.images?.jpg?.large_image_url || a.images?.jpg?.image_url || '',
-    banner: a.images?.jpg?.large_image_url || '',
+    banner: a.trailer?.images?.maximum_image_url || a.images?.jpg?.large_image_url || '',
     totalEps: a.episodes || null,
-    score: a.score ? Math.round(a.score * 10) : null,
-    format: FORMAT_FR_JIKAN[a.type] || a.type || '?',
-    status: STATUS_FR_JIKAN[a.status] || a.status || '?',
-    year: a.year || (a.aired?.prop?.from?.year) || null,
-    genres: (a.genres || []).map(g => g.name),
-    synopsis: a.synopsis || '',
-    studio: (a.studios || [])[0]?.name || '?',
-    source: a.source || '?',
-    duration: a.duration || '?',
+    currentEp: 0,
+    score: a.score ? Number(a.score.toFixed(1)) : null,
+    averageScore: a.score ? Math.round(a.score * 10) : null,
+    popularity: a.popularity || 0,
+    format: a.type || '?',
+    year: a.year || a.aired?.prop?.from?.year || null,
     season: a.season || '',
-  };
-}
-
-function normalizeJikanFull(a) {
-  if (!a) return null;
-  return {
-    id: a.mal_id,
-    title: a.title_french || a.title_english || a.title,
-    title_romaji: a.title,
-    title_native: a.title_japanese,
-    cover: a.images?.jpg?.large_image_url || a.images?.jpg?.image_url || '',
-    banner: a.images?.jpg?.large_image_url || '',
-    totalEps: a.episodes || null,
-    score: a.score ? Math.round(a.score * 10) : null,
-    format: FORMAT_FR_JIKAN[a.type] || a.type || '?',
-    status: STATUS_FR_JIKAN[a.status] || a.status || '?',
-    year: a.year || (a.aired?.prop?.from?.year) || null,
     genres: (a.genres || []).map(g => g.name),
     synopsis: (a.synopsis || '').replace(/<[^>]+>/g, '').trim(),
     studio: (a.studios || [])[0]?.name || '?',
     source: a.source || '?',
     duration: a.duration || '?',
-    season: a.season || '',
-    airing: a.airing || false,
-    broadcast: a.broadcast?.string || null,
+    trailerUrl: a.trailer?.url || '',
+    trailerYoutubeId: a.trailer?.youtube_id || '',
+    statusApi: a.status || '?',
+    userStatus: 'planned',
+    rating: 0,
+    note: '',
+    favorite: false,
+    addedAt: Date.now(),
+    updatedAt: Date.now()
   };
 }
 
-// =============================================
-// TRENDING
-// =============================================
-async function loadTrending() {
-  const scroll = document.getElementById('trendingScroll');
-  scroll.innerHTML = Array(10).fill(`<div><div class="skeleton sk-cover"></div><div class="skeleton sk-text"></div><div class="skeleton sk-text short"></div></div>`).join('');
-  try {
-    const items = await fetchTrending();
-    scroll.innerHTML = '';
-    items.forEach((a, i) => {
-      const inList = animeList.find(x => x.id === a.id);
-      const score = a.score ? `⭐ ${(a.score/10).toFixed(1)}/10` : '';
-      const card = document.createElement('div');
-      card.className = 'trending-card';
-      card.style.animationDelay = (i * 0.04) + 's';
-      card.style.animation = 'cardEntrance 0.4s cubic-bezier(0.16,1,0.3,1) both';
-      card.innerHTML = `
-        <div class="trending-cover-wrap">
-          <img class="trending-cover" src="${a.cover}" alt="${a.title}" loading="lazy">
-        </div>
-        <div class="trending-info">
-          <div class="trending-title">${a.title}</div>
-          <div class="trending-score">${score}</div>
-          <button class="trending-add ${inList ? 'added' : ''}" data-id="${a.id}">${inList ? '✓ Dans ma liste' : '+ Ajouter'}</button>
-        </div>`;
-      card.querySelector('.trending-cover-wrap').addEventListener('click', () => openModalById(a.id));
-      card.querySelector('.trending-add').addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (!animeList.find(x => x.id === a.id)) {
-          addToList(a);
-          e.target.textContent = '✓ Dans ma liste';
-          e.target.classList.add('added');
+function normalizeAniList(media) {
+  return {
+    id: media.idMal || media.id,
+    malId: media.idMal || null,
+    anilistId: media.id,
+    title: media.title?.french || media.title?.english || media.title?.romaji || 'Inconnu',
+    titleRomaji: media.title?.romaji || '',
+    titleNative: media.title?.native || '',
+    cover: media.coverImage?.extraLarge || media.coverImage?.large || '',
+    banner: media.bannerImage || media.coverImage?.extraLarge || '',
+    totalEps: media.episodes || null,
+    currentEp: 0,
+    score: media.averageScore ? Number((media.averageScore / 10).toFixed(1)) : null,
+    averageScore: media.averageScore || null,
+    popularity: media.popularity || 0,
+    format: media.format || '?',
+    year: media.seasonYear || media.startDate?.year || null,
+    season: media.season || '',
+    genres: media.genres || [],
+    synopsis: (media.description || '').replace(/<[^>]+>/g, '').trim(),
+    studio: media.studios?.nodes?.[0]?.name || '?',
+    source: media.source || '?',
+    duration: media.duration ? `${media.duration} min` : '?',
+    trailerUrl: media.trailer?.site === 'youtube' && media.trailer?.id ? `https://www.youtube.com/watch?v=${media.trailer.id}` : '',
+    trailerYoutubeId: media.trailer?.site === 'youtube' ? media.trailer?.id || '' : '',
+    statusApi: media.status || '?',
+    userStatus: 'planned',
+    rating: 0,
+    note: '',
+    favorite: false,
+    addedAt: Date.now(),
+    updatedAt: Date.now(),
+    recommendations: (media.recommendations?.nodes || [])
+      .map(n => n.mediaRecommendation)
+      .filter(Boolean)
+      .map(r => ({
+        id: r.idMal || r.id,
+        anilistId: r.id,
+        title: r.title?.french || r.title?.english || r.title?.romaji || 'Inconnu',
+        cover: r.coverImage?.large || '',
+        score: r.averageScore ? Number((r.averageScore / 10).toFixed(1)) : null
+      }))
+  };
+}
+
+async function searchJikan(term) {
+  const d = await jikanFetch(`${JIKAN}/anime?q=${encodeURIComponent(term)}&limit=8&sfw=false`);
+  return (d.data || []).map(normalizeJikan);
+}
+
+async function searchAniList(term) {
+  const query = `
+    query ($search: String) {
+      Page(page: 1, perPage: 8) {
+        media(search: $search, type: ANIME, sort: SEARCH_MATCH) {
+          id
+          idMal
+          title { romaji english native }
+          coverImage { large extraLarge }
+          bannerImage
+          episodes
+          averageScore
+          popularity
+          format
+          season
+          seasonYear
+          genres
+          description(asHtml: false)
+          duration
+          source
+          status
+          studios(isMain: true) { nodes { name } }
+          trailer { id site }
         }
-      });
-      scroll.appendChild(card);
-    });
-  } catch(e) {
-    scroll.innerHTML = '<p style="color:var(--text-muted);font-size:var(--text-sm);padding:var(--space-4)">Impossible de charger les tendances. Réessaie dans quelques secondes.</p>';
-  }
-}
-
-// =============================================
-// SEARCH
-// =============================================
-document.getElementById('searchInput').addEventListener('input', function() {
-  const val = this.value.trim();
-  document.getElementById('searchClear').classList.toggle('visible', val.length > 0);
-  clearTimeout(searchTimer);
-  if (!val) { closeSearchResults(); return; }
-  searchTimer = setTimeout(() => performSearch(val), 350);
-});
-
-document.getElementById('searchInput').addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') clearSearch();
-});
-
-document.addEventListener('click', (e) => {
-  if (!document.getElementById('searchInput').contains(e.target) &&
-      !document.getElementById('searchResults').contains(e.target)) {
-    closeSearchResults();
-  }
-});
-
-function closeSearchResults() {
-  const el = document.getElementById('searchResults');
-  el.classList.remove('open');
-  el.innerHTML = '';
-}
-
-function clearSearch() {
-  document.getElementById('searchInput').value = '';
-  document.getElementById('searchClear').classList.remove('visible');
-  closeSearchResults();
-}
-
-async function performSearch(term) {
-  const box = document.getElementById('searchResults');
-  box.innerHTML = '<div class="search-loading"><span class="search-spinner"></span>Recherche...</div>';
-  box.classList.add('open');
-  try {
-    const local = animeList.filter(a => (a.title || '').toLowerCase().includes(term.toLowerCase()));
-    const remote = await searchAnime(term);
-    box.innerHTML = '';
-    if (local.length > 0) {
-      box.insertAdjacentHTML('beforeend', '<div class="search-section-header">📚 Ma liste</div>');
-      local.forEach(a => {
-        const div = document.createElement('div');
-        div.className = 'search-result-item';
-        div.innerHTML = `
-          <img class="search-result-img" src="${a.cover}" alt="${a.title}" loading="lazy">
-          <div class="search-result-info">
-            <div class="search-result-title">${a.title}</div>
-            <div class="search-result-meta">Ép. ${a.currentEp}/${a.totalEps||'?'} · ${statusLabel(a.status)}</div>
-          </div>
-          <span class="search-add-btn added">Dans ma liste</span>`;
-        div.addEventListener('click', () => { clearSearch(); openModalById(a.id); });
-        box.appendChild(div);
-      });
+      }
     }
-    if (remote.length > 0) {
-      box.insertAdjacentHTML('beforeend', '<div class="search-section-header">🌐 MyAnimeList</div>');
-      remote.forEach(a => {
-        const inList = animeList.find(x => x.id === a.id);
-        const div = document.createElement('div');
-        div.className = 'search-result-item';
-        div.innerHTML = `
-          <img class="search-result-img" src="${a.cover}" alt="${a.title}" loading="lazy">
-          <div class="search-result-info">
-            <div class="search-result-title">${a.title}</div>
-            <div class="search-result-meta">${a.format} · ${a.totalEps||'?'} ép. · ${a.year||'?'}</div>
-          </div>
-          <button class="search-add-btn ${inList ? 'added' : ''}" data-id="${a.id}">${inList ? '✓ Ajouté' : '+ Ajouter'}</button>`;
-        div.querySelector('.search-result-img').addEventListener('click', () => { clearSearch(); openModalById(a.id); });
-        div.querySelector('.search-result-info').addEventListener('click', () => { clearSearch(); openModalById(a.id); });
-        const addBtn = div.querySelector('.search-add-btn');
-        if (!inList) {
-          addBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            addToList(a);
-            addBtn.textContent = '✓ Ajouté';
-            addBtn.classList.add('added');
-          });
+  `;
+  const data = await anilistFetch(query, { search: term });
+  return (data.Page?.media || []).map(normalizeAniList);
+}
+
+async function fetchTrending() {
+  if (trendingCache) return trendingCache;
+  const d = await jikanFetch(`${JIKAN}/top/anime?filter=airing&limit=12`);
+  trendingCache = (d.data || []).map(normalizeJikan);
+  return trendingCache;
+}
+
+async function fetchSeasonal() {
+  if (seasonalCache) return seasonalCache;
+  const query = `
+    query ($season: MediaSeason, $seasonYear: Int) {
+      Page(page: 1, perPage: 12) {
+        media(season: $season, seasonYear: $seasonYear, type: ANIME, sort: POPULARITY_DESC) {
+          id
+          idMal
+          title { romaji english native }
+          coverImage { large extraLarge }
+          bannerImage
+          episodes
+          averageScore
+          popularity
+          format
+          season
+          seasonYear
+          genres
+          description(asHtml: false)
+          duration
+          source
+          status
+          studios(isMain: true) { nodes { name } }
+          trailer { id site }
         }
-        box.appendChild(div);
-      });
+      }
     }
-    if (local.length === 0 && remote.length === 0) {
-      box.innerHTML = '<div class="search-empty">Aucun résultat pour "' + term + '"</div>';
-    }
-  } catch(e) {
-    box.innerHTML = '<div class="search-empty">Erreur de recherche. Réessaie dans quelques secondes.</div>';
-  }
+  `;
+  const data = await anilistFetch(query, {
+    season: getCurrentSeason(),
+    seasonYear: getCurrentYear()
+  });
+  seasonalCache = (data.Page?.media || []).map(normalizeAniList);
+  return seasonalCache;
 }
 
-// =============================================
-// LIST MANAGEMENT
-// =============================================
+async function fetchAnimeDetails(id) {
+  const query = `
+    query ($idMal: Int, $id: Int) {
+      Media(idMal: $idMal, id: $id, type: ANIME) {
+        id
+        idMal
+        title { romaji english native }
+        coverImage { large extraLarge }
+        bannerImage
+        episodes
+        averageScore
+        popularity
+        favourites
+        format
+        season
+        seasonYear
+        genres
+        description(asHtml: false)
+        duration
+        source
+        status
+        siteUrl
+        nextAiringEpisode { episode timeUntilAiring }
+        trailer { id site }
+        studios(isMain: true) { nodes { name } }
+        recommendations(page: 1, perPage: 6, sort: RATING_DESC) {
+          nodes {
+            mediaRecommendation {
+              id
+              idMal
+              title { romaji english native }
+              coverImage { large }
+              averageScore
+            }
+          }
+        }
+      }
+    }
+  `;
+  const numericId = Number(id);
+  const data = await anilistFetch(query, { idMal: numericId, id: numericId });
+  if (!data.Media) throw new Error('Anime introuvable');
+  return normalizeAniList(data.Media);
+}
+
+function mergeSearchResults(local, jikan, anilist) {
+  const map = new Map();
+  [...local, ...jikan, ...anilist].forEach(item => {
+    const key = item.malId || item.id || item.anilistId;
+    if (!map.has(key)) map.set(key, item);
+    else {
+      map.set(key, { ...map.get(key), ...item });
+    }
+  });
+  return [...map.values()];
+}
+
 function addToList(apiAnime) {
-  const title = apiAnime.title || 'Inconnu';
+  const existing = animeList.find(x => x.id === apiAnime.id);
+  if (existing) return;
   const entry = {
     id: apiAnime.id,
-    title,
+    malId: apiAnime.malId || apiAnime.id,
+    anilistId: apiAnime.anilistId || null,
+    title: apiAnime.title || 'Inconnu',
+    titleRomaji: apiAnime.titleRomaji || '',
+    titleNative: apiAnime.titleNative || '',
     cover: apiAnime.cover || '',
     banner: apiAnime.banner || '',
     totalEps: apiAnime.totalEps || null,
     currentEp: 0,
-    status: 'planned',
+    userStatus: 'planned',
     rating: 0,
     note: '',
-    addedAt: Date.now()
+    favorite: false,
+    score: apiAnime.score || null,
+    averageScore: apiAnime.averageScore || null,
+    popularity: apiAnime.popularity || 0,
+    format: apiAnime.format || '?',
+    year: apiAnime.year || null,
+    season: apiAnime.season || '',
+    genres: apiAnime.genres || [],
+    synopsis: apiAnime.synopsis || '',
+    studio: apiAnime.studio || '?',
+    source: apiAnime.source || '?',
+    duration: apiAnime.duration || '?',
+    trailerUrl: apiAnime.trailerUrl || '',
+    trailerYoutubeId: apiAnime.trailerYoutubeId || '',
+    recommendations: apiAnime.recommendations || [],
+    addedAt: Date.now(),
+    updatedAt: Date.now()
   };
-  if (animeList.find(x => x.id === entry.id)) return;
   animeList.unshift(entry);
   save();
   renderGrid();
   updateStats();
   updateBadges();
-  toast('success', `"${title}" ajouté à ta liste !`);
+  toast('success', `« ${entry.title} » ajouté à ta liste.`);
+}
+
+function updateEntry(id, patch) {
+  const i = animeList.findIndex(x => x.id === id);
+  if (i === -1) return;
+  animeList[i] = { ...animeList[i], ...patch, updatedAt: Date.now() };
+  save();
+  renderGrid();
+  updateStats();
+  updateBadges();
 }
 
 function removeFromList(id) {
-  const a = animeList.find(x => x.id === id);
-  if (!a) return;
+  const anime = animeList.find(x => x.id === id);
   animeList = animeList.filter(x => x.id !== id);
   save();
   renderGrid();
   updateStats();
   updateBadges();
-  toast('info', `"${a.title}" retiré de ta liste.`);
+  if (anime) toast('info', `« ${anime.title} » retiré de ta liste.`);
 }
 
-function updateEntry(id, patch) {
-  const idx = animeList.findIndex(x => x.id === id);
-  if (idx === -1) return;
-  animeList[idx] = { ...animeList[idx], ...patch };
-  save();
-  updateStats();
-  updateBadges();
-  const card = document.querySelector(`.anime-card[data-id="${id}"]`);
-  if (card) refreshCard(card, animeList[idx]);
+function toggleFavorite(id) {
+  const anime = animeList.find(x => x.id === id);
+  if (!anime) return;
+  updateEntry(id, { favorite: !anime.favorite });
 }
 
-// =============================================
-// RENDER
-// =============================================
-function renderGrid() {
-  const grid = document.getElementById('animeGrid');
-  const list = currentFilter === 'all' ? animeList : animeList.filter(a => a.status === currentFilter);
-  if (list.length === 0) {
-    const msg = currentFilter === 'all'
-      ? 'Recherche un animé ci-dessus pour commencer !'
-      : 'Aucun animé dans cette catégorie.';
-    grid.innerHTML = `
-      <div class="empty-state">
-        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-        <h3>Ta liste est vide</h3>
-        <p>${msg}</p>
-      </div>`;
-    return;
-  }
-  grid.innerHTML = '';
-  list.forEach((a, i) => {
-    const card = document.createElement('div');
-    card.className = 'anime-card';
-    card.dataset.id = a.id;
-    card.style.animationDelay = Math.min(i * 0.05, 0.4) + 's';
-    renderCardContent(card, a);
-    grid.appendChild(card);
-  });
-}
-
-function renderCardContent(card, a) {
-  const pct = a.totalEps ? Math.round((a.currentEp / a.totalEps) * 100) : 0;
-  card.innerHTML = `
-    <button class="card-delete" data-id="${a.id}" title="Retirer" onclick="removeFromList(${a.id})">✕</button>
-    <div class="anime-cover-wrap" onclick="openModalById(${a.id})">
-      <img class="anime-cover" src="${a.cover}" alt="${a.title}" loading="lazy">
-      <div class="anime-cover-overlay">
-        <div class="cover-play-btn">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
-      </div>
-    </div>
-    <div class="anime-card-body">
-      <div class="anime-card-title">${a.title}</div>
-      <span class="status-badge status-${a.status}">${statusLabel(a.status)}</span>
-      ${a.rating ? `<div class="card-rating-preview">${Array.from({length:10},(_,i)=>`<span class="card-star-preview">${i < a.rating ? '⭐' : '☆'}</span>`).join('')}</div>` : ''}
-      ${a.note ? `<div class="card-note-preview">"${a.note}"</div>` : ''}
-      <div class="episode-row">
-        <button class="ep-btn" onclick="changeEp(${a.id},-1)">−</button>
-        <input class="ep-input" type="number" min="0" max="${a.totalEps||9999}" value="${a.currentEp}" onchange="changeEpDirect(${a.id},this.value)" onclick="event.stopPropagation()">
-        <span class="ep-total">/ ${a.totalEps||'?'}</span>
-        <button class="ep-btn" onclick="changeEp(${a.id},1)">+</button>
-      </div>
-      ${a.totalEps ? `<div class="progress-bar-wrap"><div class="progress-bar" style="width:${pct}%"></div></div>` : ''}
-      <select class="status-select" onchange="changeStatus(${a.id},this.value)">
-        <option value="watching" ${a.status==='watching'?'selected':''}>▶ En cours</option>
-        <option value="completed" ${a.status==='completed'?'selected':''}>✓ Terminé</option>
-        <option value="planned" ${a.status==='planned'?'selected':''}>📅 À voir</option>
-        <option value="dropped" ${a.status==='dropped'?'selected':''}>✗ Abandonné</option>
-      </select>
-    </div>`;
-}
-
-function refreshCard(card, a) {
-  renderCardContent(card, a);
-}
-
-function statusLabel(s) {
-  return {watching:'En cours',completed:'Terminé',planned:'À voir',dropped:'Abandonné'}[s] || s;
-}
-
-function setFilter(f) {
-  currentFilter = f;
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  const nb = document.getElementById('nav-' + f);
-  const fb = document.getElementById('filter-' + f);
-  if (nb) nb.classList.add('active');
-  if (fb) fb.classList.add('active');
-  renderGrid();
+function changeStatus(id, value) {
+  updateEntry(id, { userStatus: value });
 }
 
 function changeEp(id, delta) {
-  const a = animeList.find(x => x.id === id);
-  if (!a) return;
-  const newEp = Math.max(0, Math.min(a.currentEp + delta, a.totalEps || 9999));
-  let patch = { currentEp: newEp };
-  if (a.totalEps && newEp === a.totalEps && a.status !== 'completed') {
-    patch.status = 'completed';
-    toast('success', `"${a.title}" terminé ! 🎉`);
-    launchConfetti();
-  }
+  const anime = animeList.find(x => x.id === id);
+  if (!anime) return;
+  const max = anime.totalEps || 9999;
+  const newEp = Math.max(0, Math.min(max, anime.currentEp + delta));
+  const patch = { currentEp: newEp };
+  if (anime.totalEps && newEp >= anime.totalEps) patch.userStatus = 'completed';
+  else if (newEp > 0 && anime.userStatus === 'planned') patch.userStatus = 'watching';
   updateEntry(id, patch);
 }
 
-function changeEpDirect(id, val) {
-  const a = animeList.find(x => x.id === id);
-  if (!a) return;
-  const newEp = Math.max(0, Math.min(parseInt(val)||0, a.totalEps || 9999));
-  let patch = { currentEp: newEp };
-  if (a.totalEps && newEp === a.totalEps && a.status !== 'completed') {
-    patch.status = 'completed';
-    toast('success', `"${a.title}" terminé ! 🎉`);
-    launchConfetti();
-  }
+function changeEpDirect(id, value) {
+  const anime = animeList.find(x => x.id === id);
+  if (!anime) return;
+  const max = anime.totalEps || 9999;
+  const newEp = Math.max(0, Math.min(max, parseInt(value || 0, 10)));
+  const patch = { currentEp: newEp };
+  if (anime.totalEps && newEp >= anime.totalEps) patch.userStatus = 'completed';
   updateEntry(id, patch);
-  if (currentModalLocal && currentModalLocal.id === id) {
-    const inp = document.getElementById('modalEpInput');
-    if (inp) inp.value = newEp;
-  }
 }
 
-function changeStatus(id, val) {
-  updateEntry(id, { status: val });
-  if (currentFilter !== 'all') renderGrid();
+function setRating(id, value) {
+  updateEntry(id, { rating: value });
+}
+
+function saveComment(id) {
+  const txt = document.getElementById('commentArea')?.value || '';
+  updateEntry(id, { note: txt });
+  toast('success', 'Avis sauvegardé.');
 }
 
 function updateStats() {
   const total = animeList.length;
-  const eps = animeList.reduce((s, a) => s + a.currentEp, 0);
+  const eps = animeList.reduce((s, a) => s + (a.currentEp || 0), 0);
   const rated = animeList.filter(a => a.rating > 0);
   const avg = rated.length ? (rated.reduce((s, a) => s + a.rating, 0) / rated.length).toFixed(1) : '—';
-  const completed = animeList.filter(a => a.status === 'completed').length;
-  document.getElementById('statTotal').textContent = total;
-  document.getElementById('statEps').textContent = eps;
-  document.getElementById('statRating').textContent = avg;
-  document.getElementById('statCompleted').textContent = completed;
+  const completed = animeList.filter(a => a.userStatus === 'completed').length;
+
+  const statTotal = document.getElementById('statTotal');
+  const statEps = document.getElementById('statEps');
+  const statRating = document.getElementById('statRating');
+  const statCompleted = document.getElementById('statCompleted');
+  if (statTotal) statTotal.textContent = total;
+  if (statEps) statEps.textContent = eps;
+  if (statRating) statRating.textContent = avg;
+  if (statCompleted) statCompleted.textContent = completed;
 }
 
 function updateBadges() {
-  document.getElementById('badge-all').textContent = animeList.length;
-  document.getElementById('badge-watching').textContent = animeList.filter(a=>a.status==='watching').length;
-  document.getElementById('badge-completed').textContent = animeList.filter(a=>a.status==='completed').length;
-  document.getElementById('badge-planned').textContent = animeList.filter(a=>a.status==='planned').length;
-  document.getElementById('badge-dropped').textContent = animeList.filter(a=>a.status==='dropped').length;
+  const counts = {
+    all: animeList.length,
+    watching: animeList.filter(a => a.userStatus === 'watching').length,
+    completed: animeList.filter(a => a.userStatus === 'completed').length,
+    planned: animeList.filter(a => a.userStatus === 'planned').length,
+    dropped: animeList.filter(a => a.userStatus === 'dropped').length
+  };
+  Object.entries(counts).forEach(([key, value]) => {
+    const el = document.getElementById(`badge-${key}`);
+    if (el) el.textContent = value;
+  });
 }
 
-// =============================================
-// MODAL
-// =============================================
+function getFilteredList() {
+  let list = [...animeList];
+  if (currentFilter === 'favorites') list = list.filter(a => a.favorite);
+  else if (currentFilter !== 'all') list = list.filter(a => a.userStatus === currentFilter);
+
+  switch (currentSort) {
+    case 'title':
+      list.sort((a, b) => (a.title || '').localeCompare(b.title || '', 'fr'));
+      break;
+    case 'rating':
+      list.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+      break;
+    case 'score':
+      list.sort((a, b) => (b.score || 0) - (a.score || 0));
+      break;
+    case 'progress':
+      list.sort((a, b) => (b.currentEp || 0) - (a.currentEp || 0));
+      break;
+    case 'year':
+      list.sort((a, b) => (b.year || 0) - (a.year || 0));
+      break;
+    default:
+      list.sort((a, b) => (b.updatedAt || b.addedAt || 0) - (a.updatedAt || a.addedAt || 0));
+  }
+  return list;
+}
+
+function renderGrid() {
+  const grid = document.getElementById('animeGrid');
+  if (!grid) return;
+
+  const list = getFilteredList();
+
+  if (!list.length) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+          <path d="M8 21h8M12 17v4"></path>
+        </svg>
+        <h3>Aucun animé ici</h3>
+        <p>Ajoute un animé avec la recherche ou change le filtre actuel.</p>
+      </div>
+    `;
+    return;
+  }
+
+  grid.innerHTML = list.map(a => {
+    const pct = a.totalEps ? Math.round((a.currentEp / a.totalEps) * 100) : 0;
+    return `
+      <article class="anime-card" data-id="${a.id}">
+        <button class="card-delete" title="Retirer" onclick="removeFromList(${a.id})">✕</button>
+        <div class="anime-cover-wrap" onclick="openModalById(${a.id})">
+          <img class="anime-cover" src="${safeText(a.cover)}" alt="${safeText(a.title)}" loading="lazy">
+          <div class="anime-cover-overlay">
+            <div class="cover-play-btn">▶</div>
+          </div>
+        </div>
+        <div class="anime-card-body">
+          <div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start">
+            <div class="anime-card-title">${safeText(a.title)}</div>
+            <button onclick="event.stopPropagation();toggleFavorite(${a.id})" style="font-size:1rem">
+              ${a.favorite ? '💜' : '🤍'}
+            </button>
+          </div>
+
+          <span class="status-badge ${STATUS_COLORS[a.userStatus] || 'status-planned'}">${statusLabel(a.userStatus)}</span>
+
+          ${a.rating ? `<div class="card-rating-preview">${Array.from({length:10}, (_,i)=>`<span class="card-star-preview">${i < a.rating ? '⭐' : '☆'}</span>`).join('')}</div>` : ''}
+          ${a.note ? `<div class="card-note-preview">"${safeText(a.note)}"</div>` : ''}
+
+          <div class="episode-row">
+            <button class="ep-btn" onclick="changeEp(${a.id},-1)">−</button>
+            <input class="ep-input" type="number" min="0" max="${a.totalEps || 9999}" value="${a.currentEp}" onchange="changeEpDirect(${a.id},this.value)">
+            <span class="ep-total">/ ${a.totalEps || '?'}</span>
+            <button class="ep-btn" onclick="changeEp(${a.id},1)">+</button>
+          </div>
+
+          ${a.totalEps ? `<div class="progress-bar-wrap"><div class="progress-bar" style="width:${pct}%"></div></div>` : ''}
+
+          <select class="status-select" onchange="changeStatus(${a.id}, this.value)">
+            <option value="watching" ${a.userStatus === 'watching' ? 'selected' : ''}>▶ En cours</option>
+            <option value="completed" ${a.userStatus === 'completed' ? 'selected' : ''}>✓ Terminé</option>
+            <option value="planned" ${a.userStatus === 'planned' ? 'selected' : ''}>📅 À voir</option>
+            <option value="paused" ${a.userStatus === 'paused' ? 'selected' : ''}>⏸ En pause</option>
+            <option value="dropped" ${a.userStatus === 'dropped' ? 'selected' : ''}>✗ Abandonné</option>
+          </select>
+        </div>
+      </article>
+    `;
+  }).join('');
+}
+
+async function performSearch(term) {
+  const box = document.getElementById('searchResults');
+  box.innerHTML = '<div class="search-loading"><span class="search-spinner"></span>Recherche multi-source...</div>';
+  box.classList.add('open');
+
+  try {
+    const local = animeList.filter(a =>
+      (a.title || '').toLowerCase().includes(term.toLowerCase()) ||
+      (a.titleRomaji || '').toLowerCase().includes(term.toLowerCase())
+    );
+    const [jikan, anilist] = await Promise.all([
+      searchJikan(term),
+      searchAniList(term)
+    ]);
+    const merged = mergeSearchResults(local, jikan, anilist);
+    box.innerHTML = '';
+
+    if (!merged.length) {
+      box.innerHTML = `<div class="search-empty">Aucun résultat pour "${safeText(term)}"</div>`;
+      return;
+    }
+
+    if (local.length) box.insertAdjacentHTML('beforeend', `<div class="search-section-header">📚 Déjà dans ma liste</div>`);
+    local.forEach(a => box.appendChild(buildSearchItem(a, true)));
+
+    const externals = merged.filter(a => !local.find(l => l.id === a.id));
+    if (externals.length) box.insertAdjacentHTML('beforeend', `<div class="search-section-header">🌐 Résultats API</div>`);
+    externals.forEach(a => box.appendChild(buildSearchItem(a, false)));
+  } catch (e) {
+    box.innerHTML = `<div class="search-empty">Erreur pendant la recherche : ${safeText(e.message)}</div>`;
+  }
+}
+
+function buildSearchItem(a, inLibrary) {
+  const div = document.createElement('div');
+  div.className = 'search-result-item';
+  div.innerHTML = `
+    <img class="search-result-img" src="${safeText(a.cover)}" alt="${safeText(a.title)}" loading="lazy">
+    <div class="search-result-info">
+      <div class="search-result-title">${safeText(a.title)}</div>
+      <div class="search-result-meta">${safeText(a.format || '?')} · ${a.totalEps || '?'} ép. · ${a.year || '?'}</div>
+    </div>
+    <button class="search-add-btn ${inLibrary ? 'added' : ''}">
+      ${inLibrary ? '✓ Ajouté' : '+ Ajouter'}
+    </button>
+  `;
+  div.querySelector('.search-result-info').addEventListener('click', () => openModalById(a.id));
+  div.querySelector('.search-result-img').addEventListener('click', () => openModalById(a.id));
+
+  const btn = div.querySelector('.search-add-btn');
+  if (!inLibrary) {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      addToList(a);
+      btn.textContent = '✓ Ajouté';
+      btn.classList.add('added');
+    });
+  }
+  return div;
+}
+
+async function loadTrending() {
+  const scroll = document.getElementById('trendingScroll');
+  if (!scroll) return;
+  scroll.innerHTML = Array(8).fill(`<div><div class="skeleton sk-cover"></div><div class="skeleton sk-text"></div><div class="skeleton sk-text short"></div></div>`).join('');
+  try {
+    const items = await fetchTrending();
+    scroll.innerHTML = items.map(a => `
+      <div class="trending-card">
+        <div class="trending-cover-wrap" onclick="openModalById(${a.id})">
+          <img class="trending-cover" src="${safeText(a.cover)}" alt="${safeText(a.title)}" loading="lazy">
+        </div>
+        <div class="trending-info">
+          <div class="trending-title">${safeText(a.title)}</div>
+          <div class="trending-score">${a.score ? `⭐ ${a.score}/10` : ''}</div>
+          <button class="trending-add ${animeList.find(x => x.id === a.id) ? 'added' : ''}" onclick='event.stopPropagation();addTrending(${JSON.stringify(a).replace(/'/g, "&apos;")})'>
+            ${animeList.find(x => x.id === a.id) ? '✓ Dans ma liste' : '+ Ajouter'}
+          </button>
+        </div>
+      </div>
+    `).join('');
+  } catch (e) {
+    scroll.innerHTML = `<p style="padding:var(--space-4);color:var(--text-muted)">Impossible de charger les tendances.</p>`;
+  }
+}
+
+function addTrending(a) {
+  if (!animeList.find(x => x.id === a.id)) addToList(a);
+  loadTrending();
+}
+
 async function openModalById(id) {
+  currentModal = id;
   const overlay = document.getElementById('modalOverlay');
   const body = document.getElementById('modalBody');
   const banner = document.getElementById('modalBanner');
   const cover = document.getElementById('modalCover');
-  currentModal = id;
-  currentModalLocal = animeList.find(x => x.id === id) || null;
-  body.innerHTML = `<div style="padding:var(--space-12);text-align:center;color:var(--text-muted)"><span class="search-spinner" style="width:28px;height:28px;border-width:3px"></span></div>`;
-  banner.src = ''; cover.src = '';
+
   overlay.classList.add('open');
-  document.body.style.overflow = 'hidden';
+  body.innerHTML = `<div style="padding:var(--space-12);text-align:center;color:var(--text-muted)"><span class="search-spinner" style="width:28px;height:28px;border-width:3px"></span></div>`;
+  banner.src = '';
+  cover.src = '';
+
   try {
-    const a = await fetchAnimeDetails(id);
-    if (!a) throw new Error('Anime introuvable');
+    const data = await fetchAnimeDetails(id);
     const local = animeList.find(x => x.id === id);
-    const title = a.title;
-    const statusClass = a.airing ? 'airing' : (a.status === 'Terminé' ? 'finished' : 'not-started');
-    banner.src = a.banner || a.cover;
-    cover.src = a.cover;
-    cover.alt = title;
-    const synopsis = a.synopsis || 'Aucun synopsis disponible.';
-    const genres = (a.genres || []).map(g => `<span class="modal-genre">${GENRES_FR[g]||g}</span>`).join('');
+    banner.src = data.banner || data.cover;
+    cover.src = data.cover;
+    cover.alt = data.title;
+
+    const recommendations = (data.recommendations || []).slice(0, 6).map(r => `
+      <div class="trending-card" style="width:120px">
+        <div class="trending-cover-wrap" onclick="openModalById(${r.id})">
+          <img class="trending-cover" src="${safeText(r.cover)}" alt="${safeText(r.title)}" loading="lazy">
+        </div>
+        <div class="trending-info">
+          <div class="trending-title">${safeText(r.title)}</div>
+          <div class="trending-score">${r.score ? `⭐ ${r.score}/10` : ''}</div>
+        </div>
+      </div>
+    `).join('');
+
     body.innerHTML = `
       <div class="modal-title-row">
         <div>
-          <div class="modal-title">${title}</div>
-          ${a.title_native ? `<div class="modal-native">${a.title_native}</div>` : ''}
+          <div class="modal-title">${safeText(data.title)}</div>
+          ${data.titleNative ? `<div class="modal-native">${safeText(data.titleNative)}</div>` : ''}
         </div>
       </div>
+
       <div class="modal-meta-row">
-        ${a.score ? `<span class="modal-chip score">⭐ ${(a.score/10).toFixed(1)}/10</span>` : ''}
-        ${a.format ? `<span class="modal-chip">${a.format}</span>` : ''}
-        ${a.status ? `<span class="modal-chip ${statusClass}">${a.status}</span>` : ''}
-        ${a.year ? `<span class="modal-chip">${a.season ? a.season+' ' : ''}${a.year}</span>` : ''}
+        ${data.score ? `<span class="modal-chip score">⭐ ${data.score}/10</span>` : ''}
+        ${data.format ? `<span class="modal-chip">${safeText(data.format)}</span>` : ''}
+        ${data.year ? `<span class="modal-chip">${safeText(data.season || '')} ${data.year}</span>` : ''}
+        ${data.studio ? `<span class="modal-chip">${safeText(data.studio)}</span>` : ''}
       </div>
+
       <div>
         <div class="modal-section-title">Synopsis</div>
-        <div class="modal-synopsis">${synopsis}</div>
+        <div class="modal-synopsis">${safeText(data.synopsis || 'Aucun synopsis disponible.')}</div>
       </div>
-      ${genres ? `<div><div class="modal-section-title">Genres</div><div class="modal-genres">${genres}</div></div>` : ''}
+
+      ${data.genres?.length ? `
+        <div>
+          <div class="modal-section-title">Genres</div>
+          <div class="modal-genres">${data.genres.map(g => `<span class="modal-genre">${safeText(GENRES_FR[g] || g)}</span>`).join('')}</div>
+        </div>
+      ` : ''}
+
       <div>
-        <div class="modal-section-title">Infos</div>
+        <div class="modal-section-title">Informations</div>
         <div class="modal-stats-grid">
-          <div class="modal-stat"><div class="modal-stat-val">${a.totalEps||'?'}</div><div class="modal-stat-lbl">Épisodes</div></div>
-          <div class="modal-stat"><div class="modal-stat-val">${a.duration}</div><div class="modal-stat-lbl">Durée/ép.</div></div>
-          <div class="modal-stat"><div class="modal-stat-val">${a.studio}</div><div class="modal-stat-lbl">Studio</div></div>
-          <div class="modal-stat"><div class="modal-stat-val">${a.source}</div><div class="modal-stat-lbl">Source</div></div>
+          <div class="modal-stat"><div class="modal-stat-val">${data.totalEps || '?'}</div><div class="modal-stat-lbl">Épisodes</div></div>
+          <div class="modal-stat"><div class="modal-stat-val">${safeText(data.duration)}</div><div class="modal-stat-lbl">Durée</div></div>
+          <div class="modal-stat"><div class="modal-stat-val">${safeText(data.source)}</div><div class="modal-stat-lbl">Source</div></div>
+          <div class="modal-stat"><div class="modal-stat-val">${data.popularity || '?'}</div><div class="modal-stat-lbl">Popularité</div></div>
         </div>
       </div>
-      ${local ? buildProgressSection(local, a) : `
-        <button class="modal-add-btn" onclick="addFromModal(${id}, ${JSON.stringify(a).split('"').join('&quot;')})">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+
+      ${data.trailerUrl ? `
+        <div>
+          <div class="modal-section-title">Trailer</div>
+          <a href="${safeText(data.trailerUrl)}" target="_blank" rel="noopener noreferrer" class="modal-add-btn" style="text-decoration:none">
+            Voir le trailer
+          </a>
+        </div>
+      ` : ''}
+
+      ${local ? buildTrackingSection(local) : `
+        <button class="modal-add-btn" onclick='addToList(${JSON.stringify(data).replace(/'/g, "&apos;")}); setTimeout(()=>openModalById(${data.id}), 200)'>
           Ajouter à ma liste
-        </button>`}`;
-  } catch(e) {
-    body.innerHTML = `<div style="padding:var(--space-8);text-align:center;color:var(--text-muted)">Impossible de charger les détails.<br><small>${e.message}</small></div>`;
+        </button>
+      `}
+
+      ${recommendations ? `
+        <div>
+          <div class="modal-section-title">Recommandations</div>
+          <div class="trending-scroll">${recommendations}</div>
+        </div>
+      ` : ''}
+    `;
+  } catch (e) {
+    body.innerHTML = `<div style="padding:var(--space-8);text-align:center;color:var(--text-muted)">Impossible de charger les détails.<br><small>${safeText(e.message)}</small></div>`;
   }
 }
 
-function buildProgressSection(local, apiData) {
-  const pct = local.totalEps ? Math.round(local.currentEp / local.totalEps * 100) : 0;
-  const totalEps = apiData?.totalEps || local.totalEps || '?';
-  const ratingStars = Array.from({length:10}, (_, i) =>
-    `<span class="rating-star ${i < local.rating ? 'active' : ''}" data-val="${i+1}" onclick="setRating(${local.id},${i+1})" onmouseenter="hoverStars(${i+1})" onmouseleave="unhoverStars(${local.rating})">⭐</span>`
-  ).join('');
+function buildTrackingSection(local) {
+  const pct = local.totalEps ? Math.round((local.currentEp / local.totalEps) * 100) : 0;
+  const stars = Array.from({ length: 10 }, (_, i) => `
+    <span class="rating-star ${i < local.rating ? 'active' : ''}" onclick="setRating(${local.id}, ${i + 1}); setTimeout(()=>openModalById(${local.id}), 50)">⭐</span>
+  `).join('');
+
   return `
     <div>
       <div class="modal-section-title">Mon suivi</div>
@@ -921,156 +1146,218 @@ function buildProgressSection(local, apiData) {
         <div class="modal-ep-row">
           <span class="modal-ep-label">Épisode actuel</span>
           <div class="modal-ep-btns">
-            <button class="modal-ep-btn" onclick="changeEp(${local.id},-5);refreshModalEp(${local.id})">-5</button>
-            <button class="modal-ep-btn" onclick="changeEp(${local.id},-1);refreshModalEp(${local.id})">-1</button>
+            <button class="modal-ep-btn" onclick="changeEp(${local.id},-1); setTimeout(()=>openModalById(${local.id}), 50)">-1</button>
+            <button class="modal-ep-btn" onclick="changeEp(${local.id},1); setTimeout(()=>openModalById(${local.id}), 50)">+1</button>
           </div>
-          <input class="modal-ep-input" id="modalEpInput" type="number" min="0" max="${totalEps}" value="${local.currentEp}" onchange="changeEpDirect(${local.id},this.value);refreshModalEp(${local.id})">
-          <span class="modal-ep-sep">/</span>
-          <span class="modal-ep-total">${totalEps}</span>
-          <div class="modal-ep-btns">
-            <button class="modal-ep-btn" onclick="changeEp(${local.id},1);refreshModalEp(${local.id})">+1</button>
-            <button class="modal-ep-btn" onclick="changeEp(${local.id},5);refreshModalEp(${local.id})">+5</button>
-          </div>
+          <input class="modal-ep-input" type="number" value="${local.currentEp}" onchange="changeEpDirect(${local.id}, this.value); setTimeout(()=>openModalById(${local.id}), 50)">
+          <span class="modal-ep-total">/ ${local.totalEps || '?'}</span>
         </div>
-        ${local.totalEps ? `<div class="progress-bar-wrap"><div class="progress-bar" id="modalProgressBar" style="width:${pct}%"></div></div>` : ''}
-        <div style="display:flex;align-items:center;gap:var(--space-3);flex-wrap:wrap">
-          <span style="font-size:var(--text-sm);color:var(--text-muted);font-weight:500">Statut</span>
-          <select class="modal-status-select" onchange="changeStatus(${local.id},this.value)">
-            <option value="watching" ${local.status==='watching'?'selected':''}>▶ En cours</option>
-            <option value="completed" ${local.status==='completed'?'selected':''}>✓ Terminé</option>
-            <option value="planned" ${local.status==='planned'?'selected':''}>📅 À voir</option>
-            <option value="dropped" ${local.status==='dropped'?'selected':''}>✗ Abandonné</option>
-          </select>
-        </div>
+        ${local.totalEps ? `<div class="progress-bar-wrap"><div class="progress-bar" style="width:${pct}%"></div></div>` : ''}
+        <select class="modal-status-select" onchange="changeStatus(${local.id}, this.value); setTimeout(()=>openModalById(${local.id}), 50)">
+          <option value="watching" ${local.userStatus === 'watching' ? 'selected' : ''}>▶ En cours</option>
+          <option value="completed" ${local.userStatus === 'completed' ? 'selected' : ''}>✓ Terminé</option>
+          <option value="planned" ${local.userStatus === 'planned' ? 'selected' : ''}>📅 À voir</option>
+          <option value="paused" ${local.userStatus === 'paused' ? 'selected' : ''}>⏸ En pause</option>
+          <option value="dropped" ${local.userStatus === 'dropped' ? 'selected' : ''}>✗ Abandonné</option>
+        </select>
       </div>
     </div>
+
     <div>
       <div class="modal-section-title">Ma note</div>
       <div class="rating-row">
         <span class="rating-label">Note</span>
-        <div class="rating-stars" id="modalStars">${ratingStars}</div>
-        <span class="rating-val" id="modalRatingVal">${local.rating ? local.rating+'/10' : ''}</span>
+        <div class="rating-stars">${stars}</div>
+        <span class="rating-val">${local.rating ? local.rating + '/10' : ''}</span>
       </div>
     </div>
+
     <div>
       <div class="modal-section-title">Mon avis</div>
       <div class="comment-wrap">
-        <textarea class="comment-textarea" id="commentArea" placeholder="Écris ton avis, tes notes...">${local.note}</textarea>
+        <textarea class="comment-textarea" id="commentArea" placeholder="Ton avis perso, sans spoiler si possible...">${safeText(local.note || '')}</textarea>
         <button class="comment-save-btn" onclick="saveComment(${local.id})">Sauvegarder</button>
       </div>
     </div>
-    <div style="padding-bottom:var(--space-2)">
-      <button onclick="removeFromList(${local.id});closeModal()" style="color:var(--red);font-size:var(--text-xs);opacity:0.7;padding:var(--space-2)">Retirer de ma liste</button>
-    </div>`;
-}
 
-function refreshModalEp(id) {
-  const local = animeList.find(x => x.id === id);
-  if (!local) return;
-  const inp = document.getElementById('modalEpInput');
-  const bar = document.getElementById('modalProgressBar');
-  if (inp) inp.value = local.currentEp;
-  if (bar && local.totalEps) bar.style.width = Math.round(local.currentEp/local.totalEps*100) + '%';
-}
-
-function addFromModal(id, animeData) {
-  if (typeof animeData === 'string') {
-    try { animeData = JSON.parse(animeData); } catch(e) { animeData = null; }
-  }
-  if (animeData) {
-    addToList(animeData);
-  } else {
-    fetchAnimeDetails(id).then(a => { if(a) addToList(a); });
-  }
-  setTimeout(() => openModalById(id), 200);
-}
-
-function setRating(id, val) {
-  updateEntry(id, { rating: val });
-  const stars = document.querySelectorAll('#modalStars .rating-star');
-  stars.forEach((s, i) => s.classList.toggle('active', i < val));
-  const rv = document.getElementById('modalRatingVal');
-  if (rv) rv.textContent = val + '/10';
-}
-
-function hoverStars(n) {
-  document.querySelectorAll('#modalStars .rating-star').forEach((s, i) => s.classList.toggle('hovered', i < n));
-}
-
-function unhoverStars(current) {
-  document.querySelectorAll('#modalStars .rating-star').forEach(s => s.classList.remove('hovered'));
-}
-
-function saveComment(id) {
-  const txt = document.getElementById('commentArea')?.value;
-  updateEntry(id, { note: txt });
-  const btn = document.querySelector('.comment-save-btn');
-  if (btn) {
-    const orig = btn.textContent;
-    btn.textContent = 'Sauvegardé !';
-    btn.style.background = 'var(--green)';
-    setTimeout(() => { btn.textContent = orig; btn.style.background = ''; }, 1500);
-  }
-  toast('success', 'Avis sauvegardé !');
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <button class="modal-add-btn" onclick="toggleFavorite(${local.id}); setTimeout(()=>openModalById(${local.id}), 50)">
+        ${local.favorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+      </button>
+      <button onclick="removeFromList(${local.id}); closeModal()" style="color:var(--red);font-size:var(--text-sm)">
+        Retirer de ma liste
+      </button>
+    </div>
+  `;
 }
 
 function closeModal() {
-  document.getElementById('modalOverlay').classList.remove('open');
-  document.body.style.overflow = '';
-  currentModal = null;
-  currentModalLocal = null;
+  document.getElementById('modalOverlay')?.classList.remove('open');
 }
 
 function handleModalClick(e) {
-  if (e.target === document.getElementById('modalOverlay')) closeModal();
+  if (e.target.id === 'modalOverlay') closeModal();
 }
 
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && document.getElementById('modalOverlay').classList.contains('open')) closeModal();
-});
-
-// =============================================
-// TOAST
-// =============================================
 function toast(type, msg) {
-  const icons = {success:'✓',error:'✕',info:'ℹ'};
+  const icons = { success: '✓', error: '✕', info: 'ℹ' };
   const c = document.getElementById('toastContainer');
+  if (!c) return;
   const t = document.createElement('div');
   t.className = 'toast ' + type;
-  t.innerHTML = `<span>${icons[type]}</span><span>${msg}</span>`;
+  t.innerHTML = `<span>${icons[type] || 'ℹ'}</span><span>${safeText(msg)}</span>`;
   c.appendChild(t);
-  setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 300); }, 3200);
+  setTimeout(() => {
+    t.classList.add('out');
+    setTimeout(() => t.remove(), 300);
+  }, 2800);
 }
 
-// =============================================
-// CONFETTI
-// =============================================
-function launchConfetti() {
-  const colors = ['7c6af7','34d399','f59e0b','f472b6','60a5fa','f87171'];
-  for (let i = 0; i < 60; i++) {
-    const p = document.createElement('div');
-    p.className = 'confetti-piece';
-    p.style.cssText = `left:${Math.random()*100}vw;background:#${colors[Math.floor(Math.random()*colors.length)]};animation-duration:${2.5+Math.random()*2}s;animation-delay:${Math.random()*0.8}s;transform:rotate(${Math.random()*360}deg);width:${6+Math.random()*8}px;height:${10+Math.random()*12}px`;
-    document.body.appendChild(p);
-    setTimeout(() => p.remove(), 5000);
-  }
-}
-
-// =============================================
-// THEME
-// =============================================
 function toggleTheme() {
   isDark = !isDark;
   document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-  const btn = document.getElementById('themeToggle');
-  btn.innerHTML = isDark
-    ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
-    : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
 }
 
-// =============================================
-// INIT
-// =============================================
+function exportData() {
+  const blob = new Blob([JSON.stringify(animeList, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'anitrack-backup.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function importData(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const imported = JSON.parse(e.target.result);
+      if (!Array.isArray(imported)) throw new Error('Format invalide');
+      animeList = imported;
+      save();
+      renderGrid();
+      updateStats();
+      updateBadges();
+      toast('success', 'Sauvegarde importée.');
+    } catch (err) {
+      toast('error', 'Import impossible.');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function bindSearch() {
+  const input = document.getElementById('searchInput');
+  const clear = document.getElementById('searchClear');
+  const box = document.getElementById('searchResults');
+  if (!input || !clear || !box) return;
+
+  input.addEventListener('input', function () {
+    const val = this.value.trim();
+    clear.classList.toggle('visible', val.length > 0);
+    clearTimeout(searchTimer);
+    if (!val) {
+      box.classList.remove('open');
+      box.innerHTML = '';
+      return;
+    }
+    searchTimer = setTimeout(() => performSearch(val), 350);
+  });
+
+  clear.addEventListener('click', function () {
+    input.value = '';
+    clear.classList.remove('visible');
+    box.classList.remove('open');
+    box.innerHTML = '';
+  });
+}
+
+function injectToolbar() {
+  const header = document.querySelector('.page-header');
+  if (!header) return;
+
+  const toolbar = document.createElement('div');
+  toolbar.style.display = 'flex';
+  toolbar.style.flexWrap = 'wrap';
+  toolbar.style.gap = '10px';
+  toolbar.style.width = '100%';
+  toolbar.innerHTML = `
+    <select class="status-select" id="sortSelect" style="max-width:220px">
+      <option value="recent">Tri : plus récents</option>
+      <option value="title">Tri : nom</option>
+      <option value="rating">Tri : note perso</option>
+      <option value="score">Tri : note globale</option>
+      <option value="progress">Tri : progression</option>
+      <option value="year">Tri : année</option>
+    </select>
+
+    <button class="filter-btn" id="favoritesBtn">💜 Favoris</button>
+    <button class="filter-btn" id="seasonBtn">📺 Saison</button>
+    <button class="filter-btn" id="exportBtn">⬇ Export</button>
+    <label class="filter-btn" style="cursor:pointer">
+      ⬆ Import
+      <input type="file" id="importInput" accept=".json" hidden>
+    </label>
+  `;
+  header.insertAdjacentElement('afterend', toolbar);
+
+  document.getElementById('sortSelect').addEventListener('change', e => {
+    currentSort = e.target.value;
+    renderGrid();
+  });
+
+  document.getElementById('favoritesBtn').addEventListener('click', () => {
+    currentFilter = currentFilter === 'favorites' ? 'all' : 'favorites';
+    renderGrid();
+  });
+
+  document.getElementById('seasonBtn').addEventListener('click', async () => {
+    const items = await fetchSeasonal();
+    const grid = document.getElementById('animeGrid');
+    grid.innerHTML = items.map(a => `
+      <article class="anime-card">
+        <div class="anime-cover-wrap" onclick="openModalById(${a.id})">
+          <img class="anime-cover" src="${safeText(a.cover)}" alt="${safeText(a.title)}" loading="lazy">
+        </div>
+        <div class="anime-card-body">
+          <div class="anime-card-title">${safeText(a.title)}</div>
+          <span class="status-badge status-planned">${safeText(a.format)}</span>
+          <div class="card-note-preview">${safeText((a.genres || []).slice(0,2).join(' • '))}</div>
+          <button class="search-add-btn ${animeList.find(x => x.id === a.id) ? 'added' : ''}" onclick='addToList(${JSON.stringify(a).replace(/'/g, "&apos;")})'>
+            ${animeList.find(x => x.id === a.id) ? '✓ Ajouté' : '+ Ajouter'}
+          </button>
+        </div>
+      </article>
+    `).join('');
+  });
+
+  document.getElementById('exportBtn').addEventListener('click', exportData);
+  document.getElementById('importInput').addEventListener('change', e => {
+    const file = e.target.files?.[0];
+    if (file) importData(file);
+  });
+}
+
+function bindExistingFilters() {
+  ['all', 'watching', 'completed', 'planned', 'dropped'].forEach(key => {
+    document.getElementById(`nav-${key}`)?.addEventListener('click', () => {
+      currentFilter = key;
+      renderGrid();
+    });
+    document.getElementById(`filter-${key}`)?.addEventListener('click', () => {
+      currentFilter = key;
+      renderGrid();
+    });
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+bindSearch();
+injectToolbar();
+bindExistingFilters();
 renderGrid();
 updateStats();
 updateBadges();
