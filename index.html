@@ -497,8 +497,10 @@ async function processJikanQueue() {
     }
     if (!r.ok) throw new Error('HTTP ' + r.status);
     resolve(await r.json());
-  } catch (e) {
+    } catch (e) {
     reject(e);
+    setTimeout(() => { jikanBusy = false; processJikanQueue(); }, 350);
+    return;
   }
   setTimeout(() => { jikanBusy = false; processJikanQueue(); }, 350);
 }
@@ -543,7 +545,7 @@ function normalizeAniList(media) {
     id: media.idMal || media.id,
     malId: media.idMal || null,
     anilistId: media.id,
-    title: media.title?.french || media.title?.english || media.title?.romaji || 'Inconnu',
+    title: media.title?.english || media.title?.romaji || 'Inconnu',
     titleRomaji: media.title?.romaji || '',
     titleNative: media.title?.native || '',
     cover: media.coverImage?.extraLarge || media.coverImage?.large || '',
@@ -576,7 +578,7 @@ function normalizeAniList(media) {
       .map(r => ({
         id: r.idMal || r.id,
         anilistId: r.id,
-        title: r.title?.french || r.title?.english || r.title?.romaji || 'Inconnu',
+        title: r.title?.english || r.title?.romaji || 'Inconnu',
         cover: r.coverImage?.large || '',
         score: r.averageScore ? Number((r.averageScore / 10).toFixed(1)) : null
       }))
@@ -702,7 +704,11 @@ async function fetchAnimeDetails(id) {
     }
   `;
   const numericId = Number(id);
-  const data = await anilistFetch(query, { idMal: numericId, id: numericId });
+  const local = animeList.find(x => x.id === numericId || x.malId === numericId);
+  const variables = local?.anilistId
+    ? { id: local.anilistId }
+    : { idMal: numericId };
+  const data = await anilistFetch(query, variables);  
   if (!data.Media) throw new Error('Anime introuvable');
   return normalizeAniList(data.Media);
 }
@@ -710,7 +716,7 @@ async function fetchAnimeDetails(id) {
 function mergeSearchResults(local, jikan, anilist) {
   const map = new Map();
   [...local, ...jikan, ...anilist].forEach(item => {
-    const key = item.malId || item.id || item.anilistId;
+    const key = item.anilistId ? `al_${item.anilistId}` : `mal_${item.malId || item.id}`;
     if (!map.has(key)) map.set(key, item);
     else {
       map.set(key, { ...map.get(key), ...item });
