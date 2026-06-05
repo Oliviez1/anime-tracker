@@ -21,43 +21,20 @@
       --transition: 180ms cubic-bezier(0.16, 1, 0.3, 1);
     }
     [data-theme="dark"] {
-      --bg: #0f0f11;
-      --surface: #17171a;
-      --surface-2: #1e1e22;
-      --surface-3: #26262b;
-      --border: rgba(255,255,255,0.08);
-      --text: #e8e8ea;
-      --text-muted: #8b8b94;
-      --text-faint: #4a4a52;
-      --primary: #7c6af7;
-      --primary-hover: #9585f9;
-      --primary-bg: rgba(124,106,247,0.12);
+      --bg: #0f0f11; --surface: #17171a; --surface-2: #1e1e22; --surface-3: #26262b;
+      --border: rgba(255,255,255,0.08); --text: #e8e8ea; --text-muted: #8b8b94; --text-faint: #4a4a52;
+      --primary: #7c6af7; --primary-hover: #9585f9; --primary-bg: rgba(124,106,247,0.12);
       --shadow: 0 4px 24px rgba(0,0,0,0.4);
     }
     [data-theme="light"] {
-      --bg: #f5f5f7;
-      --surface: #ffffff;
-      --surface-2: #f0f0f3;
-      --surface-3: #e8e8ec;
-      --border: rgba(0,0,0,0.08);
-      --text: #1a1a1f;
-      --text-muted: #6b6b74;
-      --text-faint: #aaaab2;
-      --primary: #6255e8;
-      --primary-hover: #7c6af7;
-      --primary-bg: rgba(98,85,232,0.1);
+      --bg: #f5f5f7; --surface: #ffffff; --surface-2: #f0f0f3; --surface-3: #e8e8ec;
+      --border: rgba(0,0,0,0.08); --text: #1a1a1f; --text-muted: #6b6b74; --text-faint: #aaaab2;
+      --primary: #6255e8; --primary-hover: #7c6af7; --primary-bg: rgba(98,85,232,0.1);
       --shadow: 0 4px 24px rgba(0,0,0,0.1);
     }
     html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
-    body {
-      min-height: 100dvh;
-      font-family: 'Inter', sans-serif;
-      font-size: var(--text-base);
-      color: var(--text);
-      background: var(--bg);
-      transition: background var(--transition), color var(--transition);
-    }
-    a, button, input, select { font: inherit; color: inherit; transition: all var(--transition); }
+    body { min-height: 100dvh; font-family: 'Inter', sans-serif; font-size: var(--text-base); color: var(--text); background: var(--bg); transition: background var(--transition), color var(--transition); }
+    a, button, input, select, textarea { font: inherit; color: inherit; transition: all var(--transition); }
     button { cursor: pointer; background: none; border: none; }
     img { display: block; max-width: 100%; }
     :focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; border-radius: var(--radius-sm); }
@@ -65,555 +42,195 @@
     .app { display: grid; grid-template-columns: 260px 1fr; min-height: 100dvh; }
     @media (max-width: 768px) { .app { grid-template-columns: 1fr; } }
 
-    .sidebar {
-      background: var(--surface);
-      border-right: 1px solid var(--border);
-      padding: var(--space-6);
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-6);
-      position: sticky;
-      top: 0;
-      height: 100dvh;
-      overflow-y: auto;
-    }
+    .sidebar { background: var(--surface); border-right: 1px solid var(--border); padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-6); position: sticky; top: 0; height: 100dvh; overflow-y: auto; }
     @media (max-width: 768px) { .sidebar { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); } }
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: var(--space-3);
-      font-weight: 700;
-      font-size: var(--text-lg);
-      color: var(--text);
-      text-decoration: none;
-    }
+    .logo { display: flex; align-items: center; gap: var(--space-3); font-weight: 700; font-size: var(--text-lg); color: var(--text); text-decoration: none; }
     .logo svg { color: var(--primary); }
-    .nav-section-title {
-      font-size: var(--text-xs);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-faint);
-      margin-bottom: var(--space-2);
-    }
-    .nav-btn {
-      width: 100%;
-      text-align: left;
-      padding: var(--space-2) var(--space-3);
-      border-radius: var(--radius-md);
-      color: var(--text-muted);
-      font-size: var(--text-sm);
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
-      position: relative;
-    }
+    .nav-section-title { font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); margin-bottom: var(--space-2); }
+    .nav-btn { width: 100%; text-align: left; padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); color: var(--text-muted); font-size: var(--text-sm); font-weight: 500; display: flex; align-items: center; gap: var(--space-2); }
     .nav-btn:hover { background: var(--surface-2); color: var(--text); }
     .nav-btn.active { background: var(--primary-bg); color: var(--primary); }
-    .nav-badge {
-      margin-left: auto;
-      background: var(--surface-3);
-      color: var(--text-muted);
-      font-size: var(--text-xs);
-      padding: 0.1rem 0.4rem;
-      border-radius: var(--radius-full);
-      font-weight: 600;
-    }
+    .nav-badge { margin-left: auto; background: var(--surface-3); color: var(--text-muted); font-size: var(--text-xs); padding: 0.1rem 0.4rem; border-radius: var(--radius-full); font-weight: 600; }
     .nav-btn.active .nav-badge { background: var(--primary-bg); color: var(--primary); }
-    .sidebar-footer {
-      margin-top: auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .theme-toggle {
-      padding: var(--space-2);
-      border-radius: var(--radius-md);
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    .sidebar-footer { margin-top: auto; display: flex; align-items: center; justify-content: space-between; }
+    .theme-toggle { padding: var(--space-2); border-radius: var(--radius-md); color: var(--text-muted); display: flex; align-items: center; justify-content: center; }
     .theme-toggle:hover { background: var(--surface-2); color: var(--text); }
 
     .main { padding: var(--space-8); display: flex; flex-direction: column; gap: var(--space-8); }
     @media (max-width: 768px) { .main { padding: var(--space-4); } }
-
     .page-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-4); }
     .page-title { font-size: var(--text-xl); font-weight: 700; }
     .page-title span { color: var(--primary); }
 
+    /* SEARCH */
     .search-wrap { position: relative; max-width: 480px; flex: 1; }
-    .search-icon {
-      position: absolute; left: var(--space-3); top: 50%; transform: translateY(-50%);
-      color: var(--text-faint); pointer-events: none;
-    }
-    .search-input {
-      width: 100%;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: var(--space-3) var(--space-3) var(--space-3) 2.5rem;
-      color: var(--text);
-      font-size: var(--text-sm);
-    }
+    .search-icon { position: absolute; left: var(--space-3); top: 50%; transform: translateY(-50%); color: var(--text-faint); pointer-events: none; }
+    .search-clear { position: absolute; right: var(--space-3); top: 50%; transform: translateY(-50%); color: var(--text-faint); padding: 2px; border-radius: var(--radius-sm); display: none; }
+    .search-clear:hover { color: var(--text); }
+    .search-clear.visible { display: flex; }
+    .search-input { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--space-3) 2.25rem var(--space-3) 2.5rem; color: var(--text); font-size: var(--text-sm); }
     .search-input::placeholder { color: var(--text-faint); }
     .search-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-bg); }
-    .search-results {
-      position: absolute;
-      top: calc(100% + var(--space-2));
-      left: 0; right: 0;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow);
-      z-index: 100;
-      max-height: 360px;
-      overflow-y: auto;
-      display: none;
-    }
+    .search-results { position: absolute; top: calc(100% + var(--space-2)); left: 0; right: 0; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow); z-index: 100; max-height: 400px; overflow-y: auto; display: none; }
     .search-results.open { display: block; }
-    .search-result-item {
-      display: flex;
-      align-items: center;
-      gap: var(--space-3);
-      padding: var(--space-3);
-      cursor: pointer;
-      border-bottom: 1px solid var(--border);
-    }
+    .search-result-item { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3); cursor: pointer; border-bottom: 1px solid var(--border); }
     .search-result-item:last-child { border-bottom: none; }
     .search-result-item:hover { background: var(--surface-2); }
-    .search-result-img {
-      width: 40px; height: 56px;
-      object-fit: cover;
-      border-radius: var(--radius-sm);
-      background: var(--surface-3);
-      flex-shrink: 0;
-    }
+    .search-result-img { width: 40px; height: 56px; object-fit: cover; border-radius: var(--radius-sm); background: var(--surface-3); flex-shrink: 0; }
     .search-result-info { flex: 1; min-width: 0; }
     .search-result-title { font-weight: 600; font-size: var(--text-sm); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .search-result-meta { font-size: var(--text-xs); color: var(--text-muted); margin-top: 2px; }
-    .search-add-btn {
-      padding: var(--space-1) var(--space-3);
-      background: var(--primary-bg);
-      color: var(--primary);
-      border-radius: var(--radius-full);
-      font-size: var(--text-xs);
-      font-weight: 600;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
+    .search-add-btn { padding: var(--space-1) var(--space-3); background: var(--primary-bg); color: var(--primary); border-radius: var(--radius-full); font-size: var(--text-xs); font-weight: 600; white-space: nowrap; flex-shrink: 0; }
     .search-add-btn:hover { background: var(--primary); color: #fff; }
-    .search-loading, .search-empty {
-      padding: var(--space-6);
-      text-align: center;
-      color: var(--text-muted);
-      font-size: var(--text-sm);
-    }
+    .search-add-btn.added { background: rgba(52,211,153,0.15); color: #34d399; }
+    .search-loading, .search-empty { padding: var(--space-6); text-align: center; color: var(--text-muted); font-size: var(--text-sm); }
+    .search-header { padding: var(--space-2) var(--space-3); font-size: var(--text-xs); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); background: var(--surface-2); border-bottom: 1px solid var(--border); }
 
-    .filters { display: flex; gap: var(--space-2); flex-wrap: wrap; }
-    .filter-btn {
-      padding: var(--space-1) var(--space-4);
-      border-radius: var(--radius-full);
-      border: 1px solid var(--border);
-      font-size: var(--text-sm);
-      font-weight: 500;
-      color: var(--text-muted);
-      background: var(--surface);
-    }
-    .filter-btn:hover { border-color: var(--primary); color: var(--primary); }
-    .filter-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
-
+    /* STATS */
     .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--space-4); }
-    .stat-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: var(--space-4);
-    }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--space-4); }
     .stat-value { font-size: var(--text-xl); font-weight: 700; color: var(--primary); }
     .stat-label { font-size: var(--text-xs); color: var(--text-muted); margin-top: var(--space-1); }
 
-    .info-banner {
-      display: none;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-4);
-      padding: var(--space-4);
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-    }
+    /* TRENDING SECTION */
+    .trending-section { display: flex; flex-direction: column; gap: var(--space-4); }
+    .section-heading { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-sm); font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+    .section-heading svg { color: var(--primary); }
+    .trending-scroll { display: flex; gap: var(--space-3); overflow-x: auto; padding-bottom: var(--space-2); scrollbar-width: thin; scrollbar-color: var(--surface-3) transparent; }
+    .trending-scroll::-webkit-scrollbar { height: 4px; }
+    .trending-scroll::-webkit-scrollbar-track { background: transparent; }
+    .trending-scroll::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 4px; }
+    .trending-card { flex-shrink: 0; width: 130px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; cursor: pointer; transition: transform var(--transition), border-color var(--transition); }
+    .trending-card:hover { transform: translateY(-3px); border-color: var(--primary); }
+    .trending-cover { width: 100%; aspect-ratio: 2/3; object-fit: cover; background: var(--surface-3); }
+    .trending-info { padding: var(--space-2); }
+    .trending-title { font-size: var(--text-xs); font-weight: 600; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .trending-score { font-size: var(--text-xs); color: var(--primary); font-weight: 700; margin-top: 2px; }
+    .trending-add { width: 100%; margin-top: var(--space-2); padding: var(--space-1) 0; background: var(--primary-bg); color: var(--primary); border-radius: var(--radius-sm); font-size: var(--text-xs); font-weight: 700; }
+    .trending-add:hover { background: var(--primary); color: #fff; }
+    .trending-add.added { background: rgba(52,211,153,0.15); color: #34d399; cursor: default; }
+    .trending-skeleton { flex-shrink: 0; width: 130px; border-radius: var(--radius-lg); overflow: hidden; }
+    @keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+    .skeleton { background: linear-gradient(90deg,var(--surface-2) 25%,var(--surface-3) 50%,var(--surface-2) 75%); background-size:200% 100%; animation:shimmer 1.5s ease-in-out infinite; }
+    .sk-cover { width: 130px; height: 195px; border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+    .sk-text { height: 10px; margin: var(--space-2); border-radius: 4px; }
+    .sk-text.short { width: 60%; }
+
+    /* INFO BANNER */
+    .info-banner { display: none; align-items: center; justify-content: space-between; gap: var(--space-4); padding: var(--space-4); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); }
     .info-banner.show { display: flex; }
     .info-banner strong { color: var(--primary); }
     .info-banner small { color: var(--text-muted); display: block; margin-top: 2px; }
-    .info-banner button {
-      padding: var(--space-2) var(--space-3);
-      border-radius: var(--radius-full);
-      background: var(--primary-bg);
-      color: var(--primary);
-      font-size: var(--text-xs);
-      font-weight: 700;
-      white-space: nowrap;
-    }
+    .info-banner button { padding: var(--space-2) var(--space-3); border-radius: var(--radius-full); background: var(--primary-bg); color: var(--primary); font-size: var(--text-xs); font-weight: 700; white-space: nowrap; }
     .info-banner button:hover { background: var(--primary); color: #fff; }
 
-    .anime-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr));
-      gap: var(--space-4);
-    }
-    .anime-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
+    /* FILTERS */
+    .filters { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+    .filter-btn { padding: var(--space-1) var(--space-4); border-radius: var(--radius-full); border: 1px solid var(--border); font-size: var(--text-sm); font-weight: 500; color: var(--text-muted); background: var(--surface); }
+    .filter-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .filter-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    /* GRID */
+    .anime-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr)); gap: var(--space-4); }
+    .anime-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; display: flex; flex-direction: column; position: relative; transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition); }
     .anime-card:hover { border-color: var(--primary); box-shadow: var(--shadow); transform: translateY(-2px); }
     .anime-cover-wrap { position: relative; cursor: pointer; }
-    .anime-cover {
-      width: 100%; aspect-ratio: 2/3;
-      object-fit: cover;
-      background: var(--surface-3);
-      display: block;
-    }
-    .anime-cover-overlay {
-      position: absolute; inset: 0;
-      background: rgba(0,0,0,0);
-      display: flex; align-items: center; justify-content: center;
-      transition: background var(--transition);
-      border-radius: 0;
-    }
-    .anime-cover-wrap:hover .anime-cover-overlay {
-      background: rgba(0,0,0,0.5);
-    }
-    .anime-cover-overlay svg {
-      opacity: 0;
-      transition: opacity var(--transition);
-      color: #fff;
-    }
+    .anime-cover { width: 100%; aspect-ratio: 2/3; object-fit: cover; background: var(--surface-3); display: block; }
+    .anime-cover-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0); display: flex; align-items: center; justify-content: center; transition: background var(--transition); }
+    .anime-cover-wrap:hover .anime-cover-overlay { background: rgba(0,0,0,0.5); }
+    .anime-cover-overlay svg { opacity: 0; transition: opacity var(--transition); color: #fff; }
     .anime-cover-wrap:hover .anime-cover-overlay svg { opacity: 1; }
     .anime-card-body { padding: var(--space-3); flex: 1; display: flex; flex-direction: column; gap: var(--space-2); }
-    .anime-card-title {
-      font-weight: 600;
-      font-size: var(--text-sm);
-      line-height: 1.3;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 2px 8px;
-      border-radius: var(--radius-full);
-      font-size: var(--text-xs);
-      font-weight: 600;
-    }
+    .anime-card-title { font-weight: 600; font-size: var(--text-sm); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .status-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: var(--radius-full); font-size: var(--text-xs); font-weight: 600; }
     .status-watching { background: rgba(124,106,247,0.15); color: var(--primary); }
     .status-completed { background: rgba(52,211,153,0.15); color: #34d399; }
     .status-planned { background: rgba(251,191,36,0.15); color: #fbbf24; }
     .status-dropped { background: rgba(248,113,113,0.15); color: #f87171; }
     .status-catchup { background: rgba(59,130,246,0.15); color: #60a5fa; }
-    .episode-row {
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
-      margin-top: auto;
-    }
-    .ep-btn {
-      width: 28px; height: 28px;
-      border-radius: var(--radius-sm);
-      background: var(--surface-2);
-      color: var(--text);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1rem;
-      font-weight: 700;
-      flex-shrink: 0;
-    }
+    .episode-row { display: flex; align-items: center; gap: var(--space-2); margin-top: auto; }
+    .ep-btn { width: 28px; height: 28px; border-radius: var(--radius-sm); background: var(--surface-2); color: var(--text); display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 700; flex-shrink: 0; }
     .ep-btn:hover { background: var(--primary); color: #fff; }
-    .ep-input {
-      flex: 1;
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: var(--space-1) var(--space-2);
-      font-size: var(--text-sm);
-      text-align: center;
-      color: var(--text);
-      width: 100%;
-    }
+    .ep-input { flex: 1; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: var(--space-1) var(--space-2); font-size: var(--text-sm); text-align: center; color: var(--text); width: 100%; }
     .ep-input:focus { outline: none; border-color: var(--primary); }
     .ep-total { font-size: var(--text-xs); color: var(--text-faint); white-space: nowrap; }
     .missing-note { font-size: var(--text-xs); color: #60a5fa; font-weight: 600; }
     .progress-bar-wrap { height: 3px; background: var(--surface-3); border-radius: 2px; overflow: hidden; }
     .progress-bar { height: 100%; background: var(--primary); border-radius: 2px; transition: width 0.4s ease; }
-    .status-select {
-      width: 100%;
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: var(--space-1) var(--space-2);
-      font-size: var(--text-xs);
-      color: var(--text);
-      cursor: pointer;
-    }
+    .status-select { width: 100%; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: var(--space-1) var(--space-2); font-size: var(--text-xs); color: var(--text); cursor: pointer; }
     .status-select:focus { outline: none; border-color: var(--primary); }
-    .card-delete {
-      position: absolute;
-      top: var(--space-2); right: var(--space-2);
-      width: 28px; height: 28px;
-      background: rgba(0,0,0,0.6);
-      color: #f87171;
-      border-radius: var(--radius-sm);
-      display: none;
-      align-items: center; justify-content: center;
-      font-size: 0.85rem;
-      z-index: 2;
-    }
+    .card-delete { position: absolute; top: var(--space-2); right: var(--space-2); width: 28px; height: 28px; background: rgba(0,0,0,0.6); color: #f87171; border-radius: var(--radius-sm); display: none; align-items: center; justify-content: center; font-size: 0.85rem; z-index: 2; }
     .anime-card:hover .card-delete { display: flex; }
     .card-delete:hover { background: #f87171; color: #fff; }
+    .card-note-preview { font-size: var(--text-xs); color: var(--text-muted); font-style: italic; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .card-rating { font-size: var(--text-xs); color: #fbbf24; font-weight: 700; }
 
-    .empty-state {
-      display: flex; flex-direction: column; align-items: center;
-      text-align: center;
-      padding: var(--space-12) var(--space-8);
-      color: var(--text-muted);
-      gap: var(--space-4);
-    }
+    /* EMPTY STATE */
+    .empty-state { display: flex; flex-direction: column; align-items: center; text-align: center; padding: var(--space-12) var(--space-8); color: var(--text-muted); gap: var(--space-4); }
     .empty-state svg { color: var(--text-faint); }
     .empty-state h3 { color: var(--text); font-size: var(--text-lg); }
     .empty-state p { max-width: 36ch; font-size: var(--text-sm); }
 
-    .toast-container {
-      position: fixed; bottom: var(--space-6); right: var(--space-6);
-      display: flex; flex-direction: column; gap: var(--space-2);
-      z-index: 999;
-    }
-    .toast {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: var(--space-3) var(--space-4);
-      font-size: var(--text-sm);
-      box-shadow: var(--shadow);
-      display: flex; align-items: center; gap: var(--space-2);
-      animation: slideIn 0.3s ease;
-    }
+    /* TOAST */
+    .toast-container { position: fixed; bottom: var(--space-6); right: var(--space-6); display: flex; flex-direction: column; gap: var(--space-2); z-index: 999; }
+    .toast { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--space-3) var(--space-4); font-size: var(--text-sm); box-shadow: var(--shadow); display: flex; align-items: center; gap: var(--space-2); animation: slideIn 0.3s ease; }
     @keyframes slideIn { from { opacity:0; transform: translateX(20px); } to { opacity:1; transform: translateX(0); } }
     .toast.success { border-left: 3px solid #34d399; }
     .toast.error { border-left: 3px solid #f87171; }
     .toast.info { border-left: 3px solid var(--primary); }
 
-    /* ===== MODAL INFOS ANIME ===== */
-    .modal-overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.75);
-      z-index: 500;
-      display: flex; align-items: center; justify-content: center;
-      padding: var(--space-4);
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.25s ease;
-    }
+    /* MODAL */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 500; display: flex; align-items: center; justify-content: center; padding: var(--space-4); opacity: 0; pointer-events: none; transition: opacity 0.25s ease; }
     .modal-overlay.open { opacity: 1; pointer-events: all; }
-    .modal {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      width: 100%;
-      max-width: 700px;
-      max-height: 90dvh;
-      overflow-y: auto;
-      box-shadow: 0 24px 64px rgba(0,0,0,0.5);
-      transform: translateY(16px);
-      transition: transform 0.25s ease;
-    }
+    .modal { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); width: 100%; max-width: 720px; max-height: 90dvh; overflow-y: auto; box-shadow: 0 24px 64px rgba(0,0,0,0.5); transform: translateY(16px); transition: transform 0.25s ease; }
     .modal-overlay.open .modal { transform: translateY(0); }
-    .modal-hero {
-      position: relative;
-      width: 100%;
-      height: 220px;
-      overflow: hidden;
-      flex-shrink: 0;
-    }
-    .modal-banner {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      filter: blur(2px) brightness(0.4);
-      transform: scale(1.05);
-    }
-    .modal-cover {
-      position: absolute;
-      left: var(--space-6);
-      bottom: -40px;
-      width: 100px;
-      border-radius: var(--radius-md);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-      border: 3px solid var(--surface);
-    }
-    .modal-close {
-      position: absolute;
-      top: var(--space-3); right: var(--space-3);
-      width: 36px; height: 36px;
-      background: rgba(0,0,0,0.5);
-      color: #fff;
-      border-radius: var(--radius-full);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.1rem;
-      z-index: 2;
-    }
+    .modal-hero { position: relative; width: 100%; height: 220px; overflow: hidden; flex-shrink: 0; }
+    .modal-banner { width: 100%; height: 100%; object-fit: cover; filter: blur(2px) brightness(0.4); transform: scale(1.05); }
+    .modal-cover { position: absolute; left: var(--space-6); bottom: -40px; width: 100px; border-radius: var(--radius-md); box-shadow: 0 8px 24px rgba(0,0,0,0.6); border: 3px solid var(--surface); }
+    .modal-close { position: absolute; top: var(--space-3); right: var(--space-3); width: 36px; height: 36px; background: rgba(0,0,0,0.5); color: #fff; border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; z-index: 2; }
     .modal-close:hover { background: rgba(255,255,255,0.2); }
-    .modal-body {
-      padding: var(--space-6);
-      padding-top: calc(var(--space-6) + 40px);
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-4);
-    }
-    .modal-title {
-      font-size: var(--text-lg);
-      font-weight: 700;
-      line-height: 1.2;
-    }
-    .modal-native {
-      font-size: var(--text-sm);
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-    .modal-meta-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-2);
-      align-items: center;
-    }
-    .modal-chip {
-      padding: 3px 10px;
-      border-radius: var(--radius-full);
-      font-size: var(--text-xs);
-      font-weight: 600;
-      background: var(--surface-2);
-      color: var(--text-muted);
-      border: 1px solid var(--border);
-    }
+    .modal-body { padding: var(--space-6); padding-top: calc(var(--space-6) + 40px); display: flex; flex-direction: column; gap: var(--space-4); }
+    .modal-title { font-size: var(--text-lg); font-weight: 700; line-height: 1.2; }
+    .modal-native { font-size: var(--text-sm); color: var(--text-muted); margin-top: 2px; }
+    .modal-meta-row { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
+    .modal-chip { padding: 3px 10px; border-radius: var(--radius-full); font-size: var(--text-xs); font-weight: 600; background: var(--surface-2); color: var(--text-muted); border: 1px solid var(--border); }
     .modal-chip.score { background: var(--primary-bg); color: var(--primary); border-color: transparent; }
     .modal-chip.airing { background: rgba(52,211,153,0.15); color: #34d399; border-color: transparent; }
     .modal-chip.finished { background: rgba(124,106,247,0.1); color: var(--primary); border-color: transparent; }
-    .modal-section-title {
-      font-size: var(--text-xs);
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-faint);
-      margin-bottom: var(--space-2);
-    }
-    .modal-synopsis {
-      font-size: var(--text-sm);
-      color: var(--text-muted);
-      line-height: 1.7;
-    }
-    .modal-genres {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-2);
-    }
-    .modal-genre {
-      padding: 2px 10px;
-      border-radius: var(--radius-full);
-      font-size: var(--text-xs);
-      font-weight: 600;
-      background: var(--primary-bg);
-      color: var(--primary);
-    }
-    .modal-stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-      gap: var(--space-3);
-    }
-    .modal-stat {
-      background: var(--surface-2);
-      border-radius: var(--radius-md);
-      padding: var(--space-3);
-    }
+    .modal-section-title { font-size: var(--text-xs); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); margin-bottom: var(--space-2); }
+    .modal-synopsis { font-size: var(--text-sm); color: var(--text-muted); line-height: 1.7; }
+    .modal-genres { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+    .modal-genre { padding: 2px 10px; border-radius: var(--radius-full); font-size: var(--text-xs); font-weight: 600; background: var(--primary-bg); color: var(--primary); }
+    .modal-stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: var(--space-3); }
+    .modal-stat { background: var(--surface-2); border-radius: var(--radius-md); padding: var(--space-3); }
     .modal-stat-val { font-weight: 700; font-size: var(--text-base); color: var(--text); }
     .modal-stat-lbl { font-size: var(--text-xs); color: var(--text-muted); margin-top: 2px; }
-    .modal-progress-section {
-      background: var(--surface-2);
-      border-radius: var(--radius-md);
-      padding: var(--space-4);
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-3);
-    }
-    .modal-progress-row {
-      display: flex; align-items: center; gap: var(--space-2);
-    }
-    .modal-ep-btn {
-      width: 32px; height: 32px;
-      border-radius: var(--radius-sm);
-      background: var(--surface-3);
-      color: var(--text);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1rem; font-weight: 700;
-      flex-shrink: 0;
-    }
+    .modal-progress-section { background: var(--surface-2); border-radius: var(--radius-md); padding: var(--space-4); display: flex; flex-direction: column; gap: var(--space-3); }
+    .modal-progress-row { display: flex; align-items: center; gap: var(--space-2); }
+    .modal-ep-btn { width: 32px; height: 32px; border-radius: var(--radius-sm); background: var(--surface-3); color: var(--text); display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 700; flex-shrink: 0; }
     .modal-ep-btn:hover { background: var(--primary); color: #fff; }
-    .modal-ep-input {
-      flex: 1;
-      background: var(--surface-3);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: var(--space-2);
-      font-size: var(--text-sm);
-      text-align: center;
-      color: var(--text);
-    }
+    .modal-ep-input { flex: 1; background: var(--surface-3); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: var(--space-2); font-size: var(--text-sm); text-align: center; color: var(--text); }
     .modal-ep-input:focus { outline: none; border-color: var(--primary); }
     .modal-ep-total { font-size: var(--text-sm); color: var(--text-muted); white-space: nowrap; }
-    .modal-status-select {
-      width: 100%;
-      background: var(--surface-3);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: var(--space-2);
-      font-size: var(--text-sm);
-      color: var(--text);
-      cursor: pointer;
-    }
+    .modal-status-select { width: 100%; background: var(--surface-3); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: var(--space-2); font-size: var(--text-sm); color: var(--text); cursor: pointer; }
     .modal-status-select:focus { outline: none; border-color: var(--primary); }
-    .modal-loading {
-      display: flex; align-items: center; justify-content: center;
-      padding: var(--space-12);
-      color: var(--text-muted);
-      gap: var(--space-3);
-    }
+    .modal-loading { display: flex; align-items: center; justify-content: center; padding: var(--space-12); color: var(--text-muted); gap: var(--space-3); }
     @keyframes spin { to { transform: rotate(360deg); } }
-    .spinner {
-      width: 20px; height: 20px;
-      border: 2px solid var(--border);
-      border-top-color: var(--primary);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-    .modal-anilist-link {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-2);
-      font-size: var(--text-xs);
-      color: var(--text-muted);
-      text-decoration: none;
-      padding: var(--space-2) var(--space-3);
-      border-radius: var(--radius-md);
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      width: fit-content;
-    }
+    .spinner { width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    .modal-anilist-link { display: inline-flex; align-items: center; gap: var(--space-2); font-size: var(--text-xs); color: var(--text-muted); text-decoration: none; padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); background: var(--surface-2); border: 1px solid var(--border); width: fit-content; }
     .modal-anilist-link:hover { color: var(--primary); border-color: var(--primary); }
+
+    /* NOTE & COMMENTAIRE */
+    .modal-user-section { background: var(--surface-2); border-radius: var(--radius-md); padding: var(--space-4); display: flex; flex-direction: column; gap: var(--space-3); }
+    .star-row { display: flex; gap: var(--space-1); }
+    .star-btn { font-size: 1.4rem; color: var(--surface-3); cursor: pointer; transition: color var(--transition), transform var(--transition); padding: 2px; background: none; border: none; }
+    .star-btn:hover, .star-btn.active { color: #fbbf24; transform: scale(1.15); }
+    .note-label { font-size: var(--text-xs); color: var(--text-muted); }
+    .modal-comment-input { width: 100%; background: var(--surface-3); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: var(--space-3); font-size: var(--text-sm); color: var(--text); resize: vertical; min-height: 80px; max-height: 200px; }
+    .modal-comment-input::placeholder { color: var(--text-faint); }
+    .modal-comment-input:focus { outline: none; border-color: var(--primary); }
+    .modal-save-note-btn { padding: var(--space-2) var(--space-4); background: var(--primary); color: #fff; border-radius: var(--radius-sm); font-size: var(--text-sm); font-weight: 600; align-self: flex-end; }
+    .modal-save-note-btn:hover { background: var(--primary-hover); }
   </style>
 </head>
 <body>
@@ -632,33 +249,27 @@
       <p class="nav-section-title">Ma liste</p>
       <button class="nav-btn active" data-view="all" onclick="switchView('all')">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-        Tous
-        <span class="nav-badge" id="badge-all">0</span>
+        Tous <span class="nav-badge" id="badge-all">0</span>
       </button>
       <button class="nav-btn" data-view="watching" onclick="switchView('watching')">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16"/></svg>
-        En cours
-        <span class="nav-badge" id="badge-watching">0</span>
+        En cours <span class="nav-badge" id="badge-watching">0</span>
       </button>
       <button class="nav-btn" data-view="catchup" onclick="switchView('catchup')">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-3.2-6.9"/><polyline points="21 3 21 9 15 9"/></svg>
-        À rattraper
-        <span class="nav-badge" id="badge-catchup">0</span>
+        À rattraper <span class="nav-badge" id="badge-catchup">0</span>
       </button>
       <button class="nav-btn" data-view="completed" onclick="switchView('completed')">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg>
-        Terminés
-        <span class="nav-badge" id="badge-completed">0</span>
+        Terminés <span class="nav-badge" id="badge-completed">0</span>
       </button>
       <button class="nav-btn" data-view="planned" onclick="switchView('planned')">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        À voir
-        <span class="nav-badge" id="badge-planned">0</span>
+        À voir <span class="nav-badge" id="badge-planned">0</span>
       </button>
       <button class="nav-btn" data-view="dropped" onclick="switchView('dropped')">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-        Abandonnés
-        <span class="nav-badge" id="badge-dropped">0</span>
+        Abandonnés <span class="nav-badge" id="badge-dropped">0</span>
       </button>
     </nav>
 
@@ -676,6 +287,9 @@
       <div class="search-wrap">
         <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input class="search-input" type="text" id="searchInput" placeholder="Rechercher un anime..." autocomplete="off">
+        <button class="search-clear" id="searchClear" aria-label="Effacer" onclick="clearSearch()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
         <div class="search-results" id="searchResults"></div>
       </div>
     </div>
@@ -685,6 +299,17 @@
       <div class="stat-card"><div class="stat-value" id="stat-eps">0</div><div class="stat-label">Épisodes vus</div></div>
       <div class="stat-card"><div class="stat-value" id="stat-done">0</div><div class="stat-label">Terminés</div></div>
       <div class="stat-card"><div class="stat-value" id="stat-watching">0</div><div class="stat-label">En cours</div></div>
+    </div>
+
+    <!-- TRENDING -->
+    <div class="trending-section">
+      <div class="section-heading">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        Populaires du moment
+      </div>
+      <div class="trending-scroll" id="trendingScroll">
+        ${Array(10).fill(0).map(() => `<div class="trending-skeleton"><div class="skeleton sk-cover"></div><div style="padding:var(--space-2)"><div class="skeleton sk-text"></div><div class="skeleton sk-text short"></div></div></div>`).join('')}
+      </div>
     </div>
 
     <div class="info-banner" id="catchupBanner">
@@ -708,7 +333,7 @@
   </main>
 </div>
 
-<!-- MODAL INFOS ANIME -->
+<!-- MODAL -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
   <div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Infos anime">
     <div id="modalContent">
@@ -724,118 +349,308 @@ let list = JSON.parse(localStorage.getItem('anime-tracker-v2') || '[]');
 let currentFilter = 'all';
 let searchTimeout = null;
 let currentModalId = null;
+let trendingCache = null;
 
-function save() {
-  localStorage.setItem('anime-tracker-v2', JSON.stringify(list));
-}
+function save() { localStorage.setItem('anime-tracker-v2', JSON.stringify(list)); }
 
 // ===== ANILIST API =====
-async function searchAniList(query) {
-  const q = `query ($search: String) {
-    Page(page: 1, perPage: 10) {
-      media(search: $search, type: ANIME, sort: SEARCH_MATCH) {
-        id title { romaji english native }
-        coverImage { large }
-        episodes status startDate { year } format
-      }
-    }
-  }`;
+async function anilistQuery(query, variables = {}) {
   const res = await fetch('https://graphql.anilist.co', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ query: q, variables: { search: query } })
+    body: JSON.stringify({ query, variables })
   });
-  const data = await res.json();
-  return data.data.Page.media;
+  return (await res.json()).data;
+}
+
+async function searchAniList(query) {
+  const data = await anilistQuery(`query ($search: String) {
+    Page(page: 1, perPage: 12) {
+      media(search: $search, type: ANIME, sort: SEARCH_MATCH) {
+        id title { romaji english native }
+        coverImage { large } episodes status startDate { year } format
+      }
+    }
+  }`, { search: query });
+  return data.Page.media;
+}
+
+async function fetchTrending() {
+  if (trendingCache) return trendingCache;
+  const data = await anilistQuery(`query {
+    Page(page: 1, perPage: 20) {
+      media(type: ANIME, sort: TRENDING_DESC, status_in: [RELEASING, FINISHED]) {
+        id title { romaji english native }
+        coverImage { large } averageScore episodes status format
+      }
+    }
+  }`);
+  trendingCache = data.Page.media;
+  return trendingCache;
 }
 
 async function fetchAnimeDetails(id) {
-  const q = `query ($id: Int) {
+  const data = await anilistQuery(`query ($id: Int) {
     Media(id: $id, type: ANIME) {
-      id
-      title { romaji english native }
-      coverImage { extraLarge large }
-      bannerImage
-      description(asHtml: false)
-      episodes
-      duration
-      status
-      format
-      genres
-      averageScore
-      popularity
-      startDate { year month day }
-      endDate { year month day }
-      season
-      seasonYear
+      id title { romaji english native }
+      coverImage { extraLarge large } bannerImage
+      description(asHtml: false) episodes duration status format genres
+      averageScore popularity startDate { year month day } endDate { year month day }
+      season seasonYear
       studios { nodes { name isAnimationStudio } }
-      source
-      countryOfOrigin
+      source countryOfOrigin
     }
-  }`;
-  const res = await fetch('https://graphql.anilist.co', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ query: q, variables: { id } })
-  });
-  const data = await res.json();
-  return data.data.Media;
+  }`, { id });
+  return data.Media;
 }
 
-// ===== TRADUCTIONS =====
-const statusFR = {
-  FINISHED: 'Terminé',
-  RELEASING: 'En diffusion',
-  NOT_YET_RELEASED: 'Pas encore diffusé',
-  CANCELLED: 'Annulé',
-  HIATUS: 'En pause'
-};
-const formatFR = {
-  TV: 'Série TV',
-  TV_SHORT: 'Série courte',
-  MOVIE: 'Film',
-  SPECIAL: 'Spécial',
-  OVA: 'OVA',
-  ONA: 'ONA',
-  MUSIC: 'Clip musical'
-};
-const seasonFR = {
-  WINTER: 'Hiver',
-  SPRING: 'Printemps',
-  SUMMER: 'Été',
-  FALL: 'Automne'
-};
-const sourceFR = {
-  ORIGINAL: 'Original',
-  MANGA: 'Manga',
-  LIGHT_NOVEL: 'Light Novel',
-  VISUAL_NOVEL: 'Visual Novel',
-  VIDEO_GAME: 'Jeu vidéo',
-  OTHER: 'Autre',
-  NOVEL: 'Roman',
-  DOUJINSHI: 'Doujinshi',
-  ANIME: 'Anime',
-  WEB_NOVEL: 'Web Novel',
-  LIVE_ACTION: 'Prise de vue réelle',
-  GAME: 'Jeu',
-  COMIC: 'Comic',
-  MULTIMEDIA_PROJECT: 'Projet multimédia',
-  PICTURE_BOOK: 'Livre illustré'
-};
+// ===== TRADUCTIONS FR =====
+const STATUS_FR = { FINISHED:'Terminé', RELEASING:'En diffusion', NOT_YET_RELEASED:'Pas encore diffusé', CANCELLED:'Annulé', HIATUS:'En pause' };
+const FORMAT_FR = { TV:'Série TV', TV_SHORT:'Série courte', MOVIE:'Film', SPECIAL:'Spécial', OVA:'OVA', ONA:'ONA', MUSIC:'Clip musical' };
+const SEASON_FR = { WINTER:'Hiver', SPRING:'Printemps', SUMMER:'Été', FALL:'Automne' };
+const SOURCE_FR = { ORIGINAL:'Original', MANGA:'Manga', LIGHT_NOVEL:'Light Novel', VISUAL_NOVEL:'Visual Novel', VIDEO_GAME:'Jeu vidéo', OTHER:'Autre', NOVEL:'Roman', DOUJINSHI:'Doujinshi', ANIME:'Anime', WEB_NOVEL:'Web Novel', LIVE_ACTION:'Prise de vue réelle', GAME:'Jeu', COMIC:'Comic', MULTIMEDIA_PROJECT:'Projet multimédia', PICTURE_BOOK:'Livre illustré' };
+const GENRE_FR = { 'Action':'Action', 'Adventure':'Aventure', 'Comedy':'Comédie', 'Drama':'Drame', 'Ecchi':'Ecchi', 'Fantasy':'Fantaisie', 'Horror':'Horreur', 'Mahou Shoujo':'Mahou Shoujo', 'Mecha':'Mecha', 'Music':'Musique', 'Mystery':'Mystère', 'Psychological':'Psychologique', 'Romance':'Romance', 'Sci-Fi':'Science-Fiction', 'Slice of Life':'Tranche de vie', 'Sports':'Sport', 'Supernatural':'Surnaturel', 'Thriller':'Thriller', 'Hentai':'Hentai' };
+
+function frGenre(g) { return GENRE_FR[g] || g; }
+
+function animeTitle(t) { return t.french || t.english || t.romaji || t.native || '—'; }
 
 function cleanDescription(desc) {
   if (!desc) return 'Aucune description disponible.';
-  return desc
-    .replace(/<br\s*\/?>/gi, '\n')
-    .replace(/<[^>]+>/g, '')
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&#039;/g, "'")
-    .replace(/\(Source:.+\)/gi, '')
-    .trim()
-    .substring(0, 600) + (desc.length > 600 ? '...' : '');
+  let txt = desc.replace(/<br\s*\/?>/gi,'\n').replace(/<[^>]+>/g,'')
+    .replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#039;/g,"'")
+    .replace(/\(Source:.+\)/gi,'').trim();
+  return txt.length > 700 ? txt.substring(0,700) + '...' : txt;
+}
+
+// ===== TRENDING =====
+async function renderTrending() {
+  try {
+    const animes = await fetchTrending();
+    const scroll = document.getElementById('trendingScroll');
+    scroll.innerHTML = animes.map(a => {
+      const title = animeTitle(a.title);
+      const score = a.averageScore ? `⭐ ${(a.averageScore/10).toFixed(1)}/10` : '';
+      const already = list.find(x => x.id === a.id);
+      const payload = encodeURIComponent(JSON.stringify(a));
+      return `<div class="trending-card" onclick="openModal(${a.id})" role="button" tabindex="0" aria-label="${escapeHtml(title)}">
+        <img class="trending-cover" src="${a.coverImage.large}" alt="${escapeHtml(title)}" loading="lazy">
+        <div class="trending-info">
+          <div class="trending-title">${escapeHtml(title)}</div>
+          ${score ? `<div class="trending-score">${score}</div>` : ''}
+          <button class="trending-add ${already ? 'added' : ''}" onclick="event.stopPropagation();${already ? '' : `addAnimeFromPayload('${payload}')`}" ${already ? 'disabled' : ''}>
+            ${already ? '✓ Ajouté' : '+ Ajouter'}
+          </button>
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    document.getElementById('trendingScroll').innerHTML = '<span style="font-size:var(--text-xs);color:var(--text-faint);padding:var(--space-4)">Impossible de charger les tendances.</span>';
+  }
+}
+
+// ===== RECHERCHE INSTANTANÉE =====
+const SEARCH_DEBOUNCE = 250;
+const searchInput = document.getElementById('searchInput');
+const searchResults = document.getElementById('searchResults');
+const searchClear = document.getElementById('searchClear');
+
+// Suggestions instantanées depuis la liste locale + recherche AniList dès 1 caractère
+searchInput.addEventListener('input', () => {
+  clearTimeout(searchTimeout);
+  const val = searchInput.value.trim();
+  searchClear.classList.toggle('visible', val.length > 0);
+
+  if (!val) { closeSearch(); return; }
+
+  // Résultats locaux immédiats
+  const localMatches = list.filter(x => x.title.toLowerCase().includes(val.toLowerCase())).slice(0, 5);
+  let html = '';
+  if (localMatches.length) {
+    html += `<div class="search-header">Ma liste</div>`;
+    html += localMatches.map(x => `<div class="search-result-item" onclick="openModal(${x.id})">
+      <img class="search-result-img" src="${x.cover}" alt="${escapeHtml(x.title)}" loading="lazy">
+      <div class="search-result-info">
+        <div class="search-result-title">${escapeHtml(x.title)}</div>
+        <div class="search-result-meta">Dans ma liste · Épisode ${x.currentEp}</div>
+      </div>
+      <span class="search-add-btn added">✓ Dans ta liste</span>
+    </div>`).join('');
+  }
+  html += `<div class="search-header">AniList</div><div id="anilistResultsInner"><div class="search-loading">Recherche en cours...</div></div>`;
+  searchResults.innerHTML = html;
+  searchResults.classList.add('open');
+
+  // Requête AniList différée
+  searchTimeout = setTimeout(async () => {
+    const inner = document.getElementById('anilistResultsInner');
+    if (!inner) return;
+    try {
+      const results = await searchAniList(val);
+      if (!results || !results.length) {
+        inner.innerHTML = '<div class="search-empty">Aucun résultat AniList</div>';
+        return;
+      }
+      inner.innerHTML = results.map(a => {
+        const title = animeTitle(a.title);
+        const year = a.startDate?.year || '';
+        const eps = a.episodes ? `${a.episodes} éps` : 'Ongoing';
+        const fmt = FORMAT_FR[a.format] || a.format || '';
+        const already = list.find(x => x.id === a.id);
+        const payload = encodeURIComponent(JSON.stringify(a));
+        return `<div class="search-result-item" onclick="addAnimeFromPayload('${payload}')">
+          <img class="search-result-img" src="${a.coverImage.large}" alt="${escapeHtml(title)}" loading="lazy">
+          <div class="search-result-info">
+            <div class="search-result-title">${escapeHtml(title)}</div>
+            <div class="search-result-meta">${[year, eps, fmt].filter(Boolean).join(' · ')}</div>
+          </div>
+          <button class="search-add-btn ${already ? 'added' : ''}" onclick="event.stopPropagation();addAnimeFromPayload('${payload}')">
+            ${already ? '✓ Déjà ajouté' : '+ Ajouter'}
+          </button>
+        </div>`;
+      }).join('');
+    } catch(e) {
+      if (inner) inner.innerHTML = '<div class="search-empty">Erreur de connexion</div>';
+    }
+  }, SEARCH_DEBOUNCE);
+});
+
+document.addEventListener('click', e => { if (!e.target.closest('.search-wrap')) closeSearch(); });
+
+function closeSearch() { searchResults.classList.remove('open'); searchResults.innerHTML = ''; }
+function clearSearch() { searchInput.value = ''; searchClear.classList.remove('visible'); closeSearch(); searchInput.focus(); }
+
+function escapeHtml(str = '') { return String(str).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function addAnimeFromPayload(payload) { addAnime(JSON.parse(decodeURIComponent(payload))); }
+
+function addAnime(anime) {
+  if (list.find(x => x.id === anime.id)) { toast('Déjà dans ta liste !', 'info'); closeSearch(); return; }
+  const title = animeTitle(anime.title);
+  list.push({ id: anime.id, title, titleNative: anime.title.native, cover: anime.coverImage.large, episodes: anime.episodes || null, currentEp: 0, status: 'watching', addedAt: Date.now(), note: 0, comment: '' });
+  save(); render(); renderTrending();
+  toast(`"${title}" ajouté !`, 'success');
+  closeSearch(); searchInput.value = ''; searchClear.classList.remove('visible');
+}
+
+function deleteAnime(id) {
+  const anime = list.find(x => x.id === id);
+  list = list.filter(x => x.id !== id);
+  save(); render();
+  if (anime) toast(`"${anime.title}" retiré`, 'error');
+}
+
+// ===== GESTION ÉPISODES / STATUT =====
+function updateEp(id, val) {
+  const item = list.find(x => x.id === id); if (!item) return;
+  let ep = parseInt(val); if (isNaN(ep) || ep < 0) ep = 0;
+  if (item.episodes && ep > item.episodes) ep = item.episodes;
+  item.currentEp = ep;
+  if (item.episodes && ep === item.episodes) item.status = 'completed';
+  if (item.status === 'completed' && item.episodes && ep < item.episodes) item.status = 'watching';
+  save(); render();
+}
+function changeEp(id, delta) {
+  const item = list.find(x => x.id === id); if (!item) return;
+  let ep = item.currentEp + delta; if (ep < 0) ep = 0;
+  if (item.episodes && ep > item.episodes) ep = item.episodes;
+  item.currentEp = ep;
+  if (item.episodes && ep === item.episodes) item.status = 'completed';
+  if (item.status === 'completed' && item.episodes && ep < item.episodes) item.status = 'watching';
+  save(); render();
+}
+function updateStatus(id, status) {
+  const item = list.find(x => x.id === id); if (!item) return;
+  item.status = status;
+  if (status === 'completed' && item.episodes) item.currentEp = item.episodes;
+  save(); render();
+}
+function getCatchupList() { return list.filter(x => x.status === 'watching' && x.episodes && x.currentEp < x.episodes); }
+function getFilteredList() {
+  if (currentFilter === 'all') return list;
+  if (currentFilter === 'catchup') return getCatchupList();
+  return list.filter(x => x.status === currentFilter);
+}
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === f));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.view === f));
+  render();
+}
+function switchView(v) { setFilter(v); }
+
+// ===== RENDER =====
+function starsHtml(note) {
+  return [1,2,3,4,5].map(i => `<span style="color:${i <= note ? '#fbbf24' : 'var(--surface-3)'};font-size:0.85rem">★</span>`).join('');
+}
+
+function render() {
+  const grid = document.getElementById('animeGrid');
+  const filtered = getFilteredList();
+  if (!filtered.length) {
+    const emptyTitle = currentFilter === 'catchup' ? 'Aucun épisode manquant' : "Rien ici pour l'instant";
+    const emptyText = currentFilter === 'catchup' ? 'Tes animes en cours sont à jour.' : "Recherche un anime en haut pour l'ajouter à ta liste.";
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      <h3>${emptyTitle}</h3><p>${emptyText}</p></div>`;
+    updateStats(); updateBadges(); updateCatchupBanner(); return;
+  }
+  const statusLabels = { watching:'En cours', completed:'Terminé', planned:'À voir', dropped:'Abandonné' };
+  grid.innerHTML = filtered.map(item => {
+    const pct = item.episodes ? Math.round((item.currentEp / item.episodes) * 100) : 0;
+    const missing = item.episodes ? Math.max(item.episodes - item.currentEp, 0) : 0;
+    const showMissing = item.status === 'watching' && missing > 0;
+    return `<div class="anime-card" id="card-${item.id}">
+      <button class="card-delete" onclick="deleteAnime(${item.id})" aria-label="Supprimer">✕</button>
+      <div class="anime-cover-wrap" onclick="openModal(${item.id})" role="button" aria-label="Voir les infos de ${escapeHtml(item.title)}" tabindex="0">
+        <img class="anime-cover" src="${item.cover}" alt="${escapeHtml(item.title)}" loading="lazy">
+        <div class="anime-cover-overlay"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+      </div>
+      <div class="anime-card-body">
+        <div class="anime-card-title">${escapeHtml(item.title)}</div>
+        <span class="status-badge ${showMissing ? 'status-catchup' : 'status-' + item.status}">${showMissing ? `${missing} épisode${missing > 1 ? 's' : ''} manquant${missing > 1 ? 's' : ''}` : statusLabels[item.status]}</span>
+        <div class="progress-bar-wrap"><div class="progress-bar" style="width:${pct}%"></div></div>
+        ${showMissing ? `<div class="missing-note">Il te manque ${missing} épisode${missing > 1 ? 's' : ''}</div>` : ''}
+        ${item.note ? `<div class="card-rating">${starsHtml(item.note)}</div>` : ''}
+        ${item.comment ? `<div class="card-note-preview">"${escapeHtml(item.comment)}"</div>` : ''}
+        <div class="episode-row">
+          <button class="ep-btn" onclick="changeEp(${item.id}, -1)" aria-label="-1 épisode">−</button>
+          <input class="ep-input" type="number" value="${item.currentEp}" min="0" max="${item.episodes || 9999}" onchange="updateEp(${item.id}, this.value)" oninput="updateEp(${item.id}, this.value)">
+          <span class="ep-total">${item.episodes ? '/ ' + item.episodes : ''}</span>
+          <button class="ep-btn" onclick="changeEp(${item.id}, 1)" aria-label="+1 épisode">+</button>
+        </div>
+        <select class="status-select" onchange="updateStatus(${item.id}, this.value)">
+          <option value="watching" ${item.status==='watching'?'selected':''}>En cours</option>
+          <option value="completed" ${item.status==='completed'?'selected':''}>Terminé</option>
+          <option value="planned" ${item.status==='planned'?'selected':''}>À voir</option>
+          <option value="dropped" ${item.status==='dropped'?'selected':''}>Abandonné</option>
+        </select>
+      </div>
+    </div>`;
+  }).join('');
+  updateStats(); updateBadges(); updateCatchupBanner();
+}
+
+function updateStats() {
+  document.getElementById('stat-total').textContent = list.length;
+  document.getElementById('stat-eps').textContent = list.reduce((s,x) => s + x.currentEp, 0);
+  document.getElementById('stat-done').textContent = list.filter(x => x.status === 'completed').length;
+  document.getElementById('stat-watching').textContent = list.filter(x => x.status === 'watching').length;
+}
+function updateBadges() {
+  const catchup = getCatchupList();
+  document.getElementById('badge-all').textContent = list.length;
+  document.getElementById('badge-watching').textContent = list.filter(x => x.status === 'watching').length;
+  document.getElementById('badge-catchup').textContent = catchup.length;
+  document.getElementById('badge-completed').textContent = list.filter(x => x.status === 'completed').length;
+  document.getElementById('badge-planned').textContent = list.filter(x => x.status === 'planned').length;
+  document.getElementById('badge-dropped').textContent = list.filter(x => x.status === 'dropped').length;
+}
+function updateCatchupBanner() {
+  const catchup = getCatchupList();
+  const totalMissing = catchup.reduce((sum,x) => sum + (x.episodes - x.currentEp), 0);
+  document.getElementById('catchupCountText').textContent = `${catchup.length} anime${catchup.length > 1 ? 's' : ''} à rattraper`;
+  document.getElementById('catchupEpisodesText').textContent = `${totalMissing} épisode${totalMissing > 1 ? 's' : ''} manquant${totalMissing > 1 ? 's' : ''} au total`;
+  document.getElementById('catchupBanner').classList.toggle('show', catchup.length > 0);
 }
 
 // ===== MODAL =====
@@ -846,7 +661,6 @@ async function openModal(animeId) {
   content.innerHTML = '<div class="modal-loading"><div class="spinner"></div> Chargement des infos...</div>';
   overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
-
   try {
     const anime = await fetchAnimeDetails(animeId);
     const item = list.find(x => x.id === animeId);
@@ -858,20 +672,22 @@ async function openModal(animeId) {
 
 function renderModalContent(anime, item) {
   const content = document.getElementById('modalContent');
-  const title = anime.title.english || anime.title.romaji;
+  const title = animeTitle(anime.title);
   const cover = anime.coverImage.extraLarge || anime.coverImage.large;
   const banner = anime.bannerImage || cover;
   const studio = anime.studios?.nodes?.find(s => s.isAnimationStudio)?.name || anime.studios?.nodes?.[0]?.name || '—';
   const score = anime.averageScore ? `${anime.averageScore}/100` : '—';
-  const status = statusFR[anime.status] || anime.status || '—';
-  const format = formatFR[anime.format] || anime.format || '—';
-  const season = anime.season ? `${seasonFR[anime.season] || anime.season} ${anime.seasonYear || ''}` : '—';
-  const source = sourceFR[anime.source] || anime.source || '—';
-  const eps = anime.episodes ? `${anime.episodes} épisodes` : 'Ongoing';
+  const status = STATUS_FR[anime.status] || anime.status || '—';
+  const format = FORMAT_FR[anime.format] || anime.format || '—';
+  const season = anime.season ? `${SEASON_FR[anime.season] || anime.season} ${anime.seasonYear || ''}` : '—';
+  const source = SOURCE_FR[anime.source] || anime.source || '—';
+  const eps = anime.episodes ? `${anime.episodes} épisodes` : 'En cours';
   const duration = anime.duration ? `${anime.duration} min/épisode` : '—';
   const desc = cleanDescription(anime.description);
   const statusClass = anime.status === 'RELEASING' ? 'airing' : 'finished';
   const pct = item && anime.episodes ? Math.round((item.currentEp / anime.episodes) * 100) : 0;
+  const userNote = item?.note || 0;
+  const userComment = item?.comment || '';
 
   content.innerHTML = `
     <div class="modal-hero">
@@ -885,7 +701,6 @@ function renderModalContent(anime, item) {
         ${anime.title.native ? `<div class="modal-native">${escapeHtml(anime.title.native)}</div>` : ''}
         ${anime.title.romaji && anime.title.english ? `<div class="modal-native" style="margin-top:2px">${escapeHtml(anime.title.romaji)}</div>` : ''}
       </div>
-
       <div class="modal-meta-row">
         ${anime.averageScore ? `<span class="modal-chip score">⭐ ${score}</span>` : ''}
         <span class="modal-chip ${statusClass}">${status}</span>
@@ -893,20 +708,14 @@ function renderModalContent(anime, item) {
         <span class="modal-chip">${eps}</span>
         ${anime.seasonYear ? `<span class="modal-chip">${season}</span>` : ''}
       </div>
-
-      ${anime.genres?.length ? `
-      <div>
+      ${anime.genres?.length ? `<div>
         <div class="modal-section-title">Genres</div>
-        <div class="modal-genres">
-          ${anime.genres.map(g => `<span class="modal-genre">${escapeHtml(g)}</span>`).join('')}
-        </div>
+        <div class="modal-genres">${anime.genres.map(g => `<span class="modal-genre">${escapeHtml(frGenre(g))}</span>`).join('')}</div>
       </div>` : ''}
-
       <div>
         <div class="modal-section-title">Synopsis</div>
         <div class="modal-synopsis">${escapeHtml(desc)}</div>
       </div>
-
       <div>
         <div class="modal-section-title">Infos</div>
         <div class="modal-stats-grid">
@@ -916,14 +725,12 @@ function renderModalContent(anime, item) {
           <div class="modal-stat"><div class="modal-stat-val">${anime.popularity ? anime.popularity.toLocaleString('fr-FR') : '—'}</div><div class="modal-stat-lbl">Popularité</div></div>
         </div>
       </div>
-
       ${item ? `
       <div class="modal-progress-section">
         <div class="modal-section-title">Mon avancement</div>
         <div class="modal-progress-row">
           <button class="modal-ep-btn" onclick="modalChangeEp(-1)">−</button>
-          <input class="modal-ep-input" type="number" id="modalEpInput" value="${item.currentEp}" min="0" max="${anime.episodes || 9999}"
-            onchange="modalUpdateEp(this.value)" oninput="modalUpdateEp(this.value)">
+          <input class="modal-ep-input" type="number" id="modalEpInput" value="${item.currentEp}" min="0" max="${anime.episodes || 9999}" onchange="modalUpdateEp(this.value)" oninput="modalUpdateEp(this.value)">
           <span class="modal-ep-total">${anime.episodes ? '/ ' + anime.episodes + ' épisodes' : ''}</span>
           <button class="modal-ep-btn" onclick="modalChangeEp(1)">+</button>
         </div>
@@ -934,323 +741,121 @@ function renderModalContent(anime, item) {
           <option value="planned" ${item.status==='planned'?'selected':''}>À voir</option>
           <option value="dropped" ${item.status==='dropped'?'selected':''}>Abandonné</option>
         </select>
-      </div>` : ''}
-
+      </div>
+      <div class="modal-user-section">
+        <div class="modal-section-title">Ma note &amp; commentaire</div>
+        <div>
+          <div class="note-label" style="margin-bottom:var(--space-2)">Note personnelle</div>
+          <div class="star-row" id="starRow">
+            ${[1,2,3,4,5].map(i => `<button class="star-btn ${i <= userNote ? 'active' : ''}" data-star="${i}" onclick="setNote(${i})" aria-label="${i} étoile${i>1?'s':''}">★</button>`).join('')}
+          </div>
+          <div class="note-label" id="noteLabelText" style="margin-top:var(--space-1)">${userNote ? `${userNote}/5` : 'Pas encore noté'}</div>
+        </div>
+        <div>
+          <div class="note-label" style="margin-bottom:var(--space-2)">Commentaire</div>
+          <textarea class="modal-comment-input" id="modalCommentInput" placeholder="Ton avis sur cet anime...">${escapeHtml(userComment)}</textarea>
+        </div>
+        <button class="modal-save-note-btn" onclick="saveNoteComment()">Enregistrer</button>
+      </div>` : `
+      <div style="text-align:center;padding:var(--space-4) 0">
+        <button style="padding:var(--space-3) var(--space-6);background:var(--primary);color:#fff;border-radius:var(--radius-md);font-weight:600;font-size:var(--text-sm)" onclick="addAnimeById(${anime.id})">+ Ajouter à ma liste</button>
+      </div>`}
       <a href="https://anilist.co/anime/${anime.id}" target="_blank" rel="noopener noreferrer" class="modal-anilist-link">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
         Voir sur AniList
       </a>
-    </div>
-  `;
+    </div>`;
+}
+
+function setNote(n) {
+  const item = list.find(x => x.id === currentModalId); if (!item) return;
+  item.note = item.note === n ? 0 : n;
+  save(); render();
+  document.querySelectorAll('.star-btn').forEach(b => b.classList.toggle('active', parseInt(b.dataset.star) <= item.note));
+  const lbl = document.getElementById('noteLabelText');
+  if (lbl) lbl.textContent = item.note ? `${item.note}/5` : 'Pas encore noté';
+}
+
+function saveNoteComment() {
+  const item = list.find(x => x.id === currentModalId); if (!item) return;
+  const commentEl = document.getElementById('modalCommentInput');
+  if (commentEl) item.comment = commentEl.value.trim();
+  save(); render();
+  toast('Note et commentaire enregistrés !', 'success');
+}
+
+async function addAnimeById(id) {
+  try {
+    const anime = await fetchAnimeDetails(id);
+    const fakeAnime = { id: anime.id, title: anime.title, coverImage: anime.coverImage, episodes: anime.episodes, status: anime.status, format: anime.format, startDate: anime.startDate };
+    addAnime(fakeAnime);
+    const item = list.find(x => x.id === id);
+    renderModalContent(anime, item);
+  } catch(e) { toast('Impossible d\'ajouter cet anime', 'error'); }
 }
 
 function modalChangeEp(delta) {
-  const item = list.find(x => x.id === currentModalId);
-  if (!item) return;
-  let ep = item.currentEp + delta;
-  if (ep < 0) ep = 0;
+  const item = list.find(x => x.id === currentModalId); if (!item) return;
+  let ep = item.currentEp + delta; if (ep < 0) ep = 0;
   if (item.episodes && ep > item.episodes) ep = item.episodes;
   item.currentEp = ep;
   if (item.episodes && ep === item.episodes) item.status = 'completed';
   if (item.status === 'completed' && item.episodes && ep < item.episodes) item.status = 'watching';
   save(); render();
-  const input = document.getElementById('modalEpInput');
-  if (input) input.value = ep;
-  const sel = document.getElementById('modalStatusSelect');
-  if (sel) sel.value = item.status;
+  const input = document.getElementById('modalEpInput'); if (input) input.value = ep;
+  const sel = document.getElementById('modalStatusSelect'); if (sel) sel.value = item.status;
   updateModalProgress(item);
 }
-
 function modalUpdateEp(val) {
-  const item = list.find(x => x.id === currentModalId);
-  if (!item) return;
-  let ep = parseInt(val);
-  if (isNaN(ep) || ep < 0) ep = 0;
+  const item = list.find(x => x.id === currentModalId); if (!item) return;
+  let ep = parseInt(val); if (isNaN(ep) || ep < 0) ep = 0;
   if (item.episodes && ep > item.episodes) ep = item.episodes;
   item.currentEp = ep;
   if (item.episodes && ep === item.episodes) item.status = 'completed';
   if (item.status === 'completed' && item.episodes && ep < item.episodes) item.status = 'watching';
   save(); render();
-  const sel = document.getElementById('modalStatusSelect');
-  if (sel) sel.value = item.status;
+  const sel = document.getElementById('modalStatusSelect'); if (sel) sel.value = item.status;
   updateModalProgress(item);
 }
-
 function modalUpdateStatus(status) {
-  const item = list.find(x => x.id === currentModalId);
-  if (!item) return;
+  const item = list.find(x => x.id === currentModalId); if (!item) return;
   item.status = status;
   if (status === 'completed' && item.episodes) item.currentEp = item.episodes;
-  save(); render();
-  updateModalProgress(item);
+  save(); render(); updateModalProgress(item);
 }
-
 function updateModalProgress(item) {
   const bar = document.getElementById('modalProgressBar');
   if (bar && item.episodes) bar.style.width = Math.round((item.currentEp / item.episodes) * 100) + '%';
 }
+function closeModal(e) { if (e.target === document.getElementById('modalOverlay')) closeModalDirect(); }
+function closeModalDirect() { document.getElementById('modalOverlay').classList.remove('open'); document.body.style.overflow = ''; currentModalId = null; }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalDirect(); });
 
-function closeModal(e) {
-  if (e.target === document.getElementById('modalOverlay')) closeModalDirect();
-}
-
-function closeModalDirect() {
-  document.getElementById('modalOverlay').classList.remove('open');
-  document.body.style.overflow = '';
-  currentModalId = null;
-}
-
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModalDirect();
-});
-
-// ===== RECHERCHE =====
-const searchInput = document.getElementById('searchInput');
-const searchResults = document.getElementById('searchResults');
-
-searchInput.addEventListener('input', () => {
-  clearTimeout(searchTimeout);
-  const val = searchInput.value.trim();
-  if (!val) { closeSearch(); return; }
-  searchResults.innerHTML = '<div class="search-loading">Recherche...</div>';
-  searchResults.classList.add('open');
-  searchTimeout = setTimeout(async () => {
-    try {
-      const results = await searchAniList(val);
-      if (!results.length) {
-        searchResults.innerHTML = '<div class="search-empty">Aucun résultat</div>';
-        return;
-      }
-      searchResults.innerHTML = results.map(a => {
-        const title = a.title.english || a.title.romaji;
-        const year = a.startDate?.year || '';
-        const eps = a.episodes ? `${a.episodes} éps` : 'Ongoing';
-        const already = list.find(x => x.id === a.id);
-        const payload = encodeURIComponent(JSON.stringify(a));
-        return `<div class="search-result-item" onclick="addAnimeFromPayload('${payload}')">
-          <img class="search-result-img" src="${a.coverImage.large}" alt="${escapeHtml(title)}" loading="lazy">
-          <div class="search-result-info">
-            <div class="search-result-title">${escapeHtml(title)}</div>
-            <div class="search-result-meta">${year} · ${eps} · ${a.format || ''}</div>
-          </div>
-          <button class="search-add-btn" onclick="event.stopPropagation();addAnimeFromPayload('${payload}')">
-            ${already ? '✓ Déjà ajouté' : '+ Ajouter'}
-          </button>
-        </div>`;
-      }).join('');
-    } catch(e) {
-      searchResults.innerHTML = '<div class="search-empty">Erreur de connexion</div>';
-    }
-  }, 400);
-});
-
-document.addEventListener('click', e => {
-  if (!e.target.closest('.search-wrap')) closeSearch();
-});
-
-function closeSearch() {
-  searchResults.classList.remove('open');
-  searchResults.innerHTML = '';
-}
-
-function escapeHtml(str = '') {
-  return String(str).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
-}
-
-function addAnimeFromPayload(payload) {
-  addAnime(JSON.parse(decodeURIComponent(payload)));
-}
-
-function addAnime(anime) {
-  if (list.find(x => x.id === anime.id)) {
-    toast('Déjà dans ta liste !', 'info');
-    closeSearch();
-    return;
-  }
-  list.push({
-    id: anime.id,
-    title: anime.title.english || anime.title.romaji,
-    titleNative: anime.title.native,
-    cover: anime.coverImage.large,
-    episodes: anime.episodes || null,
-    currentEp: 0,
-    status: 'watching',
-    addedAt: Date.now()
-  });
-  save();
-  render();
-  toast(`"${anime.title.english || anime.title.romaji}" ajouté !`, 'success');
-  closeSearch();
-  searchInput.value = '';
-}
-
-function deleteAnime(id) {
-  const anime = list.find(x => x.id === id);
-  list = list.filter(x => x.id !== id);
-  save();
-  render();
-  if (anime) toast(`"${anime.title}" retiré`, 'error');
-}
-
-function updateEp(id, val) {
-  const item = list.find(x => x.id === id);
-  if (!item) return;
-  let ep = parseInt(val);
-  if (isNaN(ep) || ep < 0) ep = 0;
-  if (item.episodes && ep > item.episodes) ep = item.episodes;
-  item.currentEp = ep;
-  if (item.episodes && ep === item.episodes) item.status = 'completed';
-  if (item.status === 'completed' && item.episodes && ep < item.episodes) item.status = 'watching';
-  save();
-  render();
-}
-
-function changeEp(id, delta) {
-  const item = list.find(x => x.id === id);
-  if (!item) return;
-  let ep = item.currentEp + delta;
-  if (ep < 0) ep = 0;
-  if (item.episodes && ep > item.episodes) ep = item.episodes;
-  item.currentEp = ep;
-  if (item.episodes && ep === item.episodes) item.status = 'completed';
-  if (item.status === 'completed' && item.episodes && ep < item.episodes) item.status = 'watching';
-  save();
-  render();
-}
-
-function updateStatus(id, status) {
-  const item = list.find(x => x.id === id);
-  if (!item) return;
-  item.status = status;
-  if (status === 'completed' && item.episodes) item.currentEp = item.episodes;
-  save();
-  render();
-}
-
-function getCatchupList() {
-  return list.filter(x => x.status === 'watching' && x.episodes && x.currentEp < x.episodes);
-}
-
-function getFilteredList() {
-  if (currentFilter === 'all') return list;
-  if (currentFilter === 'catchup') return getCatchupList();
-  return list.filter(x => x.status === currentFilter);
-}
-
-function setFilter(f) {
-  currentFilter = f;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === f));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.view === f));
-  render();
-}
-
-function switchView(v) { setFilter(v); }
-
-function render() {
-  const grid = document.getElementById('animeGrid');
-  const filtered = getFilteredList();
-
-  if (!filtered.length) {
-    const emptyTitle = currentFilter === 'catchup' ? 'Aucun épisode manquant' : "Rien ici pour l'instant";
-    const emptyText = currentFilter === 'catchup'
-      ? 'Tes animes en cours sont à jour pour le moment.'
-      : 'Recherche un anime en haut pour l\'ajouter à ta liste.';
-    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
-      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-      <h3>${emptyTitle}</h3>
-      <p>${emptyText}</p>
-    </div>`;
-    updateStats(); updateBadges(); updateCatchupBanner();
-    return;
-  }
-
-  grid.innerHTML = filtered.map(item => {
-    const pct = item.episodes ? Math.round((item.currentEp / item.episodes) * 100) : 0;
-    const missing = item.episodes ? Math.max(item.episodes - item.currentEp, 0) : 0;
-    const statusLabels = { watching: 'En cours', completed: 'Terminé', planned: 'À voir', dropped: 'Abandonné' };
-    const showMissing = item.status === 'watching' && missing > 0;
-    return `<div class="anime-card" id="card-${item.id}">
-      <button class="card-delete" onclick="deleteAnime(${item.id})" aria-label="Supprimer">✕</button>
-      <div class="anime-cover-wrap" onclick="openModal(${item.id})" role="button" aria-label="Voir les infos de ${escapeHtml(item.title)}" tabindex="0">
-        <img class="anime-cover" src="${item.cover}" alt="${escapeHtml(item.title)}" loading="lazy">
-        <div class="anime-cover-overlay">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-        </div>
-      </div>
-      <div class="anime-card-body">
-        <div class="anime-card-title">${escapeHtml(item.title)}</div>
-        <span class="status-badge ${showMissing ? 'status-catchup' : 'status-' + item.status}">${showMissing ? `${missing} épisode${missing > 1 ? 's' : ''} manquant${missing > 1 ? 's' : ''}` : statusLabels[item.status]}</span>
-        <div class="progress-bar-wrap"><div class="progress-bar" style="width:${pct}%"></div></div>
-        ${showMissing ? `<div class="missing-note">Il te manque ${missing} épisode${missing > 1 ? 's' : ''}</div>` : ''}
-        <div class="episode-row">
-          <button class="ep-btn" onclick="changeEp(${item.id}, -1)" aria-label="-1 épisode">−</button>
-          <input class="ep-input" type="number" value="${item.currentEp}" min="0" max="${item.episodes || 9999}"
-            onchange="updateEp(${item.id}, this.value)"
-            oninput="updateEp(${item.id}, this.value)">
-          <span class="ep-total">${item.episodes ? '/ ' + item.episodes : ''}</span>
-          <button class="ep-btn" onclick="changeEp(${item.id}, 1)" aria-label="+1 épisode">+</button>
-        </div>
-        <select class="status-select" onchange="updateStatus(${item.id}, this.value)">
-          <option value="watching" ${item.status==='watching'?'selected':''}>En cours</option>
-          <option value="completed" ${item.status==='completed'?'selected':''}>Terminé</option>
-          <option value="planned" ${item.status==='planned'?'selected':''}>À voir</option>
-          <option value="dropped" ${item.status==='dropped'?'selected':''}>Abandonné</option>
-        </select>
-      </div>
-    </div>`;
-  }).join('');
-
-  updateStats(); updateBadges(); updateCatchupBanner();
-}
-
-function updateStats() {
-  document.getElementById('stat-total').textContent = list.length;
-  document.getElementById('stat-eps').textContent = list.reduce((s, x) => s + x.currentEp, 0);
-  document.getElementById('stat-done').textContent = list.filter(x => x.status === 'completed').length;
-  document.getElementById('stat-watching').textContent = list.filter(x => x.status === 'watching').length;
-}
-
-function updateBadges() {
-  const catchup = getCatchupList();
-  document.getElementById('badge-all').textContent = list.length;
-  document.getElementById('badge-watching').textContent = list.filter(x => x.status === 'watching').length;
-  document.getElementById('badge-catchup').textContent = catchup.length;
-  document.getElementById('badge-completed').textContent = list.filter(x => x.status === 'completed').length;
-  document.getElementById('badge-planned').textContent = list.filter(x => x.status === 'planned').length;
-  document.getElementById('badge-dropped').textContent = list.filter(x => x.status === 'dropped').length;
-}
-
-function updateCatchupBanner() {
-  const catchup = getCatchupList();
-  const totalMissing = catchup.reduce((sum, x) => sum + (x.episodes - x.currentEp), 0);
-  const banner = document.getElementById('catchupBanner');
-  document.getElementById('catchupCountText').textContent = `${catchup.length} anime${catchup.length > 1 ? 's' : ''} à rattraper`;
-  document.getElementById('catchupEpisodesText').textContent = `${totalMissing} épisode${totalMissing > 1 ? 's' : ''} manquant${totalMissing > 1 ? 's' : ''} au total`;
-  banner.classList.toggle('show', catchup.length > 0);
-}
-
+// ===== TOAST =====
 function toast(msg, type = 'info') {
   const c = document.getElementById('toastContainer');
-  const t = document.createElement('div');
-  t.className = `toast ${type}`;
-  t.textContent = msg;
-  c.appendChild(t);
-  setTimeout(() => t.remove(), 3000);
+  const t = document.createElement('div'); t.className = `toast ${type}`; t.textContent = msg;
+  c.appendChild(t); setTimeout(() => t.remove(), 3000);
 }
 
+// ===== THEME TOGGLE =====
 (function(){
   const btn = document.querySelector('[data-theme-toggle]');
   const html = document.documentElement;
+  let d = html.getAttribute('data-theme') || 'dark';
+  const sunSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>`;
+  const moonSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+  btn.innerHTML = d === 'dark' ? sunSvg : moonSvg;
   btn.addEventListener('click', () => {
-    const isDark = html.getAttribute('data-theme') === 'dark';
-    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
-    btn.innerHTML = isDark
-      ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
-      : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+    d = d === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', d);
+    btn.innerHTML = d === 'dark' ? sunSvg : moonSvg;
   });
 })();
 
+// ===== INIT =====
 render();
+renderTrending();
 </script>
 </body>
 </html>
