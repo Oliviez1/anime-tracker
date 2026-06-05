@@ -442,12 +442,30 @@ function save() {
 // =============================================
 // ANILIST API — avec fallback proxy CORS
 // =============================================
-const ANILIST_DIRECT = 'https://graphql.anilist.co';
-const ANILIST_PROXY  = 'https://corsproxy.io/?' + encodeURIComponent('https://graphql.anilist.co');
-
 async function queryAniList(query, variables) {
   const body = JSON.stringify({ query, variables });
   const headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' };
+
+  const endpoints = [
+    'https://graphql.anilist.co',
+    'https://corsproxy.io/?' + encodeURIComponent('https://graphql.anilist.co'),
+    'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://graphql.anilist.co'),
+  ];
+
+  let lastError;
+  for (const url of endpoints) {
+    try {
+      const r = await fetch(url, { method: 'POST', headers, body });
+      if (!r.ok) { lastError = new Error('HTTP ' + r.status); continue; }
+      const d = await r.json();
+      if (d.errors) throw new Error(d.errors[0].message);
+      return d.data;
+    } catch(e) {
+      lastError = e;
+    }
+  }
+  throw lastError || new Error('Impossible de contacter AniList');
+}
 
   // Essaie d'abord en direct, bascule sur le proxy si CORS bloqué
   for (const url of [ANILIST_DIRECT, ANILIST_PROXY]) {
