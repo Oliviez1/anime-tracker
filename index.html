@@ -65,10 +65,19 @@ a{color:var(--primary);text-decoration:none}
 .nav{display:flex;gap:4px;margin-left:16px}
 .nav-btn{
   padding:6px 14px;border-radius:var(--r-full);font-size:.875rem;font-weight:600;
-  color:var(--muted);transition:all .18s;cursor:pointer;
+  color:var(--muted);transition:all .18s;cursor:pointer;position:relative;
 }
 .nav-btn:hover{color:var(--text);background:var(--surface2)}
 .nav-btn.active{color:var(--primary);background:color-mix(in srgb,var(--primary) 12%,transparent)}
+.nav-badge{
+  position:absolute;top:-4px;right:-4px;
+  min-width:18px;height:18px;border-radius:var(--r-full);
+  background:var(--orange);color:#fff;
+  font-size:.65rem;font-weight:800;
+  display:flex;align-items:center;justify-content:center;padding:0 4px;
+  display:none;
+}
+.nav-badge.show{display:flex}
 .topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px}
 .icon-btn{
   width:36px;height:36px;border-radius:var(--r-md);
@@ -123,6 +132,7 @@ a{color:var(--primary);text-decoration:none}
 .ac-thumb{width:36px;height:50px;object-fit:cover;border-radius:6px;flex-shrink:0;background:var(--surface2)}
 .ac-info{flex:1;min-width:0}
 .ac-title{font-weight:600;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ac-title em{font-style:normal;color:var(--primary);font-weight:800}
 .ac-meta{font-size:.8rem;color:var(--muted)}
 .ac-loader,.ac-empty{padding:14px;text-align:center;color:var(--muted);font-size:.875rem}
 
@@ -272,23 +282,39 @@ a{color:var(--primary);text-decoration:none}
 }
 .btn-remove:hover{background:var(--red);color:#fff}
 
-/* ---- NOTIF BANNER ---- */
-.notif-banner{
-  background:color-mix(in srgb,var(--orange) 12%,transparent);
-  border:1px solid color-mix(in srgb,var(--orange) 35%,transparent);
-  border-radius:var(--r-lg);padding:14px 18px;margin-bottom:24px;
-  display:flex;flex-direction:column;gap:8px;
+/* ---- NOUVEAUTES PAGE ---- */
+.nouveautes-header{margin-bottom:28px}
+.nouveautes-header h1{font-size:1.6rem;font-weight:900;letter-spacing:-.03em;margin-bottom:6px}
+.nouveautes-header p{color:var(--muted);font-size:.9rem}
+.new-section{margin-bottom:36px}
+.new-section-title{
+  font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:8px;
 }
-.notif-banner-title{font-weight:700;font-size:.9rem;color:var(--orange);display:flex;align-items:center;gap:8px}
-.notif-item{
-  display:flex;align-items:center;gap:10px;padding:8px 0;
-  border-top:1px solid color-mix(in srgb,var(--orange) 15%,transparent);
-  cursor:pointer;
+.new-section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.new-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r-lg);display:flex;align-items:center;gap:14px;
+  padding:12px 16px;margin-bottom:10px;cursor:pointer;
+  transition:box-shadow .18s,border-color .2s;
 }
-.notif-item:hover .notif-anime-title{color:var(--primary);text-decoration:underline}
-.notif-thumb{width:32px;height:44px;object-fit:cover;border-radius:4px;flex-shrink:0}
-.notif-anime-title{font-weight:600;font-size:.875rem;flex:1}
-.notif-msg{font-size:.8rem;color:var(--orange);font-weight:600;white-space:nowrap}
+.new-card:hover{box-shadow:var(--sh-md);border-color:var(--border2)}
+.new-card-cover{width:44px;height:62px;object-fit:cover;border-radius:var(--r-sm);flex-shrink:0;background:var(--surface2)}
+.new-card-info{flex:1;min-width:0}
+.new-card-title{font-weight:700;font-size:.9rem;margin-bottom:3px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.new-card-sub{font-size:.8rem;color:var(--muted)}
+.new-card-badge{
+  flex-shrink:0;padding:5px 12px;border-radius:var(--r-full);
+  font-size:.78rem;font-weight:800;white-space:nowrap;
+}
+.badge-new{background:var(--green-bg);color:var(--green)}
+.badge-missing{background:var(--orange-bg);color:var(--orange)}
+.new-empty{
+  text-align:center;padding:48px 24px;color:var(--muted);
+}
+.new-empty svg{margin:0 auto 14px;color:var(--faint)}
+.new-empty h3{color:var(--text);font-size:1rem;margin-bottom:6px}
 
 /* ---- MY LIST PAGE ---- */
 .list-page-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:24px}
@@ -383,6 +409,10 @@ a{color:var(--primary);text-decoration:none}
   <nav class="nav">
     <button class="nav-btn active" data-page="search">🔍 Recherche</button>
     <button class="nav-btn" data-page="mylist">📋 Ma liste <span id="listCount" style="font-size:.75rem;opacity:.7"></span></button>
+    <button class="nav-btn" data-page="nouveautes" id="navNouveautes">
+      🔔 Nouveautés
+      <span class="nav-badge" id="navBadge"></span>
+    </button>
   </nav>
   <div class="topbar-right">
     <button class="icon-btn" id="themeBtn" title="Changer le thème">
@@ -432,7 +462,6 @@ a{color:var(--primary);text-decoration:none}
       </label>
     </div>
   </div>
-  <div id="notifZone"></div>
   <div class="stats-row">
     <div class="stat-card"><span class="stat-num" id="sTotal">0</span><span class="stat-lbl">Total</span></div>
     <div class="stat-card"><span class="stat-num" style="color:var(--orange)" id="sWatching">0</span><span class="stat-lbl">En cours</span></div>
@@ -448,6 +477,19 @@ a{color:var(--primary);text-decoration:none}
     <button class="tab" data-tab="rewatching">↺ Revisionnage</button>
   </div>
   <div class="list-grid" id="listGrid"></div>
+</div>
+</div>
+
+<!-- NOUVEAUTES PAGE -->
+<div class="page" id="page-nouveautes">
+<div class="wrap">
+  <div class="nouveautes-header">
+    <h1>🔔 Nouveautés</h1>
+    <p>Nouveaux épisodes disponibles et épisodes que tu n'as pas encore regardés.</p>
+  </div>
+  <div id="nouveautesContent">
+    <div class="spin-wrap"><div class="spin"></div> Vérification en cours…</div>
+  </div>
 </div>
 </div>
 
@@ -483,7 +525,8 @@ document.querySelectorAll('.nav-btn').forEach(btn=>{
     document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('page-'+btn.dataset.page).classList.add('active');
-    if(btn.dataset.page==='mylist'){renderList();renderStats();checkNewEpisodes();}
+    if(btn.dataset.page==='mylist'){renderList();renderStats();}
+    if(btn.dataset.page==='nouveautes'){renderNouveautes();}
   });
 });
 
@@ -524,7 +567,15 @@ async function gql(query,variables){
   return r.json();
 }
 
-// ---- AUTOCOMPLETE (dès 1 lettre) ----
+// ---- HIGHLIGHT matching prefix ----
+function highlightMatch(title, query){
+  if(!query)return h(title);
+  const idx=title.toLowerCase().indexOf(query.toLowerCase());
+  if(idx<0)return h(title);
+  return h(title.slice(0,idx))+'<em>'+h(title.slice(idx,idx+query.length))+'</em>'+h(title.slice(idx+query.length));
+}
+
+// ---- AUTOCOMPLETE (dès 1 lettre, titres commençant par la lettre en premier) ----
 const searchInput=document.getElementById('searchInput');
 const acBox=document.getElementById('autocomplete');
 
@@ -543,16 +594,29 @@ document.addEventListener('click',e=>{if(!e.target.closest('.search-box-wrap'))a
 async function fetchAC(q){
   acBox.innerHTML='<div class="ac-loader">Recherche…</div>';
   acBox.classList.add('open');
-  const Q=`query($s:String){Page(page:1,perPage:8){media(search:$s,type:ANIME,sort:POPULARITY_DESC){id title{userPreferred}episodes coverImage{medium}format seasonYear}}}`;
+  const Q=`query($s:String){Page(page:1,perPage:16){media(search:$s,type:ANIME,sort:POPULARITY_DESC){id title{userPreferred romaji english}episodes coverImage{medium}format seasonYear}}}`;
   try{
     const d=await gql(Q,{s:q});
-    const items=d?.data?.Page?.media||[];
+    let items=d?.data?.Page?.media||[];
     if(!items.length){acBox.innerHTML='<div class="ac-empty">Aucun résultat</div>';return;}
+
+    // Tri : titres commençant par la requête en premier, ensuite contient, ensuite le reste
+    const ql=q.toLowerCase();
+    items=items.slice().sort((a,b)=>{
+      const ta=(a.title.userPreferred||a.title.romaji||'').toLowerCase();
+      const tb=(b.title.userPreferred||b.title.romaji||'').toLowerCase();
+      const aStarts=ta.startsWith(ql)?0:1;
+      const bStarts=tb.startsWith(ql)?0:1;
+      return aStarts-bStarts;
+    });
+    // On garde les 8 premiers après tri
+    items=items.slice(0,8);
+
     acBox.innerHTML=items.map(it=>{
-      const t=it.title.userPreferred||'?';
+      const t=it.title.userPreferred||it.title.romaji||'?';
       return `<div class="ac-item" data-id="${it.id}">
         <img class="ac-thumb" src="${h(it.coverImage?.medium||'')}" alt="" loading="lazy">
-        <div class="ac-info"><div class="ac-title">${h(t)}</div><div class="ac-meta">${h(it.format||'?')} · ${it.episodes||'?'} ép. · ${it.seasonYear||'?'}</div></div>
+        <div class="ac-info"><div class="ac-title">${highlightMatch(t,q)}</div><div class="ac-meta">${h(it.format||'?')} · ${it.episodes||'?'} ép. · ${it.seasonYear||'?'}</div></div>
       </div>`;
     }).join('');
     acBox.querySelectorAll('.ac-item').forEach(el=>{
@@ -646,7 +710,6 @@ async function openModal(id){
     const score=m.averageScore?`${m.averageScore/10}/10`:'N/A';
     const banner=m.bannerImage||m.coverImage?.extraLarge||'';
 
-    // Prochain épisode
     let nextEpHtml='';
     if(m.nextAiringEpisode){
       const ep=m.nextAiringEpisode.episode;
@@ -698,7 +761,6 @@ async function openModal(id){
         </div>
       </div>`;
 
-    // status picker
     const sg=mc.querySelector('#statusGrid');
     function setStatus(s){
       pendingStatus=s;
@@ -741,44 +803,99 @@ document.getElementById('modalClose').addEventListener('click',closeModal);
 document.getElementById('overlay').addEventListener('click',e=>{if(e.target===document.getElementById('overlay'))closeModal();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
 
-// ---- NOTIFICATIONS NOUVEAUX EPISODES ----
-async function checkNewEpisodes(){
-  const zone=document.getElementById('notifZone');
-  zone.innerHTML='';
-  // On vérifie seulement les animes "En cours"
-  const watching=list.filter(a=>a.status==='watching'&&a.episodes>0);
-  if(!watching.length)return;
-  const Q=`query($ids:[Int]){Page(perPage:50){media(id_in:$ids,type:ANIME){id episodes}}}`;
-  try{
-    const d=await gql(Q,{ids:watching.map(a=>a.id)});
-    const fresh=d?.data?.Page?.media||[];
-    const alerts=[];
-    fresh.forEach(f=>{
-      const local=list.find(a=>a.id===f.id);
-      if(local&&f.episodes&&f.episodes>local.episodes){
-        const diff=f.episodes-local.episodes;
-        // Met à jour le total stocké
-        local.episodes=f.episodes;
-        alerts.push({anime:local,diff,newTotal:f.episodes});
-      }
-    });
-    if(alerts.length){
-      saveList();
-      zone.innerHTML=`
-        <div class="notif-banner">
-          <div class="notif-banner-title">🔔 Nouveaux épisodes disponibles !</div>
-          ${alerts.map(a=>`
-            <div class="notif-item" data-id="${a.anime.id}">
-              <img class="notif-thumb" src="${h(a.anime.cover)}" alt="">
-              <span class="notif-anime-title">${h(a.anime.title)}</span>
-              <span class="notif-msg">+${a.diff} ép. → ${a.newTotal} au total</span>
-            </div>`).join('')}
-        </div>`;
-      zone.querySelectorAll('.notif-item').forEach(el=>{
-        el.addEventListener('click',()=>openModal(parseInt(el.dataset.id)));
+// ---- NOUVEAUTES ----
+let nouveautesCache={newEps:[],missing:[]};
+
+async function renderNouveautes(){
+  const zone=document.getElementById('nouveautesContent');
+  zone.innerHTML='<div class="spin-wrap"><div class="spin"></div> Vérification en cours…</div>';
+
+  // 1. Épisodes manquants (local, immédiat)
+  const missing=list.filter(a=>a.episodes>0&&a.currentEpisode<a.episodes&&a.status!=='planned');
+
+  // 2. Nouveaux épisodes (API, animes "en cours" avec total connu)
+  const watching=list.filter(a=>a.status==='watching'&&a.id);
+  let newEps=[];
+  if(watching.length){
+    try{
+      const Q=`query($ids:[Int]){Page(perPage:50){media(id_in:$ids,type:ANIME){id episodes}}}`;
+      const d=await gql(Q,{ids:watching.map(a=>a.id)});
+      const fresh=d?.data?.Page?.media||[];
+      fresh.forEach(f=>{
+        const local=list.find(a=>a.id===f.id);
+        if(local&&f.episodes&&f.episodes>local.episodes){
+          const diff=f.episodes-local.episodes;
+          newEps.push({anime:local,diff,newTotal:f.episodes,oldTotal:local.episodes});
+          // Mise à jour silencieuse du total
+          local.episodes=f.episodes;
+        }
       });
-    }
-  }catch(e){console.warn('Notif check failed',e);}
+      if(newEps.length)saveList();
+    }catch(e){console.warn('nouveautes check failed',e);}
+  }
+
+  nouveautesCache={newEps,missing};
+  // Badge
+  const total=newEps.length+missing.length;
+  const badge=document.getElementById('navBadge');
+  if(total>0){badge.textContent=total>99?'99+':total;badge.classList.add('show');}
+  else badge.classList.remove('show');
+
+  // Rendu
+  if(!newEps.length&&!missing.length){
+    zone.innerHTML=`
+      <div class="new-empty">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <h3>Tout est à jour !</h3>
+        <p>Tu as regardé tous les épisodes disponibles de tes animes en cours.</p>
+      </div>`;
+    return;
+  }
+
+  let html='';
+
+  if(newEps.length){
+    html+=`<div class="new-section"><div class="new-section-title">✨ Nouveaux épisodes (${newEps.length})</div>`;
+    newEps.forEach(({anime,diff,newTotal})=>{
+      html+=`<div class="new-card" data-id="${anime.id}">
+        <img class="new-card-cover" src="${h(anime.cover)}" alt="" loading="lazy">
+        <div class="new-card-info">
+          <div class="new-card-title">${h(anime.title)}</div>
+          <div class="new-card-sub">Tu es à l'ép. ${anime.currentEpisode} · Maintenant ${newTotal} épisodes dispo</div>
+        </div>
+        <span class="new-card-badge badge-new">+${diff} nouveau${diff>1?'x':''}</span>
+      </div>`;
+    });
+    html+=`</div>`;
+  }
+
+  if(missing.length){
+    html+=`<div class="new-section"><div class="new-section-title">⚠ Épisodes non regardés (${missing.length})</div>`;
+    missing.forEach(anime=>{
+      const nb=anime.episodes-anime.currentEpisode;
+      html+=`<div class="new-card" data-id="${anime.id}">
+        <img class="new-card-cover" src="${h(anime.cover)}" alt="" loading="lazy">
+        <div class="new-card-info">
+          <div class="new-card-title">${h(anime.title)}</div>
+          <div class="new-card-sub">Ép. ${anime.currentEpisode} / ${anime.episodes} regardés</div>
+        </div>
+        <span class="new-card-badge badge-missing">${nb} à voir</span>
+      </div>`;
+    });
+    html+=`</div>`;
+  }
+
+  zone.innerHTML=html;
+  zone.querySelectorAll('.new-card').forEach(el=>{
+    el.addEventListener('click',()=>openModal(parseInt(el.dataset.id)));
+  });
+}
+
+// Badge auto au chargement si liste non vide
+function updateBadgeQuick(){
+  const missing=list.filter(a=>a.episodes>0&&a.currentEpisode<a.episodes&&a.status!=='planned');
+  const badge=document.getElementById('navBadge');
+  if(missing.length){badge.textContent=missing.length>99?'99+':missing.length;badge.classList.add('show');}
 }
 
 // ---- LIST RENDER ----
@@ -847,7 +964,7 @@ document.getElementById('exportBtn').addEventListener('click',()=>{
 document.getElementById('importInput').addEventListener('change',async e=>{
   const f=e.target.files?.[0];if(!f)return;
   try{const t=await f.text();const d=JSON.parse(t);if(!Array.isArray(d))throw 0;
-    list=d;saveList();updateListCount();renderList();renderStats();
+    list=d;saveList();updateListCount();renderList();renderStats();updateBadgeQuick();
     toast('Import réussi — '+d.length+' animes','ok');
   }catch{toast('Fichier invalide','err');}
   e.target.value='';
@@ -856,6 +973,7 @@ document.getElementById('importInput').addEventListener('change',async e=>{
 // ---- INIT ----
 updateListCount();
 renderStats();
+updateBadgeQuick();
 })();
 </script>
 </body>
