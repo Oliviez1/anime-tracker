@@ -728,7 +728,18 @@ async function fetchSynopsisFR(malId) {
     return null;
   }
 }
-
+async function translateToFR(text) {
+  if (!text || text.length < 10) return text;
+  try {
+    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text.slice(0, 500))}&langpair=en|fr`;
+    const r = await fetch(url);
+    const json = await r.json();
+    if (json.responseStatus === 200) return json.responseData.translatedText;
+    return text;
+  } catch {
+    return text;
+  }
+}
 function mergeSearchResults(local, jikan, anilist) {
   const map = new Map();
   [...local, ...jikan, ...anilist].forEach(item => {
@@ -1083,9 +1094,15 @@ async function openModalById(id) {
     const data = await fetchAnimeDetails(id);
     const local = animeList.find(x => x.id === id);
     // Récupérer synopsis FR si dispo
-    if (data.malId) {
-      const synopsisFR = await fetchSynopsisFR(data.malId);
-      if (synopsisFR) data.synopsis = synopsisFR;
+        if (data.synopsis) {
+      const cacheKey = `synopsis_${data.id}`;
+      if (detailsCache[cacheKey]) {
+        data.synopsis = detailsCache[cacheKey];
+      } else {
+        const translated = await translateToFR(data.synopsis);
+        detailsCache[cacheKey] = translated;
+        data.synopsis = translated;
+      }
     }
     banner.src = data.banner || data.cover;
     cover.src = data.cover;
