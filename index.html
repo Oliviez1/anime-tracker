@@ -272,6 +272,24 @@ a{color:var(--primary);text-decoration:none}
 }
 .btn-remove:hover{background:var(--red);color:#fff}
 
+/* ---- NOTIF BANNER ---- */
+.notif-banner{
+  background:color-mix(in srgb,var(--orange) 12%,transparent);
+  border:1px solid color-mix(in srgb,var(--orange) 35%,transparent);
+  border-radius:var(--r-lg);padding:14px 18px;margin-bottom:24px;
+  display:flex;flex-direction:column;gap:8px;
+}
+.notif-banner-title{font-weight:700;font-size:.9rem;color:var(--orange);display:flex;align-items:center;gap:8px}
+.notif-item{
+  display:flex;align-items:center;gap:10px;padding:8px 0;
+  border-top:1px solid color-mix(in srgb,var(--orange) 15%,transparent);
+  cursor:pointer;
+}
+.notif-item:hover .notif-anime-title{color:var(--primary);text-decoration:underline}
+.notif-thumb{width:32px;height:44px;object-fit:cover;border-radius:4px;flex-shrink:0}
+.notif-anime-title{font-weight:600;font-size:.875rem;flex:1}
+.notif-msg{font-size:.8rem;color:var(--orange);font-weight:600;white-space:nowrap}
+
 /* ---- MY LIST PAGE ---- */
 .list-page-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:24px}
 .list-page-header h1{font-size:1.6rem;font-weight:900;letter-spacing:-.03em}
@@ -414,6 +432,7 @@ a{color:var(--primary);text-decoration:none}
       </label>
     </div>
   </div>
+  <div id="notifZone"></div>
   <div class="stats-row">
     <div class="stat-card"><span class="stat-num" id="sTotal">0</span><span class="stat-lbl">Total</span></div>
     <div class="stat-card"><span class="stat-num" style="color:var(--orange)" id="sWatching">0</span><span class="stat-lbl">En cours</span></div>
@@ -464,7 +483,7 @@ document.querySelectorAll('.nav-btn').forEach(btn=>{
     document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('page-'+btn.dataset.page).classList.add('active');
-    if(btn.dataset.page==='mylist'){renderList();renderStats();}
+    if(btn.dataset.page==='mylist'){renderList();renderStats();checkNewEpisodes();}
   });
 });
 
@@ -483,6 +502,7 @@ function toast(msg,type=''){
   el.className='toast';
   if(type==='ok')el.style.borderColor='var(--green)';
   if(type==='err')el.style.borderColor='var(--red)';
+  if(type==='warn')el.style.borderColor='var(--orange)';
   el.textContent=msg;
   document.getElementById('toasts').appendChild(el);
   setTimeout(()=>el.remove(),3200);
@@ -504,15 +524,15 @@ async function gql(query,variables){
   return r.json();
 }
 
-// ---- AUTOCOMPLETE ----
+// ---- AUTOCOMPLETE (dès 1 lettre) ----
 const searchInput=document.getElementById('searchInput');
 const acBox=document.getElementById('autocomplete');
 
 searchInput.addEventListener('input',()=>{
   clearTimeout(acTimer);
   const q=searchInput.value.trim();
-  if(q.length<2){acBox.classList.remove('open');acBox.innerHTML='';return;}
-  acTimer=setTimeout(()=>fetchAC(q),280);
+  if(q.length<1){acBox.classList.remove('open');acBox.innerHTML='';return;}
+  acTimer=setTimeout(()=>fetchAC(q),180);
 });
 searchInput.addEventListener('keydown',e=>{
   if(e.key==='Enter'){acBox.classList.remove('open');doSearch(searchInput.value.trim(),1);}
@@ -523,7 +543,7 @@ document.addEventListener('click',e=>{if(!e.target.closest('.search-box-wrap'))a
 async function fetchAC(q){
   acBox.innerHTML='<div class="ac-loader">Recherche…</div>';
   acBox.classList.add('open');
-  const Q=`query($s:String){Page(page:1,perPage:6){media(search:$s,type:ANIME,sort:POPULARITY_DESC){id title{userPreferred}episodes coverImage{medium}format seasonYear}}}`;
+  const Q=`query($s:String){Page(page:1,perPage:8){media(search:$s,type:ANIME,sort:POPULARITY_DESC){id title{userPreferred}episodes coverImage{medium}format seasonYear}}}`;
   try{
     const d=await gql(Q,{s:q});
     const items=d?.data?.Page?.media||[];
@@ -614,7 +634,7 @@ async function openModal(id){
   const mc=document.getElementById('modalContent');
   ov.classList.add('open');
   mc.innerHTML='<div class="spin-wrap" style="min-height:300px"><div class="spin"></div> Chargement…</div>';
-  const Q=`query($id:Int){Media(id:$id,type:ANIME){id title{userPreferred english romaji}description episodes status format seasonYear averageScore genres coverImage{extraLarge large}bannerImage studios(isMain:true){nodes{name}}tags{name rank isMediaSpoiler}duration}}`;
+  const Q=`query($id:Int){Media(id:$id,type:ANIME){id title{userPreferred english romaji}description episodes status format seasonYear averageScore genres coverImage{extraLarge large}bannerImage studios(isMain:true){nodes{name}}duration nextAiringEpisode{episode timeUntilAiring}}}`;
   try{
     const d=await gql(Q,{id});
     const m=d?.data?.Media;
@@ -625,6 +645,18 @@ async function openModal(id){
     const desc=strip(m.description||'').substring(0,600)+(m.description?.length>600?'…':'');
     const score=m.averageScore?`${m.averageScore/10}/10`:'N/A';
     const banner=m.bannerImage||m.coverImage?.extraLarge||'';
+
+    // Prochain épisode
+    let nextEpHtml='';
+    if(m.nextAiringEpisode){
+      const ep=m.nextAiringEpisode.episode;
+      const secs=m.nextAiringEpisode.timeUntilAiring;
+      const days=Math.floor(secs/86400);
+      const hrs=Math.floor((secs%86400)/3600);
+      const timeStr=days>0?`dans ${days}j ${hrs}h`:`dans ${hrs}h`;
+      nextEpHtml=`<div class="modal-stat" style="color:var(--green);background:var(--green-bg)">📡 Ép. ${ep} ${timeStr}</div>`;
+    }
+
     mc.innerHTML=`
       ${banner?`<img src="${h(banner)}" alt="" class="modal-banner" loading="lazy">`:`<div class="modal-banner-placeholder"></div>`}
       <div class="modal-body">
@@ -640,13 +672,14 @@ async function openModal(id){
               <div class="modal-stat">📅 ${m.seasonYear||'?'}</div>
               <div class="modal-stat">⏱ ${m.duration||'?'} min/ép.</div>
               <div class="modal-stat">🏢 ${h(studios)}</div>
+              ${nextEpHtml}
             </div>
           </div>
         </div>
         ${(m.genres||[]).length?`<div class="modal-genres">${m.genres.map(g=>`<span class="genre-tag">${h(g)}</span>`).join('')}</div>`:''}
         ${desc?`<div class="modal-desc">${h(desc)}</div>`:''}
         <div class="modal-add-section">
-          <h3>Ajouter à ma liste</h3>
+          <h3>${inList?'Mettre à jour':'Ajouter à ma liste'}</h3>
           <div class="status-grid" id="statusGrid">
             <div class="status-pick" data-s="watching">▶<br>En cours</div>
             <div class="status-pick" data-s="completed">✓<br>Terminé</div>
@@ -678,7 +711,7 @@ async function openModal(id){
 
     mc.querySelector('#modalConfirm').addEventListener('click',()=>{
       const ep=Math.max(0,parseInt(mc.querySelector('#modalEp').value)||0);
-      const anime={id:m.id,title:m.title.userPreferred||m.title.romaji,episodes:m.episodes||0,cover:m.coverImage?.large||'',siteUrl:'https://anilist.co/anime/'+m.id,status:pendingStatus,currentEpisode:ep};
+      const anime={id:m.id,title:m.title.userPreferred||m.title.romaji,episodes:m.episodes||0,cover:m.coverImage?.large||'',status:pendingStatus,currentEpisode:ep};
       const idx=list.findIndex(a=>a.id===m.id);
       if(idx>=0)list[idx]=anime;
       else list.unshift(anime);
@@ -708,12 +741,52 @@ document.getElementById('modalClose').addEventListener('click',closeModal);
 document.getElementById('overlay').addEventListener('click',e=>{if(e.target===document.getElementById('overlay'))closeModal();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
 
+// ---- NOTIFICATIONS NOUVEAUX EPISODES ----
+async function checkNewEpisodes(){
+  const zone=document.getElementById('notifZone');
+  zone.innerHTML='';
+  // On vérifie seulement les animes "En cours"
+  const watching=list.filter(a=>a.status==='watching'&&a.episodes>0);
+  if(!watching.length)return;
+  const Q=`query($ids:[Int]){Page(perPage:50){media(id_in:$ids,type:ANIME){id episodes}}}`;
+  try{
+    const d=await gql(Q,{ids:watching.map(a=>a.id)});
+    const fresh=d?.data?.Page?.media||[];
+    const alerts=[];
+    fresh.forEach(f=>{
+      const local=list.find(a=>a.id===f.id);
+      if(local&&f.episodes&&f.episodes>local.episodes){
+        const diff=f.episodes-local.episodes;
+        // Met à jour le total stocké
+        local.episodes=f.episodes;
+        alerts.push({anime:local,diff,newTotal:f.episodes});
+      }
+    });
+    if(alerts.length){
+      saveList();
+      zone.innerHTML=`
+        <div class="notif-banner">
+          <div class="notif-banner-title">🔔 Nouveaux épisodes disponibles !</div>
+          ${alerts.map(a=>`
+            <div class="notif-item" data-id="${a.anime.id}">
+              <img class="notif-thumb" src="${h(a.anime.cover)}" alt="">
+              <span class="notif-anime-title">${h(a.anime.title)}</span>
+              <span class="notif-msg">+${a.diff} ép. → ${a.newTotal} au total</span>
+            </div>`).join('')}
+        </div>`;
+      zone.querySelectorAll('.notif-item').forEach(el=>{
+        el.addEventListener('click',()=>openModal(parseInt(el.dataset.id)));
+      });
+    }
+  }catch(e){console.warn('Notif check failed',e);}
+}
+
 // ---- LIST RENDER ----
 function renderList(){
   const grid=document.getElementById('listGrid');
   const filtered=currentTab==='all'?list:list.filter(a=>a.status===currentTab);
   if(!filtered.length){
-    grid.innerHTML=`<div class="empty"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><h3>${currentTab==='all'?'Ta liste est vide':'Aucun anime dans cette catégorie'}</h3><p>${currentTab==='all'?'Va dans Recherche pour ajouter des animes.':'Change d\'onglet ou ajoute des animes ici.'}</p></div>`;
+    grid.innerHTML=`<div class="empty"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><h3>${currentTab==='all'?'Ta liste est vide':'Aucun anime dans cette catégorie'}</h3><p>${currentTab==='all'?'Va dans Recherche pour ajouter des animes.':"Change d'onglet ou ajoute des animes ici."}</p></div>`;
     return;
   }
   grid.innerHTML='';
@@ -721,6 +794,7 @@ function renderList(){
     const pct=anime.episodes?Math.round(anime.currentEpisode/anime.episodes*100):0;
     const pillCls='pill-'+anime.status;
     const pillTxt=anime.status==='watching'?'▶ En cours':anime.status==='completed'?'✓ Terminé':anime.status==='planned'?'⏸ À voir':'↺ Revisionnage';
+    const missing=anime.episodes&&anime.currentEpisode<anime.episodes?(anime.episodes-anime.currentEpisode)+' ép. manquants':'';
     const card=document.createElement('article');
     card.className='list-card fade-in';
     card.innerHTML=`
@@ -729,6 +803,7 @@ function renderList(){
         <div class="list-title">${h(anime.title)}</div>
         <div class="list-meta">${anime.episodes?anime.currentEpisode+' / '+anime.episodes+' épisodes':anime.currentEpisode+' ép. vus'}</div>
         <span class="pill ${pillCls}">${pillTxt}</span>
+        ${missing?`<span style="font-size:.72rem;color:var(--orange);font-weight:600">⚠ ${missing}</span>`:''}
         <div class="progress-row">
           <div class="pbar"><div class="pbar-fill" style="width:${pct}%"></div></div>
           <span class="pct">${pct}%</span>
@@ -749,8 +824,7 @@ function renderStats(){
 }
 function updateListCount(){
   const el=document.getElementById('listCount');
-  el.textContent=list.length?'('+list.length+')':
-'';
+  el.textContent=list.length?'('+list.length+')':'';
 }
 
 // ---- TABS ----
