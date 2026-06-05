@@ -1,389 +1,271 @@
 <!DOCTYPE html>
-<html lang="fr" data-theme="dark">
+<html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Anime Tracker</title>
-  <meta name="description" content="Découvre des animés, suis tes épisodes et garde ta liste partout avec export/import JSON." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root, [data-theme="light"] {
-      --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
-      --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
-      --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
-      --text-lg: clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
-      --text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2rem);
-      --space-1: .25rem; --space-2: .5rem; --space-3: .75rem; --space-4: 1rem; --space-5: 1.25rem; --space-6: 1.5rem; --space-8: 2rem; --space-10: 2.5rem; --space-12: 3rem; --space-16: 4rem;
-      --color-bg: #f7f6f2; --color-surface: #f9f8f5; --color-surface-2: #fbfbf9; --color-surface-offset:#edeae5; --color-border:#d4d1ca; --color-divider:#dcd9d5;
-      --color-text:#28251d; --color-text-muted:#68665f; --color-text-faint:#97958e; --color-text-inverse:#f9f8f4;
-      --color-primary:#01696f; --color-primary-hover:#0c4e54; --color-primary-highlight:#cedcd8; --color-blue:#006494; --color-success:#437a22; --color-error:#a12c7b; --color-gold:#d19900;
-      --shadow-sm: 0 1px 2px rgba(0,0,0,.06); --shadow-md: 0 12px 32px rgba(0,0,0,.08); --shadow-lg: 0 18px 40px rgba(0,0,0,.12);
-      --radius-sm:.5rem; --radius-md:.8rem; --radius-lg:1.15rem; --radius-xl:1.5rem; --radius-full:9999px;
-      --font-display:'Inter',sans-serif; --font-body:'DM Sans',sans-serif;
+    :root {
+      --bg: #0b1020;
+      --surface: #141b34;
+      --surface-2: #1b2447;
+      --border: rgba(255,255,255,.12);
+      --text: #eef2ff;
+      --muted: #a9b4d0;
+      --primary: #7c3aed;
+      --primary-2: #4f46e5;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius: 18px;
+      --shadow: 0 18px 50px rgba(0,0,0,.35);
     }
-    [data-theme="dark"] {
-      --color-bg:#121110; --color-surface:#191816; --color-surface-2:#211f1d; --color-surface-offset:#2a2825; --color-border:#3b3834; --color-divider:#2b2926;
-      --color-text:#f1eee7; --color-text-muted:#bcb7ab; --color-text-faint:#8b867a; --color-text-inverse:#181614;
-      --color-primary:#5cb3b1; --color-primary-hover:#7ec7c5; --color-primary-highlight:#233537; --color-blue:#78a9ff; --color-success:#7ec96d; --color-error:#df7fbb; --color-gold:#efc24c;
-      --shadow-sm:0 1px 2px rgba(0,0,0,.24); --shadow-md:0 12px 32px rgba(0,0,0,.32); --shadow-lg:0 18px 40px rgba(0,0,0,.42);
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:'Inter',system-ui,sans-serif;
+      background:linear-gradient(180deg,#090e1c 0%, #0b1020 100%);
+      color:var(--text);
     }
-    *,*::before,*::after{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{margin:0;min-height:100vh;font-family:var(--font-body);font-size:var(--text-base);background:radial-gradient(circle at top right, color-mix(in srgb,var(--color-primary) 14%, transparent), transparent 28%),var(--color-bg);color:var(--color-text);line-height:1.6}
-    img{display:block;max-width:100%;height:auto}
-    button,input,select{font:inherit}
-    a{color:inherit;text-decoration:none}
-    .container{width:min(1200px,calc(100% - 2rem));margin:0 auto}
-    .skip-link{position:absolute;left:-9999px;top:auto}.skip-link:focus{left:1rem;top:1rem;background:var(--color-primary);color:var(--color-text-inverse);padding:.75rem 1rem;border-radius:var(--radius-md);z-index:1000}
-    .site-header{position:sticky;top:0;z-index:50;border-bottom:1px solid color-mix(in srgb,var(--color-border) 85%, transparent);backdrop-filter:blur(16px);background:color-mix(in srgb,var(--color-bg) 78%, transparent)}
-    .header-inner{display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);padding:.9rem 0}
-    .brand{display:flex;align-items:center;gap:.9rem;font-weight:800;font-family:var(--font-display)}
-    .brand-mark{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,var(--color-primary),var(--color-blue));box-shadow:var(--shadow-sm)}
-    .brand-mark svg{width:24px;height:24px;color:white}
-    .header-actions{display:flex;gap:.7rem;align-items:center;flex-wrap:wrap}
-    .btn,.icon-btn{border:none;border-radius:var(--radius-full);cursor:pointer;transition:.18s ease;background:var(--color-surface-2);color:var(--color-text);border:1px solid color-mix(in srgb,var(--color-border) 85%, transparent)}
-    .btn{padding:.85rem 1.1rem;font-weight:700}
-    .btn:hover,.icon-btn:hover{transform:translateY(-1px);background:var(--color-surface-offset)}
-    .btn-primary{background:var(--color-primary);color:var(--color-text-inverse);border-color:transparent}
-    .btn-primary:hover{background:var(--color-primary-hover)}
-    .icon-btn{width:44px;height:44px;display:grid;place-items:center}
-    .hero{padding:var(--space-12) 0 var(--space-8)}
-    .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:var(--space-8);align-items:start}
-    .hero-copy{display:grid;gap:var(--space-5)}
-    .eyebrow{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem .85rem;border-radius:var(--radius-full);background:color-mix(in srgb,var(--color-primary-highlight) 85%, transparent);color:var(--color-text);font-size:var(--text-xs);font-weight:700;text-transform:uppercase;letter-spacing:.08em;width:max-content}
-    h1,h2,h3{font-family:var(--font-display);line-height:1.1;margin:0}
-    h1{font-size:var(--text-xl)}
-    .lead{font-size:var(--text-base);color:var(--color-text-muted);max-width:62ch}
-    .hero-card,.panel,.anime-card,.list-card,.guide-card,.stat-card,.spotlight-card{background:linear-gradient(180deg,color-mix(in srgb,var(--color-surface-2) 92%, transparent),var(--color-surface));border:1px solid color-mix(in srgb,var(--color-border) 88%, transparent);border-radius:var(--radius-xl);box-shadow:var(--shadow-sm)}
-    .hero-card{padding:var(--space-5);display:grid;gap:var(--space-4)}
-    .hero-poster{aspect-ratio:3/4;border-radius:var(--radius-lg);overflow:hidden;background:var(--color-surface-offset)}
-    .hero-poster img{width:100%;height:100%;object-fit:cover}
-    .meta-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-3)}
-    .stat-card{padding:var(--space-4)}
-    .stat-label{font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.08em;color:var(--color-text-faint);font-weight:700}
-    .stat-value{font-size:var(--text-lg);font-weight:800}
-    .section{padding:var(--space-8) 0}
-    .section-head{display:flex;justify-content:space-between;gap:var(--space-4);align-items:end;margin-bottom:var(--space-5)}
-    .section-head p{margin:0;color:var(--color-text-muted)}
-    .search-shell{display:grid;gap:var(--space-4)}
-    .searchbar{display:grid;grid-template-columns:1fr auto auto;gap:var(--space-3)}
-    .input,.select{width:100%;padding:.95rem 1rem;border-radius:var(--radius-lg);border:1px solid color-mix(in srgb,var(--color-border) 90%, transparent);background:var(--color-surface-2);color:var(--color-text)}
-    .searchbar .btn{border-radius:var(--radius-lg)}
-    .tag-row{display:flex;flex-wrap:wrap;gap:.65rem}
-    .chip{padding:.55rem .8rem;border-radius:var(--radius-full);background:var(--color-surface-2);border:1px solid color-mix(in srgb,var(--color-border) 90%, transparent);font-size:var(--text-xs);font-weight:700;color:var(--color-text-muted);cursor:pointer}
-    .chip.active{background:var(--color-primary);color:var(--color-text-inverse);border-color:transparent}
-    .results-grid,.spotlight-grid,.guide-grid,.list-grid{display:grid;gap:var(--space-4)}
-    .results-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
-    .spotlight-grid{grid-template-columns:repeat(5,minmax(0,1fr))}
-    .guide-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
-    .list-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .anime-card{overflow:hidden;display:grid;grid-template-rows:auto 1fr}
-    .anime-cover{position:relative;aspect-ratio:16/10;overflow:hidden;background:var(--color-surface-offset)}
-    .anime-cover img{width:100%;height:100%;object-fit:cover}
-    .score-badge,.format-badge{position:absolute;top:.8rem;padding:.45rem .65rem;border-radius:var(--radius-full);font-size:var(--text-xs);font-weight:800;backdrop-filter:blur(8px)}
-    .score-badge{right:.8rem;background:rgba(0,0,0,.68);color:#fff}
-    .format-badge{left:.8rem;background:color-mix(in srgb,var(--color-primary-highlight) 78%, transparent);color:var(--color-text)}
-    .anime-body{padding:var(--space-4);display:grid;gap:var(--space-3)}
-    .anime-title{font-size:1.08rem;font-weight:800}
-    .anime-meta{display:flex;flex-wrap:wrap;gap:.45rem .55rem;color:var(--color-text-muted);font-size:var(--text-xs)}
-    .badge{display:inline-flex;align-items:center;gap:.35rem;padding:.4rem .65rem;border-radius:var(--radius-full);background:var(--color-surface-offset);font-size:var(--text-xs);font-weight:700}
-    .genres{display:flex;flex-wrap:wrap;gap:.45rem}
-    .synopsis{color:var(--color-text-muted);font-size:var(--text-sm);display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
-    .anime-actions{display:flex;gap:.65rem;flex-wrap:wrap}
-    .anime-actions .btn{flex:1}
-    .spotlight-card{overflow:hidden}
-    .spotlight-card img{aspect-ratio:2/3;width:100%;object-fit:cover}
-    .spotlight-card .info{padding:var(--space-3)}
-    .panel{padding:var(--space-5)}
-    .guide-card{padding:var(--space-5)}
-    .guide-card p{color:var(--color-text-muted);margin:0}
-    .helper{color:var(--color-text-muted);font-size:var(--text-sm)}
-    .empty-state{padding:var(--space-8);text-align:center;color:var(--color-text-muted);border:1px dashed color-mix(in srgb,var(--color-border) 90%, transparent);border-radius:var(--radius-lg);background:color-mix(in srgb,var(--color-surface-2) 92%, transparent)}
-    .list-card{padding:var(--space-4);display:grid;grid-template-columns:120px 1fr;gap:var(--space-4);align-items:start}
-    .list-card img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:var(--radius-lg)}
-    .list-card-controls{display:grid;gap:.8rem}
-    .row{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center}
-    .row > *{flex:1}
-    .episode-input{max-width:120px}
-    .footer{padding:var(--space-8) 0 var(--space-12);color:var(--color-text-muted)}
-    .notice{padding:.95rem 1rem;border-radius:var(--radius-lg);background:color-mix(in srgb,var(--color-primary-highlight) 60%, transparent);color:var(--color-text);font-size:var(--text-sm)}
-    .pill-status{padding:.45rem .7rem;border-radius:var(--radius-full);font-size:var(--text-xs);font-weight:800}
-    .watching{background:color-mix(in srgb,var(--color-blue) 22%, transparent);color:var(--color-text)}
-    .completed{background:color-mix(in srgb,var(--color-success) 26%, transparent);color:var(--color-text)}
-    .planned{background:color-mix(in srgb,var(--color-gold) 22%, transparent);color:var(--color-text)}
-    .danger{background:color-mix(in srgb,var(--color-error) 22%, transparent);color:var(--color-text)}
-    .loader{display:inline-flex;align-items:center;gap:.6rem;font-size:var(--text-sm);color:var(--color-text-muted)}
-    .dot{width:8px;height:8px;border-radius:50%;background:var(--color-primary);animation:pulse 1s infinite alternate}
-    @keyframes pulse{from{transform:scale(.9);opacity:.65}to{transform:scale(1.35);opacity:1}}
-    @media (max-width: 1100px){.hero-grid,.results-grid,.spotlight-grid,.guide-grid,.list-grid{grid-template-columns:1fr 1fr}.spotlight-grid{grid-template-columns:repeat(3,1fr)}}
-    @media (max-width: 760px){.header-inner,.section-head,.row{align-items:stretch}.hero-grid,.results-grid,.spotlight-grid,.guide-grid,.list-grid,.searchbar,.list-card{grid-template-columns:1fr}.meta-grid{grid-template-columns:1fr 1fr}.hero{padding-top:var(--space-8)}.anime-actions{flex-direction:column}.list-card img{max-width:180px}}
+    .container{max-width:1200px;margin:0 auto;padding:24px}
+    .hero{
+      display:flex;justify-content:space-between;gap:20px;align-items:center;
+      padding:24px;border:1px solid var(--border);border-radius:24px;
+      background:linear-gradient(135deg, rgba(124,58,237,.22), rgba(79,70,229,.1));
+      box-shadow:var(--shadow);margin-top:16px;
+    }
+    .hero h1{margin:0 0 8px;font-size:clamp(2rem,4vw,3.4rem)}
+    .hero p{margin:0;color:var(--muted);max-width:65ch;line-height:1.6}
+    .badge{display:inline-block;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.08);color:#dbe4ff;font-size:.9rem;margin-bottom:14px}
+    .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:24px;margin-top:24px}
+    .panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+    .panel h2{margin-top:0;font-size:1.2rem}
+    .search-row{display:flex;gap:12px;flex-wrap:wrap}
+    input,select{
+      background:var(--surface-2);border:1px solid var(--border);color:var(--text);
+      border-radius:14px;padding:14px 16px;font-size:1rem;outline:none
+    }
+    input{flex:1;min-width:240px}
+    button{
+      border:none;border-radius:14px;padding:14px 18px;font-weight:700;cursor:pointer;
+      color:white;background:linear-gradient(135deg,var(--primary),var(--primary-2));
+    }
+    .ghost{background:transparent;border:1px solid var(--border)}
+    .result-list,.anime-list{display:grid;gap:14px;margin-top:18px}
+    .card{
+      display:grid;grid-template-columns:92px 1fr;gap:14px;align-items:start;
+      background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:16px;padding:14px;
+    }
+    .cover{width:92px;height:128px;object-fit:cover;border-radius:12px;background:#222}
+    .title{margin:0 0 6px;font-size:1.05rem}
+    .meta{color:var(--muted);font-size:.92rem;line-height:1.5;margin-bottom:10px}
+    .actions{display:flex;gap:8px;flex-wrap:wrap}
+    .small{padding:10px 12px;font-size:.92rem}
+    .empty{color:var(--muted);padding:10px 2px}
+    .tracker-controls{display:grid;grid-template-columns:1fr 120px 150px auto;gap:10px;margin-top:10px}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;font-size:.8rem;font-weight:700}
+    .watching{background:rgba(245,158,11,.15);color:#fbbf24}
+    .completed{background:rgba(34,197,94,.15);color:#4ade80}
+    .planned{background:rgba(96,165,250,.15);color:#93c5fd}
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .footer-note{margin-top:14px;color:var(--muted);font-size:.92rem;line-height:1.5}
+    .topbar{display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{
+      width:42px;height:42px;border-radius:14px;
+      background:linear-gradient(135deg,var(--primary),var(--primary-2));
+      display:grid;place-items:center;font-weight:800
+    }
+    a{color:#c4b5fd}
+    @media (max-width: 920px){
+      .grid{grid-template-columns:1fr}
+      .tracker-controls{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width: 640px){
+      .hero{flex-direction:column;align-items:flex-start}
+      .card{grid-template-columns:1fr}
+      .cover{width:100%;height:240px}
+      .tracker-controls{grid-template-columns:1fr}
+      .container{padding:16px}
+    }
   </style>
 </head>
 <body>
-  <a class="skip-link" href="#main">Aller au contenu</a>
-  <header class="site-header">
-    <div class="container header-inner">
+  <div class="container">
+    <div class="topbar">
       <div class="brand">
-        <div class="brand-mark" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="Anime Tracker logo"><path d="M4 6.5C4 5.12 5.12 4 6.5 4H18a2 2 0 0 1 2 2v12.5c0 .83-.67 1.5-1.5 1.5H8a4 4 0 0 0-4 4z"/><path d="M8 8h8"/><path d="M8 12h8"/><path d="M8 16h5"/></svg>
-        </div>
+        <div class="logo">A</div>
         <div>
-          <div>Anime Tracker</div>
-          <div class="helper">Découvrir, noter et reprendre tes animés.</div>
+          <strong>Anime Tracker</strong><br>
+          <span style="color:var(--muted)">Recherche AniList + suivi d'épisodes</span>
         </div>
       </div>
-      <div class="header-actions">
-        <button class="icon-btn" id="themeToggle" aria-label="Changer le thème">🌙</button>
-        <button class="btn" id="exportBtn">Exporter JSON</button>
-        <label class="btn" for="importFile">Importer JSON</label>
-        <input id="importFile" type="file" accept="application/json" hidden />
+      <div class="toolbar">
+        <button class="ghost small" id="exportBtn">Exporter JSON</button>
+        <label class="ghost small" style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;padding:10px 12px;border-radius:14px;border:1px solid var(--border)">
+          Importer JSON
+          <input type="file" id="importInput" accept="application/json" style="display:none">
+        </label>
       </div>
     </div>
-  </header>
 
-  <main id="main">
     <section class="hero">
-      <div class="container hero-grid">
-        <div class="hero-copy">
-          <span class="eyebrow">Suivi + découverte</span>
-          <h1>Ton hub perso pour retrouver où tu t’es arrêté et trouver ton prochain anime.</h1>
-          <p class="lead">Recherche dans une grosse base d’animés via AniList, ajoute-les à ta liste, suis ton épisode actuel, consulte les notes, genres, synopsis, studios et découvre des visuels qui donnent envie de changer de série.</p>
-          <div class="notice">Le site est pensé pour être simple à comprendre : tu recherches un anime, tu l’ajoutes à ta liste, tu modifies ton épisode, puis tu exportes ta sauvegarde si tu veux la récupérer ailleurs.</div>
-          <div class="meta-grid">
-            <article class="stat-card"><div class="stat-label">Découverte</div><div class="stat-value">10 visuels</div></article>
-            <article class="stat-card"><div class="stat-label">Sauvegarde</div><div class="stat-value">Local + JSON</div></article>
-            <article class="stat-card"><div class="stat-label">API</div><div class="stat-value">AniList</div></article>
-          </div>
-        </div>
-        <aside class="hero-card" aria-label="Anime mis en avant">
-          <div class="hero-poster">
-            <img id="featuredImage" src="" alt="Anime mis en avant" width="480" height="640" loading="eager" />
-          </div>
-          <div>
-            <h2 id="featuredTitle">Chargement…</h2>
-            <p class="helper" id="featuredMeta">Découverte en cours</p>
-          </div>
-        </aside>
+      <div>
+        <span class="badge">Projet public et gratuit</span>
+        <h1>Garde ta progression anime au même endroit.</h1>
+        <p>Recherche une série via AniList, ajoute-la à ta liste, marque l'épisode où tu t'es arrêté, puis exporte ou importe tes données en JSON pour les récupérer sur un autre appareil.</p>
       </div>
     </section>
 
-    <section class="section">
-      <div class="container">
-        <div class="section-head">
-          <div>
-            <h2>Comment ça marche</h2>
-            <p>Le site t’explique le flux avant même de commencer.</p>
-          </div>
+    <div class="grid">
+      <section class="panel">
+        <h2>Rechercher un anime</h2>
+        <div class="search-row">
+          <input id="searchInput" type="text" placeholder="Ex. One Piece, Naruto, Bleach..." />
+          <button id="searchBtn">Rechercher</button>
         </div>
-        <div class="guide-grid">
-          <article class="guide-card"><h3>1. Recherche</h3><p>Tape un titre, choisis un genre ou lance une recherche globale. Les cartes montrent image, note, épisodes, format, année et synopsis.</p></article>
-          <article class="guide-card"><h3>2. Suivi</h3><p>Ajoute un anime à ta liste perso, sélectionne son statut, puis indique l’épisode où tu t’es arrêté. La liste se met à jour instantanément.</p></article>
-          <article class="guide-card"><h3>3. Sauvegarde</h3><p>Les données sont gardées dans ton navigateur. Pour les retrouver ailleurs, exporte un fichier JSON puis importe-le sur un autre appareil.</p></article>
-        </div>
-      </div>
-    </section>
+        <div id="searchResults" class="result-list"></div>
+      </section>
 
-    <section class="section">
-      <div class="container search-shell">
-        <div class="section-head">
-          <div>
-            <h2>Recherche d’anime</h2>
-            <p>Découvre vite un titre avec beaucoup d’infos utiles pour choisir.</p>
-          </div>
-          <div class="helper" id="resultCount">Aucun résultat pour l’instant.</div>
-        </div>
-        <div class="panel">
-          <div class="searchbar">
-            <input class="input" id="searchInput" type="search" placeholder="Ex: Attack on Titan, Frieren, Naruto..." aria-label="Rechercher un anime" />
-            <select class="select" id="seasonFilter" aria-label="Trier par saison courante ou non">
-              <option value="">Tous</option>
-              <option value="POPULARITY_DESC">Popularité</option>
-              <option value="SCORE_DESC">Meilleure note</option>
-              <option value="TRENDING_DESC">Tendance</option>
-            </select>
-            <button class="btn btn-primary" id="searchBtn">Chercher</button>
-          </div>
-          <div class="tag-row" id="genreChips"></div>
-        </div>
-        <div id="resultsLoader" class="loader" hidden><span class="dot"></span>Recherche en cours…</div>
-        <div id="results" class="results-grid"></div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="container">
-        <div class="section-head">
-          <div>
-            <h2>10 images pour découvrir</h2>
-            <p>Une sélection visuelle de titres populaires pour te donner envie d’en tester d’autres.</p>
-          </div>
-        </div>
-        <div class="spotlight-grid" id="spotlightGrid"></div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="container">
-        <div class="section-head">
-          <div>
-            <h2>Ma liste</h2>
-            <p>Retrouve instantanément où tu t’es arrêté.</p>
-          </div>
-          <div class="helper" id="listCount">0 anime suivi.</div>
-        </div>
-        <div id="myList" class="list-grid"></div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <div class="container">
-      <p>Anime Tracker utilise AniList pour la recherche et les métadonnées. Sauvegarde locale par navigateur avec export/import JSON pour te déplacer d’un appareil à l’autre.</p>
+      <section class="panel">
+        <h2>Ma liste</h2>
+        <div id="animeList" class="anime-list"></div>
+        <p class="footer-note">Les données sont enregistrées dans ton navigateur. Pour les récupérer sur un autre appareil, utilise Exporter / Importer JSON.</p>
+      </section>
     </div>
-  </footer>
+  </div>
 
   <script>
-    const API_URL = 'https://graphql.anilist.co';
-    const STORAGE_KEY = 'animeTrackerList_v1';
-    const GENRES = ['Action','Adventure','Comedy','Drama','Fantasy','Mystery','Romance','Sci-Fi','Slice of Life','Sports'];
-    const state = { list: [], selectedGenre: '', results: [], spotlight: [] };
+    const STORAGE_KEY = 'anime-tracker-list-v1';
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const searchResults = document.getElementById('searchResults');
+    const animeList = document.getElementById('animeList');
+    const exportBtn = document.getElementById('exportBtn');
+    const importInput = document.getElementById('importInput');
 
-    const els = {
-      results: document.getElementById('results'),
-      myList: document.getElementById('myList'),
-      resultCount: document.getElementById('resultCount'),
-      listCount: document.getElementById('listCount'),
-      genreChips: document.getElementById('genreChips'),
-      searchInput: document.getElementById('searchInput'),
-      searchBtn: document.getElementById('searchBtn'),
-      seasonFilter: document.getElementById('seasonFilter'),
-      exportBtn: document.getElementById('exportBtn'),
-      importFile: document.getElementById('importFile'),
-      themeToggle: document.getElementById('themeToggle'),
-      resultsLoader: document.getElementById('resultsLoader'),
-      spotlightGrid: document.getElementById('spotlightGrid'),
-      featuredImage: document.getElementById('featuredImage'),
-      featuredTitle: document.getElementById('featuredTitle'),
-      featuredMeta: document.getElementById('featuredMeta')
-    };
+    let myList = loadList();
+    renderList();
 
-    const theme = { current: matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light' };
-    function applyTheme() {
-      document.documentElement.setAttribute('data-theme', theme.current);
-      els.themeToggle.textContent = theme.current === 'dark' ? '☀️' : '🌙';
-      els.themeToggle.setAttribute('aria-label', theme.current === 'dark' ? 'Passer en thème clair' : 'Passer en thème sombre');
-    }
-    els.themeToggle.addEventListener('click', () => { theme.current = theme.current === 'dark' ? 'light' : 'dark'; applyTheme(); });
-    applyTheme();
-
-    function saveList() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.list)); }
-    function loadList() {
-      try { state.list = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
-      catch { state.list = []; }
-    }
-    function cleanHtml(html='') {
-      const div = document.createElement('div'); div.innerHTML = html; return div.textContent || div.innerText || '';
-    }
-    function truncate(text, n=180) { return text && text.length > n ? text.slice(0,n).trim() + '…' : text || 'Pas de synopsis disponible.'; }
-    function statusClass(status) { return status === 'completed' ? 'completed' : status === 'planned' ? 'planned' : 'watching'; }
-    function statusLabel(status) { return status === 'completed' ? 'Terminé' : status === 'planned' ? 'À voir' : 'En cours'; }
-    function existsInList(id) { return state.list.some(item => item.id === id); }
-
-    async function anilistRequest(query, variables={}) {
-      const res = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({ query, variables })
-      });
-      if (!res.ok) throw new Error('Erreur API AniList');
-      const json = await res.json();
-      if (json.errors) throw new Error(json.errors[0]?.message || 'Erreur inconnue');
-      return json.data;
+    function loadList(){
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+      catch { return []; }
     }
 
-    async function loadSpotlight() {
-      const query = `query ($page:Int,$perPage:Int){ Page(page:$page, perPage:$perPage){ media(sort:POPULARITY_DESC, type:ANIME, isAdult:false){ id title{romaji english} coverImage{large extraLarge} bannerImage averageScore episodes seasonYear genres format studios(isMain:true){nodes{name}} siteUrl } } }`;
-      const data = await anilistRequest(query, { page: 1, perPage: 10 });
-      state.spotlight = data.Page.media;
-      renderSpotlight();
-      if (state.spotlight[0]) {
-        const first = state.spotlight[0];
-        els.featuredImage.src = first.coverImage.extraLarge || first.coverImage.large;
-        els.featuredImage.alt = `Affiche de ${first.title.english || first.title.romaji}`;
-        els.featuredTitle.textContent = first.title.english || first.title.romaji;
-        els.featuredMeta.textContent = `${first.averageScore || 'N/A'} / 100 · ${first.episodes || '?'} épisodes · ${first.studios?.nodes?.[0]?.name || 'Studio inconnu'}`;
-      }
+    function saveList(){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(myList));
+      renderList();
     }
 
-    function renderSpotlight() {
-      els.spotlightGrid.innerHTML = state.spotlight.map(anime => `
-        <article class="spotlight-card">
-          <img src="${anime.coverImage.large}" alt="Affiche de ${anime.title.english || anime.title.romaji}" width="300" height="420" loading="lazy" />
-          <div class="info">
-            <strong>${anime.title.english || anime.title.romaji}</strong>
-            <div class="helper">${anime.averageScore || 'N/A'}/100 · ${anime.seasonYear || 'N/A'}</div>
-          </div>
-        </article>
-      `).join('');
-    }
-
-    function renderGenres() {
-      els.genreChips.innerHTML = GENRES.map(genre => `<button class="chip ${state.selectedGenre === genre ? 'active' : ''}" data-genre="${genre}">${genre}</button>`).join('');
-      [...els.genreChips.querySelectorAll('[data-genre]')].forEach(btn => btn.addEventListener('click', () => {
-        state.selectedGenre = state.selectedGenre === btn.dataset.genre ? '' : btn.dataset.genre;
-        renderGenres();
-        searchAnime();
-      }));
-    }
-
-    async function searchAnime() {
-      els.resultsLoader.hidden = false;
-      const search = els.searchInput.value.trim();
-      const sort = els.seasonFilter.value || 'POPULARITY_DESC';
-      const query = `query ($search:String,$genre:String,$sort:[MediaSort],$page:Int,$perPage:Int){ Page(page:$page, perPage:$perPage){ media(search:$search, genre:$genre, sort:$sort, type:ANIME, isAdult:false){ id title{romaji english native} description(asHtml:false) averageScore episodes seasonYear genres format status coverImage{large extraLarge} bannerImage siteUrl studios(isMain:true){nodes{name}} } } }`;
-      try {
-        const data = await anilistRequest(query, { search: search || undefined, genre: state.selectedGenre || undefined, sort: [sort], page: 1, perPage: 9 });
-        state.results = data.Page.media || [];
-        renderResults();
-      } catch (error) {
-        els.results.innerHTML = `<div class="empty-state">Impossible de charger les résultats pour le moment.</div>`;
-        els.resultCount.textContent = error.message;
-      } finally { els.resultsLoader.hidden = true; }
-    }
-
-    function renderResults() {
-      els.resultCount.textContent = `${state.results.length} résultat(s)`;
-      if (!state.results.length) {
-        els.results.innerHTML = `<div class="empty-state">Aucun anime trouvé. Essaie un autre titre ou retire le filtre de genre.</div>`;
+    async function searchAnime(){
+      const query = searchInput.value.trim();
+      if(!query){
+        searchResults.innerHTML = '<div class="empty">Tape un nom d\'anime pour lancer la recherche.</div>';
         return;
       }
-      els.results.innerHTML = state.results.map(anime => {
-        const title = anime.title.english || anime.title.romaji;
-        const synopsis = truncate(cleanHtml(anime.description), 180);
-        const studio = anime.studios?.nodes?.[0]?.name || 'Studio inconnu';
-        return `
-          <article class="anime-card">
-            <div class="anime-cover">
-              <img src="${anime.bannerImage || anime.coverImage.extraLarge || anime.coverImage.large}" alt="Visuel de ${title}" width="640" height="400" loading="lazy" />
-              <span class="format-badge">${anime.format || 'Anime'}</span>
-              <span class="score-badge">${anime.averageScore || 'N/A'}/100</span>
-            </div>
-            <div class="anime-body">
+      searchResults.innerHTML = '<div class="empty">Recherche en cours...</div>';
+
+      const graphqlQuery = `
+        query ($search: String) {
+          Page(page: 1, perPage: 10) {
+            media(search: $search, type: ANIME, sort: POPULARITY_DESC) {
+              id
+              title { romaji english userPreferred }
+              episodes
+              status
+              coverImage { large }
+              format
+              seasonYear
+              siteUrl
+            }
+          }
+        }
+      `;
+
+      try {
+        const res = await fetch('https://graphql.anilist.co', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({ query: graphqlQuery, variables: { search: query } })
+        });
+        const json = await res.json();
+        const items = json?.data?.Page?.media || [];
+        if(!items.length){
+          searchResults.innerHTML = '<div class="empty">Aucun résultat trouvé.</div>';
+          return;
+        }
+        searchResults.innerHTML = items.map(item => {
+          const title = item.title.userPreferred || item.title.romaji || item.title.english || 'Titre inconnu';
+          return `
+            <article class="card">
+              <img class="cover" src="${item.coverImage?.large || ''}" alt="Couverture ${title}">
               <div>
-                <div class="anime-title">${title}</div>
-                <div class="anime-meta">
-                  <span>${anime.episodes || '?'} épisodes</span>
-                  <span>${anime.seasonYear || 'Année ?'}</span>
-                  <span>${studio}</span>
+                <h3 class="title">${escapeHtml(title)}</h3>
+                <div class="meta">${item.format || 'Format inconnu'} · ${item.episodes || '?'} épisodes · ${item.seasonYear || 'Année inconnue'}</div>
+                <div class="actions">
+                  <button class="small" onclick='addAnime(${JSON.stringify(JSON.stringify({
+                    id: item.id,
+                    title,
+                    episodes: item.episodes || 0,
+                    cover: item.coverImage?.large || '',
+                    siteUrl: item.siteUrl || '',
+                    status: 'watching',
+                    currentEpisode: 1
+                  }))})'>Ajouter à ma liste</button>
+                  <a class="ghost small" href="${item.siteUrl}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;display:inline-flex;align-items:center">Voir sur AniList</a>
                 </div>
               </div>
-              <div class="genres">${(anime.genres || []).slice(0,4).map(g => `<span class="badge">${g}</span>`).join('')}</div>
-              <p class="synopsis">${synopsis}</p>
-              <div class="anime-actions">
-                <button class="btn btn-primary" onclick="addAnime(${anime.id})" ${existsInList(anime.id) ? 'disabled' : ''}>${existsInList(anime.id) ? 'Déjà ajouté' : 'Ajouter à ma liste'}</button>
-                <a class="btn" href="${anime.siteUrl}" target="_blank" rel="noopener noreferrer">Voir AniList</a>
+            </article>
+          `;
+        }).join('');
+      } catch (e) {
+        searchResults.innerHTML = '<div class="empty">Erreur pendant la recherche. Réessaie dans un instant.</div>';
+      }
+    }
+
+    window.addAnime = function(payload){
+      const anime = JSON.parse(JSON.parse(payload));
+      const exists = myList.some(a => a.id === anime.id);
+      if(exists){
+        alert('Cet anime est déjà dans ta liste.');
+        return;
+      }
+      myList.unshift(anime);
+      saveList();
+    }
+
+    function renderList(){
+      if(!myList.length){
+        animeList.innerHTML = '<div class="empty">Tu n\'as encore aucun anime dans ta liste.</div>';
+        return;
+      }
+      animeList.innerHTML = myList.map(anime => {
+        const badgeClass = anime.status === 'completed' ? 'completed' : anime.status === 'planned' ? 'planned' : 'watching';
+        const badgeText = anime.status === 'completed' ? 'Terminé' : anime.status === 'planned' ? 'À voir' : 'En cours';
+        return `
+          <article class="card">
+            <img class="cover" src="${anime.cover}" alt="Couverture ${escapeHtml(anime.title)}">
+            <div>
+              <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap">
+                <div>
+                  <h3 class="title">${escapeHtml(anime.title)}</h3>
+                  <div class="meta">${anime.episodes ? anime.currentEpisode + ' / ' + anime.episodes + ' épisodes' : anime.currentEpisode + ' épisode(s) vus'}</div>
+                </div>
+                <span class="pill ${badgeClass}">${badgeText}</span>
+              </div>
+
+              <div class="tracker-controls">
+                <input type="number" min="0" value="${anime.currentEpisode || 0}" onchange="updateEpisode(${anime.id}, this.value)">
+                <select onchange="updateStatus(${anime.id}, this.value)">
+                  <option value="watching" ${anime.status==='watching'?'selected':''}>En cours</option>
+                  <option value="completed" ${anime.status==='completed'?'selected':''}>Terminé</option>
+                  <option value="planned" ${anime.status==='planned'?'selected':''}>À voir</option>
+                </select>
+                <a class="ghost small" href="${anime.siteUrl}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center">AniList</a>
+                <button class="small" style="background:linear-gradient(135deg,#ef4444,#dc2626)" onclick="removeAnime(${anime.id})">Supprimer</button>
               </div>
             </div>
           </article>
@@ -391,128 +273,58 @@
       }).join('');
     }
 
-    window.addAnime = function(id) {
-      const anime = [...state.results, ...state.spotlight].find(a => a.id === id);
-      if (!anime || existsInList(id)) return;
-      state.list.unshift({
-        id: anime.id,
-        title: anime.title.english || anime.title.romaji,
-        image: anime.coverImage.extraLarge || anime.coverImage.large,
-        score: anime.averageScore || null,
-        episodes: anime.episodes || 0,
-        year: anime.seasonYear || null,
-        format: anime.format || 'ANIME',
-        genres: anime.genres || [],
-        currentEpisode: 1,
-        status: 'watching'
-      });
+    window.updateEpisode = function(id, value){
+      myList = myList.map(anime => anime.id === id ? { ...anime, currentEpisode: Math.max(0, Number(value) || 0) } : anime);
       saveList();
-      renderList();
-      renderResults();
     }
 
-    window.removeAnime = function(id) {
-      state.list = state.list.filter(item => item.id !== id);
+    window.updateStatus = function(id, value){
+      myList = myList.map(anime => anime.id === id ? { ...anime, status: value } : anime);
       saveList();
-      renderList();
-      renderResults();
     }
 
-    window.updateEpisode = function(id, value) {
-      const item = state.list.find(a => a.id === id);
-      if (!item) return;
-      item.currentEpisode = Math.max(0, Number(value || 0));
+    window.removeAnime = function(id){
+      myList = myList.filter(anime => anime.id !== id);
       saveList();
-      renderList();
     }
 
-    window.updateStatus = function(id, value) {
-      const item = state.list.find(a => a.id === id);
-      if (!item) return;
-      item.status = value;
-      saveList();
-      renderList();
-    }
-
-    function renderList() {
-      els.listCount.textContent = `${state.list.length} anime(s) suivi(s).`;
-      if (!state.list.length) {
-        els.myList.innerHTML = `<div class="empty-state">Ta liste est vide. Cherche un anime et ajoute-le pour commencer.</div>`;
-        return;
-      }
-      els.myList.innerHTML = state.list.map(item => `
-        <article class="list-card">
-          <img src="${item.image}" alt="Affiche de ${item.title}" width="240" height="320" loading="lazy" />
-          <div class="list-card-controls">
-            <div>
-              <div class="anime-title">${item.title}</div>
-              <div class="anime-meta">
-                <span>${item.score ? item.score + '/100' : 'Pas de note'}</span>
-                <span>${item.episodes || '?'} épisodes</span>
-                <span>${item.year || 'Année ?'}</span>
-              </div>
-            </div>
-            <div class="genres">${item.genres.slice(0,4).map(g => `<span class="badge">${g}</span>`).join('')}</div>
-            <div class="row">
-              <div>
-                <label class="helper" for="ep-${item.id}">Épisode actuel</label>
-                <input class="input episode-input" id="ep-${item.id}" type="number" min="0" max="${item.episodes || 9999}" value="${item.currentEpisode}" onchange="updateEpisode(${item.id}, this.value)" />
-              </div>
-              <div>
-                <label class="helper" for="status-${item.id}">Statut</label>
-                <select class="select" id="status-${item.id}" onchange="updateStatus(${item.id}, this.value)">
-                  <option value="watching" ${item.status === 'watching' ? 'selected' : ''}>En cours</option>
-                  <option value="completed" ${item.status === 'completed' ? 'selected' : ''}>Terminé</option>
-                  <option value="planned" ${item.status === 'planned' ? 'selected' : ''}>À voir</option>
-                </select>
-              </div>
-            </div>
-            <div class="row">
-              <span class="pill-status ${statusClass(item.status)}">${statusLabel(item.status)}</span>
-              <button class="btn danger" onclick="removeAnime(${item.id})">Retirer</button>
-            </div>
-          </div>
-        </article>
-      `).join('');
-    }
-
-    function exportJson() {
-      const blob = new Blob([JSON.stringify(state.list, null, 2)], { type: 'application/json' });
+    exportBtn.addEventListener('click', () => {
+      const blob = new Blob([JSON.stringify(myList, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
-      a.href = url; a.download = 'anime-tracker-backup.json'; a.click();
+      a.href = url;
+      a.download = 'anime-tracker-backup.json';
+      a.click();
       URL.revokeObjectURL(url);
-    }
-
-    function importJson(file) {
-      const reader = new FileReader();
-      reader.onload = e => {
-        try {
-          const parsed = JSON.parse(e.target.result);
-          if (!Array.isArray(parsed)) throw new Error('Format invalide');
-          state.list = parsed;
-          saveList();
-          renderList();
-        } catch {
-          alert('Le fichier JSON est invalide.');
-        }
-      };
-      reader.readAsText(file);
-    }
-
-    els.exportBtn.addEventListener('click', exportJson);
-    els.importFile.addEventListener('change', e => { if (e.target.files[0]) importJson(e.target.files[0]); e.target.value = ''; });
-    els.searchBtn.addEventListener('click', searchAnime);
-    els.searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') searchAnime(); });
-    els.seasonFilter.addEventListener('change', searchAnime);
-
-    loadList();
-    renderGenres();
-    renderList();
-    loadSpotlight().catch(() => {
-      els.spotlightGrid.innerHTML = '<div class="empty-state">Impossible de charger les images de découverte pour le moment.</div>';
     });
-    searchAnime();
+
+    importInput.addEventListener('change', async (e) => {
+      const file = e.target.files?.[0];
+      if(!file) return;
+      try {
+        const text = await file.text();
+        const data = JSON.parse(text);
+        if(!Array.isArray(data)) throw new Error('Format invalide');
+        myList = data;
+        saveList();
+        alert('Import réussi.');
+      } catch {
+        alert('Le fichier JSON est invalide.');
+      }
+      e.target.value = '';
+    });
+
+    searchBtn.addEventListener('click', searchAnime);
+    searchInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') searchAnime(); });
+
+    function escapeHtml(text){
+      return String(text)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
   </script>
 </body>
 </html>
