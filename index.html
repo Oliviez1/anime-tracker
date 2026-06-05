@@ -440,18 +440,28 @@ function save() {
 }
 
 // =============================================
-// ANILIST API
+// ANILIST API — avec fallback proxy CORS
 // =============================================
+const ANILIST_DIRECT = 'https://graphql.anilist.co';
+const ANILIST_PROXY  = 'https://corsproxy.io/?' + encodeURIComponent('https://graphql.anilist.co');
+
 async function queryAniList(query, variables) {
-  const r = await fetch('https://graphql.anilist.co', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    body: JSON.stringify({ query, variables })
-  });
-  if (!r.ok) throw new Error('AniList API error: ' + r.status);
-  const d = await r.json();
-  if (d.errors) throw new Error(d.errors[0].message);
-  return d.data;
+  const body = JSON.stringify({ query, variables });
+  const headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' };
+
+  // Essaie d'abord en direct, bascule sur le proxy si CORS bloqué
+  for (const url of [ANILIST_DIRECT, ANILIST_PROXY]) {
+    try {
+      const r = await fetch(url, { method: 'POST', headers, body });
+      if (!r.ok) continue;
+      const d = await r.json();
+      if (d.errors) throw new Error(d.errors[0].message);
+      return d.data;
+    } catch(e) {
+      if (url === ANILIST_PROXY) throw e;
+      // Passe au proxy si l'appel direct échoue (CORS)
+    }
+  }
 }
 
 async function searchAnime(term) {
@@ -701,7 +711,6 @@ function renderGrid() {
 
 function renderCardContent(card, a) {
   const pct = a.totalEps ? Math.round((a.currentEp / a.totalEps) * 100) : 0;
-  const stars = a.rating ? '⭐'.repeat(Math.round(a.rating/2)) : '';
   card.innerHTML = `
     <button class="card-delete" data-id="${a.id}" title="Retirer" onclick="removeFromList(${a.id})">✕</button>
     <div class="anime-cover-wrap" onclick="openModalById(${a.id})">
@@ -715,7 +724,7 @@ function renderCardContent(card, a) {
     <div class="anime-card-body">
       <div class="anime-card-title">${a.title}</div>
       <span class="status-badge status-${a.status}">${statusLabel(a.status)}</span>
-      ${a.rating ? `<div class="card-rating-preview">${Array.from({length:10},(_, i)=>`<span class="card-star-preview">${i < a.rating ? '⭐' : '☆'}</span>`).join('')}</div>` : ''}
+      ${a.rating ? `<div class="card-rating-preview">${Array.from({length:10},(_,i)=>`<span class="card-star-preview">${i < a.rating ? '⭐' : '☆'}</span>`).join('')}</div>` : ''}
       ${a.note ? `<div class="card-note-preview">"${a.note}"</div>` : ''}
       <div class="episode-row">
         <button class="ep-btn" onclick="changeEp(${a.id},-1)">−</button>
@@ -898,7 +907,7 @@ function buildProgressSection(local, apiData) {
         <div class="modal-ep-row">
           <span class="modal-ep-label">Épisode actuel</span>
           <div class="modal-ep-btns">
-            <button class="modal-ep-btn" onclick="changeEp(${local.id},-1);refreshModalEp(${local.id})">−5</button>
+            <button class="modal-ep-btn" onclick="changeEp(${local.id},-5);refreshModalEp(${local.id})">−5</button>
             <button class="modal-ep-btn" onclick="changeEp(${local.id},-1);refreshModalEp(${local.id})">−1</button>
           </div>
           <input class="modal-ep-input" id="modalEpInput" type="number" min="0" max="${totalEps}" value="${local.currentEp}"
