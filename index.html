@@ -440,31 +440,56 @@ function save() {
 }
 
 // =============================================
-// ANILIST API — avec fallback proxy CORS
+// ANILIST API — via proxy CORS fiable
 // =============================================
 async function queryAniList(query, variables) {
   const body = JSON.stringify({ query, variables });
   const headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' };
+  const ANILIST = 'https://graphql.anilist.co';
 
-  const endpoints = [
-    'https://graphql.anilist.co',
-    'https://corsproxy.io/?' + encodeURIComponent('https://graphql.anilist.co'),
-    'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://graphql.anilist.co'),
-  ];
-
-  let lastError;
-  for (const url of endpoints) {
-    try {
-      const r = await fetch(url, { method: 'POST', headers, body });
-      if (!r.ok) { lastError = new Error('HTTP ' + r.status); continue; }
+  // 1. Tentative directe
+  try {
+    const r = await fetch(ANILIST, { method: 'POST', headers, body });
+    if (r.ok) {
       const d = await r.json();
-      if (d.errors) throw new Error(d.errors[0].message);
-      return d.data;
-    } catch(e) {
-      lastError = e;
+      if (!d.errors) return d.data;
     }
-  }
-  throw lastError || new Error('Impossible de contacter AniList');
+  } catch(_) {}
+
+  // 2. Proxy corsproxy.io
+  try {
+    const url = 'https://corsproxy.io/?' + encodeURIComponent(ANILIST);
+    const r = await fetch(url, { method: 'POST', headers, body });
+    if (r.ok) {
+      const d = await r.json();
+      if (!d.errors) return d.data;
+    }
+  } catch(_) {}
+
+  // 3. Proxy thingproxy.freeboard.io
+  try {
+    const url = 'https://thingproxy.freeboard.io/fetch/' + ANILIST;
+    const r = await fetch(url, { method: 'POST', headers, body });
+    if (r.ok) {
+      const d = await r.json();
+      if (!d.errors) return d.data;
+    }
+  } catch(_) {}
+
+  // 4. Proxy proxy.cors.sh
+  try {
+    const r = await fetch(ANILIST, {
+      method: 'POST',
+      headers: { ...headers, 'x-cors-api-key': 'temp_' + Math.random().toString(36).slice(2), 'Origin': 'https://oliviez1.github.io' },
+      body
+    });
+    if (r.ok) {
+      const d = await r.json();
+      if (!d.errors) return d.data;
+    }
+  } catch(_) {}
+
+  throw new Error('Impossible de contacter AniList. Vérifie ta connexion.');
 }
 
 async function searchAnime(term) {
@@ -632,7 +657,7 @@ async function performSearch(term) {
       box.innerHTML = '<div class="search-empty">Aucun résultat pour "' + term + '"</div>';
     }
   } catch(e) {
-    box.innerHTML = '<div class="search-empty">Erreur de recherche. Vérifie ta connexion.</div>';
+    box.innerHTML = '<div class="search-empty">Erreur de recherche : ' + e.message + '</div>';
   }
 }
 
