@@ -300,8 +300,7 @@ img { display: block; max-width: 100%; }
   justify-content: space-between;
   gap: var(--space-4);
   flex-wrap: wrap;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  -webkit-
 }
 
 [data-theme="dark"] .main-header { background: rgba(13,13,17,0.88); }
@@ -385,6 +384,7 @@ img { display: block; max-width: 100%; }
   animation: fadeUp 0.18s cubic-bezier(0.16,1,0.3,1);
   scrollbar-width: thin;
   scrollbar-color: var(--surface-3) transparent;
+  overscroll-behavior: contain;
 }
 .search-results.open { display: block; }
 
@@ -636,8 +636,7 @@ img { display: block; max-width: 100%; }
 .modal-overlay {
   position: fixed; inset: 0;
   background: rgba(0,0,0,0.80);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  -webkit-
   z-index: 500;
   display: flex;
   align-items: center;
@@ -662,12 +661,13 @@ img { display: block; max-width: 100%; }
   transition: transform 0.28s cubic-bezier(0.16,1,0.3,1);
   scrollbar-width: thin;
   scrollbar-color: var(--surface-3) transparent;
+  overscroll-behavior: contain;
 }
 .modal-overlay.open .modal { transform: translateY(0) scale(1); }
 
 .modal-hero { position: relative; width: 100%; height: 220px; overflow: hidden; flex-shrink: 0; }
 .modal-banner { width: 100%; height: 100%; object-fit: cover; filter: blur(3px) brightness(0.3) saturate(1.4); transform: scale(1.08); transition: transform 6s ease; }
-.modal-overlay.open .modal-banner { transform: scale(1); }
+
 
 .modal-cover {
   position: absolute;
@@ -688,7 +688,6 @@ img { display: block; max-width: 100%; }
   border-radius: var(--radius-full);
   display: flex; align-items: center; justify-content: center;
   font-size: 0.9rem; z-index: 2;
-  backdrop-filter: blur(4px);
 }
 .modal-close:hover { background: rgba(255,255,255,0.18); transform: scale(1.08); }
 
@@ -761,7 +760,49 @@ img { display: block; max-width: 100%; }
 
 .confetti-piece { position: fixed; width: 7px; height: 12px; border-radius: 2px; pointer-events: none; z-index: 9999; animation: confettiFall linear forwards; }
 
-  </style>
+  
+/* ===== PAGE SYSTEM ===== */
+.page-content { display: none; }
+.page-content.active { display: flex; flex-direction: column; gap: 20px; animation: fadeUp 0.3s cubic-bezier(0.16,1,0.3,1); }
+
+/* ===== EXPLORE CARDS ===== */
+.explore-card-wrap {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); overflow: hidden; cursor: pointer;
+  transition: transform 180ms cubic-bezier(0.16,1,0.3,1), border-color 180ms, box-shadow 180ms;
+  display: flex; flex-direction: column;
+}
+.explore-card-wrap:hover { transform: translateY(-4px); border-color: var(--primary); box-shadow: 0 8px 24px var(--primary-glow); }
+.explore-cover-img { width: 100%; aspect-ratio: 2/3; object-fit: cover; background: var(--surface-3); }
+.explore-card-info { padding: 8px 10px; flex: 1; }
+.explore-card-title { font-weight: 600; font-size: 0.75rem; line-height: 1.3; display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden; }
+.explore-card-score { font-size: 0.7rem; color: var(--gold); font-weight: 700; margin-top: 3px; }
+.explore-add-btn { width: 100%; padding: 5px; background: var(--primary-bg); color: var(--primary); font-size: 0.72rem; font-weight: 700; border: none; cursor: pointer; transition: background 180ms, color 180ms; }
+.explore-add-btn:hover { background: var(--primary); color: #fff; }
+.explore-add-btn.added { background: rgba(46,196,144,0.1); color: var(--green); pointer-events: none; cursor: default; }
+
+/* ===== TOP LIST ===== */
+.top-item {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 10px; cursor: pointer;
+  transition: border-color 180ms, transform 180ms, box-shadow 180ms;
+}
+.top-item:hover { border-color: var(--primary); transform: translateX(4px); box-shadow: var(--shadow); }
+.top-rank { font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem; font-weight: 700; color: var(--text-faint); min-width: 24px; text-align: center; flex-shrink: 0; }
+.top-rank.gold { color: #f0a030; }
+.top-rank.silver { color: #a0aab4; }
+.top-rank.bronze { color: #cd7f32; }
+.top-cover-sm { width: 40px; height: 56px; object-fit: cover; border-radius: 4px; flex-shrink: 0; background: var(--surface-3); }
+.top-info { flex: 1; min-width: 0; }
+.top-title-sm { font-weight: 600; font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.top-meta-sm { font-size: 0.68rem; color: var(--text-muted); margin-top: 2px; }
+.top-score-val { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.78rem; color: var(--gold); flex-shrink: 0; }
+.top-inlist { font-size: 0.68rem; color: var(--green); flex-shrink: 0; }
+
+@media (max-width: 680px) { #topPageGrid { grid-template-columns: 1fr !important; } }
+
+</style>
 </head>
 <body>
 
@@ -802,6 +843,15 @@ img { display: block; max-width: 100%; }
         Abandonnés
         <span class="nav-badge" id="badge-dropped">0</span>
       </button>
+      <div class="nav-section-title" style="margin-top:14px;padding:0 8px;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-faint)">Découvrir</div>
+      <button class="nav-btn" id="nav-explore" onclick="switchPage('explore')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        Explorer
+      </button>
+      <button class="nav-btn" id="nav-top" onclick="switchPage('top')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        Top Animés
+      </button>
     </nav>
 
     <div class="sidebar-footer">
@@ -841,6 +891,8 @@ img { display: block; max-width: 100%; }
     <!-- Body scrollable -->
     <div class="main-body">
 
+      <div class="page-content active" id="page-library">
+
       <!-- Stats -->
       <div class="stats">
         <div class="stat-card"><div class="stat-value" id="statTotal">0</div><div class="stat-label">Animés suivis</div></div>
@@ -872,6 +924,43 @@ img { display: block; max-width: 100%; }
       </div>
 
       <div class="anime-grid" id="animeGrid"></div>
+
+      </div><!-- /page-library -->
+
+      <!-- PAGE: Explorer -->
+      <div class="page-content" id="page-explore">
+        <div>
+          <h2 style="font-family:'Space Grotesk',sans-serif;font-size:1.2rem;margin-bottom:6px">🔍 Explorer</h2>
+          <p style="color:var(--text-muted);font-size:0.82rem;margin-bottom:16px">Découvre des animés par saison, popularité ou genre.</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px" id="exploreTabs">
+            <button class="filter-btn active" onclick="setExploreTab('seasonal',this)">🗓 Cette saison</button>
+            <button class="filter-btn" onclick="setExploreTab('upcoming',this)">⏳ À venir</button>
+            <button class="filter-btn" onclick="setExploreTab('popular',this)">🔥 Populaires</button>
+            <button class="filter-btn" onclick="setExploreTab('romance',this)">💕 Romance</button>
+            <button class="filter-btn" onclick="setExploreTab('action',this)">⚔️ Action</button>
+            <button class="filter-btn" onclick="setExploreTab('scifi',this)">🚀 Sci-Fi</button>
+          </div>
+          <div id="exploreGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(148px,100%),1fr));gap:12px"></div>
+        </div>
+      </div>
+
+      <!-- PAGE: Top Animés -->
+      <div class="page-content" id="page-top">
+        <div>
+          <h2 style="font-family:'Space Grotesk',sans-serif;font-size:1.2rem;margin-bottom:6px">🏆 Top Animés</h2>
+          <p style="color:var(--text-muted);font-size:0.82rem;margin-bottom:16px">Classements AniList — mieux notés et plus populaires.</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px" id="topPageGrid">
+            <div>
+              <div class="modal-section-title" style="margin-bottom:10px">🥇 Mieux notés</div>
+              <div id="topAllTime" style="display:flex;flex-direction:column;gap:8px"></div>
+            </div>
+            <div>
+              <div class="modal-section-title" style="margin-bottom:10px">📺 Plus populaires</div>
+              <div id="topPopular" style="display:flex;flex-direction:column;gap:8px"></div>
+            </div>
+          </div>
+        </div>
+      </div>
 
     </div><!-- /main-body -->
   </main>
@@ -1106,6 +1195,9 @@ function normalizeAniList(media) {
     trailerUrl: media.trailer?.site === 'youtube' && media.trailer?.id ? `https://www.youtube.com/watch?v=${media.trailer.id}` : '',
     trailerYoutubeId: media.trailer?.site === 'youtube' ? media.trailer?.id || '' : '',
     statusApi: media.status || '?',
+    favourites: media.favourites || 0,
+    siteUrl: media.siteUrl || null,
+    nextAiringEpisode: media.nextAiringEpisode || null,
     userStatus: 'planned',
     rating: 0,
     note: '',
@@ -1642,7 +1734,7 @@ async function openModalById(id) {
   const banner = document.getElementById('modalBanner');
   const cover = document.getElementById('modalCover');
 
-  overlay.classList.add('open');
+  overlay.classList.add('open'); document.body.style.overflow='hidden';
     // Si déjà en cache, pré-remplir l'image immédiatement
   const cached = detailsCache[Number(id)];
   if (cached) {
@@ -1684,45 +1776,44 @@ async function openModalById(id) {
           <div class="modal-title">${safeText(data.title)}</div>
           ${data.titleNative ? `<div class="modal-native">${safeText(data.titleNative)}</div>` : ''}
         </div>
+        ${data.siteUrl ? `<a href="${safeText(data.siteUrl)}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;background:var(--primary-bg);color:var(--primary);border-radius:9999px;font-size:0.75rem;font-weight:600;text-decoration:none;flex-shrink:0;white-space:nowrap">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          AniList
+        </a>` : ''}
       </div>
 
       <div class="modal-meta-row">
         ${data.score ? `<span class="modal-chip score">⭐ ${data.score}/10</span>` : ''}
+        ${data.statusApi === 'RELEASING' ? `<span class="modal-chip airing">🟢 En cours</span>` : data.statusApi === 'FINISHED' ? `<span class="modal-chip finished">✓ Terminé</span>` : data.statusApi === 'NOT_YET_RELEASED' ? `<span class="modal-chip not-started">⏳ À venir</span>` : ''}
         ${data.format ? `<span class="modal-chip">${safeText(data.format)}</span>` : ''}
-        ${data.year ? `<span class="modal-chip">${safeText(data.season || '')} ${data.year}</span>` : ''}
-        ${data.studio ? `<span class="modal-chip">${safeText(data.studio)}</span>` : ''}
+        ${data.year ? `<span class="modal-chip">📅 ${safeText(data.season||'')} ${data.year}</span>` : ''}
+        ${data.studio ? `<span class="modal-chip">🎬 ${safeText(data.studio)}</span>` : ''}
+        ${data.nextAiringEpisode ? (()=>{ const s=data.nextAiringEpisode.timeUntilAiring; const d=Math.floor(s/86400),h=Math.floor((s%86400)/3600),m=Math.floor((s%3600)/60); return `<span class="modal-chip airing">⏰ Ep ${data.nextAiringEpisode.episode} dans ${d>0?d+'j ':''} ${h}h${d===0?m+'m':''}</span>`;})() : ''}
       </div>
+
+      ${data.genres?.length ? `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:2px">${data.genres.map(g=>`<span class="modal-genre">${safeText(GENRES_FR[g]||g)}</span>`).join('')}</div>` : ''}
 
       <div>
         <div class="modal-section-title">Synopsis</div>
         <div class="modal-synopsis">${safeText(data.synopsis || 'Aucun synopsis disponible.')}</div>
       </div>
 
-      ${data.genres?.length ? `
-        <div>
-          <div class="modal-section-title">Genres</div>
-          <div class="modal-genres">${data.genres.map(g => `<span class="modal-genre">${safeText(GENRES_FR[g] || g)}</span>`).join('')}</div>
-        </div>
-      ` : ''}
-
       <div>
         <div class="modal-section-title">Informations</div>
         <div class="modal-stats-grid">
-          <div class="modal-stat"><div class="modal-stat-val">${data.totalEps || '?'}</div><div class="modal-stat-lbl">Épisodes</div></div>
-          <div class="modal-stat"><div class="modal-stat-val">${safeText(data.duration)}</div><div class="modal-stat-lbl">Durée</div></div>
-          <div class="modal-stat"><div class="modal-stat-val">${safeText(data.source)}</div><div class="modal-stat-lbl">Source</div></div>
-          <div class="modal-stat"><div class="modal-stat-val">${data.popularity || '?'}</div><div class="modal-stat-lbl">Popularité</div></div>
+          <div class="modal-stat"><div class="modal-stat-val">${data.totalEps||'?'}</div><div class="modal-stat-lbl">Épisodes</div></div>
+          <div class="modal-stat"><div class="modal-stat-val">${safeText(data.duration)||'?'}</div><div class="modal-stat-lbl">Durée / ep</div></div>
+          <div class="modal-stat"><div class="modal-stat-val">${safeText(data.source)||'?'}</div><div class="modal-stat-lbl">Source</div></div>
+          <div class="modal-stat"><div class="modal-stat-val">${data.popularity?'#'+Number(data.popularity).toLocaleString('fr'):'?'}</div><div class="modal-stat-lbl">Popularité</div></div>
+          ${data.favourites?`<div class="modal-stat"><div class="modal-stat-val" style="color:#e06ab0">❤️ ${Number(data.favourites).toLocaleString('fr')}</div><div class="modal-stat-lbl">Favoris AniList</div></div>`:''}
+          ${data.averageScore?`<div class="modal-stat"><div class="modal-stat-val" style="color:var(--gold)">📊 ${data.averageScore}%</div><div class="modal-stat-lbl">Score moyen</div></div>`:''}
         </div>
       </div>
 
-      ${data.trailerUrl ? `
-        <div>
-          <div class="modal-section-title">Trailer</div>
-          <a href="${safeText(data.trailerUrl)}" target="_blank" rel="noopener noreferrer" class="modal-add-btn" style="text-decoration:none">
-            Voir le trailer
-          </a>
-        </div>
-      ` : ''}
+      ${data.trailerUrl ? `<a href="${safeText(data.trailerUrl)}" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 24px;background:linear-gradient(135deg,#e53935,#c62828);color:#fff;border-radius:10px;font-size:0.85rem;font-weight:700;text-decoration:none;box-shadow:0 4px 16px rgba(229,57,53,0.38);margin-top:2px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Voir le trailer YouTube
+      </a>` : ''}
 
       ${local ? buildTrackingSection(local) : `
         <button class="modal-add-btn" onclick='addToList(${JSON.stringify(data).replace(/'/g, "&apos;")}); setTimeout(()=>openModalById(${data.id}), 200)'>
@@ -1736,7 +1827,7 @@ async function openModalById(id) {
           <div class="trending-scroll">${recommendations}</div>
         </div>
       ` : ''}
-    `;
+    `;;
   } catch (e) {
     body.innerHTML = `<div style="padding:var(--space-8);text-align:center;color:var(--text-muted)">Impossible de charger les détails.<br><small>${safeText(e.message)}</small></div>`;
   }
@@ -1979,6 +2070,135 @@ renderGrid();
 updateStats();
 updateBadges();
 loadTrending();
+
+// ========== PAGE NAVIGATION ==========
+let exploreTabCache = {};
+let exploreCurrentTab = 'seasonal';
+let topPageLoaded = false;
+
+function switchPage(page) {
+  document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const pageEl = document.getElementById('page-' + page);
+  if (pageEl) pageEl.classList.add('active');
+  const navEl = document.getElementById('nav-' + page);
+  if (navEl) navEl.classList.add('active');
+  currentView = page;
+  if (page === 'explore') loadExplorePage(exploreCurrentTab);
+  if (page === 'top') loadTopPage();
+}
+
+function setExploreTab(tab, btn) {
+  exploreCurrentTab = tab;
+  document.querySelectorAll('#exploreTabs .filter-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  loadExplorePage(tab);
+}
+
+async function loadExplorePage(tab) {
+  const grid = document.getElementById('exploreGrid');
+  if (!grid) return;
+  if (exploreTabCache[tab]) { renderExploreGrid(exploreTabCache[tab]); return; }
+  grid.innerHTML = '<div style="grid-column:1/-1;padding:40px;text-align:center"><span class="search-spinner" style="width:28px;height:28px;display:inline-block;border-width:3px"></span></div>';
+  try {
+    let media = [];
+    if (tab === 'seasonal') {
+      const now = new Date(); const seasons = ['WINTER','SPRING','SUMMER','FALL'];
+      const s = seasons[Math.floor(now.getMonth()/3)]; const y = now.getFullYear();
+      const d = await anilistFetch(`query($s:MediaSeason,$y:Int){Page(perPage:24){media(type:ANIME,season:$s,seasonYear:$y,sort:POPULARITY_DESC){id title{romaji english}coverImage{large}averageScore format episodes}}}`, {s, y});
+      media = d?.data?.Page?.media || [];
+    } else if (tab === 'upcoming') {
+      const d = await anilistFetch(`{Page(perPage:24){media(type:ANIME,status:NOT_YET_RELEASED,sort:POPULARITY_DESC){id title{romaji english}coverImage{large}averageScore format episodes}}}`, {});
+      media = d?.data?.Page?.media || [];
+    } else if (tab === 'popular') {
+      const d = await anilistFetch(`{Page(perPage:24){media(type:ANIME,sort:POPULARITY_DESC){id title{romaji english}coverImage{large}averageScore format episodes}}}`, {});
+      media = d?.data?.Page?.media || [];
+    } else if (tab === 'romance') {
+      const d = await anilistFetch(`{Page(perPage:24){media(type:ANIME,genre:"Romance",sort:POPULARITY_DESC){id title{romaji english}coverImage{large}averageScore format episodes}}}`, {});
+      media = d?.data?.Page?.media || [];
+    } else if (tab === 'action') {
+      const d = await anilistFetch(`{Page(perPage:24){media(type:ANIME,genre:"Action",sort:POPULARITY_DESC){id title{romaji english}coverImage{large}averageScore format episodes}}}`, {});
+      media = d?.data?.Page?.media || [];
+    } else if (tab === 'scifi') {
+      const d = await anilistFetch(`{Page(perPage:24){media(type:ANIME,genre:"Sci-Fi",sort:POPULARITY_DESC){id title{romaji english}coverImage{large}averageScore format episodes}}}`, {});
+      media = d?.data?.Page?.media || [];
+    }
+    const results = media.map(m => ({ id: m.id, title: m.title?.english || m.title?.romaji || '?', cover: m.coverImage?.large, score: m.averageScore ? (m.averageScore/10).toFixed(1) : null, format: m.format, episodes: m.episodes }));
+    exploreTabCache[tab] = results;
+    renderExploreGrid(results);
+  } catch(e) {
+    if (grid) grid.innerHTML = '<div style="grid-column:1/-1;padding:40px;text-align:center;color:var(--text-muted)">Erreur. Réessaie.</div>';
+  }
+}
+
+function renderExploreGrid(items) {
+  const grid = document.getElementById('exploreGrid');
+  if (!grid) return;
+  if (!items.length) { grid.innerHTML = '<div style="grid-column:1/-1;padding:40px;text-align:center;color:var(--text-muted)">Aucun résultat.</div>'; return; }
+  grid.innerHTML = items.map(a => {
+    const inList = animeList.some(x => x.anilistId === a.id || x.id === a.id);
+    return `<div class="explore-card-wrap">
+      <img class="explore-cover-img" src="${safeText(a.cover)}" alt="${safeText(a.title)}" loading="lazy" onclick="openModalById(${a.id})">
+      <div class="explore-card-info" onclick="openModalById(${a.id})">
+        <div class="explore-card-title">${safeText(a.title)}</div>
+        ${a.score ? `<div class="explore-card-score">⭐ ${a.score}</div>` : ''}
+      </div>
+      <button class="explore-add-btn ${inList ? 'added' : ''}" onclick="event.stopPropagation();${inList ? '' : `quickAddAnime(${a.id})`}">
+        ${inList ? '✓ Dans ta liste' : '+ Ajouter'}
+      </button>
+    </div>`;
+  }).join('');
+}
+
+async function quickAddAnime(anilistId) {
+  try {
+    const data = await fetchAnimeDetails(anilistId);
+    if (!data) return;
+    if (animeList.some(x => x.id === anilistId || x.anilistId === anilistId)) { showToast('Déjà dans ta liste', 'info'); return; }
+    animeList.push({ id: anilistId, anilistId, title: data.title, cover: data.cover, totalEps: data.totalEps || 0, watchedEps: 0, status: 'planned', rating: 0, addedAt: Date.now() });
+    saveList(); renderGrid(); updateStats();
+    showToast(data.title + ' ajouté !', 'success');
+    if (exploreTabCache[exploreCurrentTab]) renderExploreGrid(exploreTabCache[exploreCurrentTab]);
+  } catch(e) { showToast('Erreur lors de l\'ajout', 'error'); }
+}
+
+async function loadTopPage() {
+  if (topPageLoaded) return;
+  topPageLoaded = true;
+  const topEl = document.getElementById('topAllTime');
+  const popEl = document.getElementById('topPopular');
+  if (!topEl || !popEl) return;
+  const skel = Array(15).fill(`<div class="top-item" style="pointer-events:none;opacity:.6"><div style="width:22px;height:12px;background:var(--surface-3);border-radius:3px;flex-shrink:0"></div><div style="width:40px;height:56px;background:var(--surface-3);border-radius:4px;flex-shrink:0"></div><div style="flex:1"><div style="height:10px;background:var(--surface-3);border-radius:3px;margin-bottom:5px"></div><div style="height:9px;width:55%;background:var(--surface-3);border-radius:3px"></div></div></div>`).join('');
+  topEl.innerHTML = skel; popEl.innerHTML = skel;
+  try {
+    const qS = `{Page(perPage:25){media(type:ANIME,sort:SCORE_DESC){id title{romaji english}coverImage{large}averageScore format episodes seasonYear}}}`;
+    const qP = `{Page(perPage:25){media(type:ANIME,sort:POPULARITY_DESC){id title{romaji english}coverImage{large}averageScore format episodes seasonYear}}}`;
+    const [dS, dP] = await Promise.all([anilistFetch(qS, {}), anilistFetch(qP, {})]);
+    const renderTop = (items, el) => {
+      const rc = ['gold','silver','bronze'];
+      el.innerHTML = items.slice(0,15).map((m,i) => {
+        const inList = animeList.some(x => x.anilistId===m.id || x.id===m.id);
+        const score = m.averageScore ? (m.averageScore/10).toFixed(1) : '?';
+        return `<div class="top-item" onclick="openModalById(${m.id})">
+          <div class="top-rank ${rc[i]||''}">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div>
+          <img class="top-cover-sm" src="${safeText(m.coverImage?.large)}" alt="" loading="lazy">
+          <div class="top-info">
+            <div class="top-title-sm">${safeText(m.title?.english||m.title?.romaji||'?')}</div>
+            <div class="top-meta-sm">${m.format||''} ${m.episodes?'· '+m.episodes+' ep':''} ${m.seasonYear?'· '+m.seasonYear:''}</div>
+          </div>
+          <span class="top-score-val">⭐ ${score}</span>
+          ${inList ? '<span class="top-inlist">✓</span>' : ''}
+        </div>`;
+      }).join('');
+    };
+    renderTop(dS?.data?.Page?.media||[], topEl);
+    renderTop(dP?.data?.Page?.media||[], popEl);
+  } catch(e) {
+    topEl.innerHTML = '<p style="color:var(--text-muted);padding:12px">Erreur de chargement.</p>';
+    popEl.innerHTML = '<p style="color:var(--text-muted);padding:12px">Erreur de chargement.</p>';
+  }
+}
+
 </script>
 </body>
 
@@ -2285,8 +2505,7 @@ img { display: block; max-width: 100%; }
   justify-content: space-between;
   gap: var(--space-4);
   flex-wrap: wrap;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  -webkit-
 }
 
 [data-theme="dark"] .main-header { background: rgba(13,13,17,0.88); }
@@ -2370,6 +2589,7 @@ img { display: block; max-width: 100%; }
   animation: fadeUp 0.18s cubic-bezier(0.16,1,0.3,1);
   scrollbar-width: thin;
   scrollbar-color: var(--surface-3) transparent;
+  overscroll-behavior: contain;
 }
 .search-results.open { display: block; }
 
@@ -2621,8 +2841,7 @@ img { display: block; max-width: 100%; }
 .modal-overlay {
   position: fixed; inset: 0;
   background: rgba(0,0,0,0.80);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  -webkit-
   z-index: 500;
   display: flex;
   align-items: center;
@@ -2647,12 +2866,13 @@ img { display: block; max-width: 100%; }
   transition: transform 0.28s cubic-bezier(0.16,1,0.3,1);
   scrollbar-width: thin;
   scrollbar-color: var(--surface-3) transparent;
+  overscroll-behavior: contain;
 }
 .modal-overlay.open .modal { transform: translateY(0) scale(1); }
 
 .modal-hero { position: relative; width: 100%; height: 220px; overflow: hidden; flex-shrink: 0; }
 .modal-banner { width: 100%; height: 100%; object-fit: cover; filter: blur(3px) brightness(0.3) saturate(1.4); transform: scale(1.08); transition: transform 6s ease; }
-.modal-overlay.open .modal-banner { transform: scale(1); }
+
 
 .modal-cover {
   position: absolute;
@@ -2673,7 +2893,6 @@ img { display: block; max-width: 100%; }
   border-radius: var(--radius-full);
   display: flex; align-items: center; justify-content: center;
   font-size: 0.9rem; z-index: 2;
-  backdrop-filter: blur(4px);
 }
 .modal-close:hover { background: rgba(255,255,255,0.18); transform: scale(1.08); }
 
@@ -3091,6 +3310,9 @@ function normalizeAniList(media) {
     trailerUrl: media.trailer?.site === 'youtube' && media.trailer?.id ? `https://www.youtube.com/watch?v=${media.trailer.id}` : '',
     trailerYoutubeId: media.trailer?.site === 'youtube' ? media.trailer?.id || '' : '',
     statusApi: media.status || '?',
+    favourites: media.favourites || 0,
+    siteUrl: media.siteUrl || null,
+    nextAiringEpisode: media.nextAiringEpisode || null,
     userStatus: 'planned',
     rating: 0,
     note: '',
@@ -3627,7 +3849,7 @@ async function openModalById(id) {
   const banner = document.getElementById('modalBanner');
   const cover = document.getElementById('modalCover');
 
-  overlay.classList.add('open');
+  overlay.classList.add('open'); document.body.style.overflow='hidden';
     // Si déjà en cache, pré-remplir l'image immédiatement
   const cached = detailsCache[Number(id)];
   if (cached) {
@@ -3642,17 +3864,6 @@ async function openModalById(id) {
   try {
     const data = await fetchAnimeDetails(id);
     const local = animeList.find(x => x.id === id);
-    // Récupérer synopsis FR si dispo
-        if (data.synopsis) {
-      const cacheKey = `synopsis_${data.id}`;
-      if (detailsCache[cacheKey]) {
-        data.synopsis = detailsCache[cacheKey];
-      } else {
-        const translated = await translateToFR(data.synopsis);
-        detailsCache[cacheKey] = translated;
-        data.synopsis = translated;
-      }
-    }
     banner.src = data.banner || data.cover;
     cover.src = data.cover;
     cover.alt = data.title;
@@ -3675,45 +3886,44 @@ async function openModalById(id) {
           <div class="modal-title">${safeText(data.title)}</div>
           ${data.titleNative ? `<div class="modal-native">${safeText(data.titleNative)}</div>` : ''}
         </div>
+        ${data.siteUrl ? `<a href="${safeText(data.siteUrl)}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;background:var(--primary-bg);color:var(--primary);border-radius:9999px;font-size:0.75rem;font-weight:600;text-decoration:none;flex-shrink:0;white-space:nowrap">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          AniList
+        </a>` : ''}
       </div>
 
       <div class="modal-meta-row">
         ${data.score ? `<span class="modal-chip score">⭐ ${data.score}/10</span>` : ''}
+        ${data.statusApi === 'RELEASING' ? `<span class="modal-chip airing">🟢 En cours</span>` : data.statusApi === 'FINISHED' ? `<span class="modal-chip finished">✓ Terminé</span>` : data.statusApi === 'NOT_YET_RELEASED' ? `<span class="modal-chip not-started">⏳ À venir</span>` : ''}
         ${data.format ? `<span class="modal-chip">${safeText(data.format)}</span>` : ''}
-        ${data.year ? `<span class="modal-chip">${safeText(data.season || '')} ${data.year}</span>` : ''}
-        ${data.studio ? `<span class="modal-chip">${safeText(data.studio)}</span>` : ''}
+        ${data.year ? `<span class="modal-chip">📅 ${safeText(data.season||'')} ${data.year}</span>` : ''}
+        ${data.studio ? `<span class="modal-chip">🎬 ${safeText(data.studio)}</span>` : ''}
+        ${data.nextAiringEpisode ? (()=>{ const s=data.nextAiringEpisode.timeUntilAiring; const d=Math.floor(s/86400),h=Math.floor((s%86400)/3600),m=Math.floor((s%3600)/60); return `<span class="modal-chip airing">⏰ Ep ${data.nextAiringEpisode.episode} dans ${d>0?d+'j ':''} ${h}h${d===0?m+'m':''}</span>`;})() : ''}
       </div>
+
+      ${data.genres?.length ? `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:2px">${data.genres.map(g=>`<span class="modal-genre">${safeText(GENRES_FR[g]||g)}</span>`).join('')}</div>` : ''}
 
       <div>
         <div class="modal-section-title">Synopsis</div>
         <div class="modal-synopsis">${safeText(data.synopsis || 'Aucun synopsis disponible.')}</div>
       </div>
 
-      ${data.genres?.length ? `
-        <div>
-          <div class="modal-section-title">Genres</div>
-          <div class="modal-genres">${data.genres.map(g => `<span class="modal-genre">${safeText(GENRES_FR[g] || g)}</span>`).join('')}</div>
-        </div>
-      ` : ''}
-
       <div>
         <div class="modal-section-title">Informations</div>
         <div class="modal-stats-grid">
-          <div class="modal-stat"><div class="modal-stat-val">${data.totalEps || '?'}</div><div class="modal-stat-lbl">Épisodes</div></div>
-          <div class="modal-stat"><div class="modal-stat-val">${safeText(data.duration)}</div><div class="modal-stat-lbl">Durée</div></div>
-          <div class="modal-stat"><div class="modal-stat-val">${safeText(data.source)}</div><div class="modal-stat-lbl">Source</div></div>
-          <div class="modal-stat"><div class="modal-stat-val">${data.popularity || '?'}</div><div class="modal-stat-lbl">Popularité</div></div>
+          <div class="modal-stat"><div class="modal-stat-val">${data.totalEps||'?'}</div><div class="modal-stat-lbl">Épisodes</div></div>
+          <div class="modal-stat"><div class="modal-stat-val">${safeText(data.duration)||'?'}</div><div class="modal-stat-lbl">Durée / ep</div></div>
+          <div class="modal-stat"><div class="modal-stat-val">${safeText(data.source)||'?'}</div><div class="modal-stat-lbl">Source</div></div>
+          <div class="modal-stat"><div class="modal-stat-val">${data.popularity?'#'+Number(data.popularity).toLocaleString('fr'):'?'}</div><div class="modal-stat-lbl">Popularité</div></div>
+          ${data.favourites?`<div class="modal-stat"><div class="modal-stat-val" style="color:#e06ab0">❤️ ${Number(data.favourites).toLocaleString('fr')}</div><div class="modal-stat-lbl">Favoris AniList</div></div>`:''}
+          ${data.averageScore?`<div class="modal-stat"><div class="modal-stat-val" style="color:var(--gold)">📊 ${data.averageScore}%</div><div class="modal-stat-lbl">Score moyen</div></div>`:''}
         </div>
       </div>
 
-      ${data.trailerUrl ? `
-        <div>
-          <div class="modal-section-title">Trailer</div>
-          <a href="${safeText(data.trailerUrl)}" target="_blank" rel="noopener noreferrer" class="modal-add-btn" style="text-decoration:none">
-            Voir le trailer
-          </a>
-        </div>
-      ` : ''}
+      ${data.trailerUrl ? `<a href="${safeText(data.trailerUrl)}" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 24px;background:linear-gradient(135deg,#e53935,#c62828);color:#fff;border-radius:10px;font-size:0.85rem;font-weight:700;text-decoration:none;box-shadow:0 4px 16px rgba(229,57,53,0.38);margin-top:2px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Voir le trailer YouTube
+      </a>` : ''}
 
       ${local ? buildTrackingSection(local) : `
         <button class="modal-add-btn" onclick='addToList(${JSON.stringify(data).replace(/'/g, "&apos;")}); setTimeout(()=>openModalById(${data.id}), 200)'>
@@ -3727,7 +3937,7 @@ async function openModalById(id) {
           <div class="trending-scroll">${recommendations}</div>
         </div>
       ` : ''}
-    `;
+    `;;
   } catch (e) {
     body.innerHTML = `<div style="padding:var(--space-8);text-align:center;color:var(--text-muted)">Impossible de charger les détails.<br><small>${safeText(e.message)}</small></div>`;
   }
