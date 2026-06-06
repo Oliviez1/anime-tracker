@@ -24,6 +24,7 @@
   --gold:#ffd166;
   --green:#00cec9;
   --blue:#74b9ff;
+  --red:#e06868;
   --radius:8px;
   --radius-lg:12px;
   --shadow:0 4px 24px rgba(0,0,0,0.5);
@@ -244,6 +245,18 @@ img{display:block;max-width:100%}
   display:flex;align-items:center;justify-content:center;
   font-size:0.65rem;font-weight:700;
 }
+/* Bouton supprimer sur les cards de Ma Liste */
+.card-delete-btn{
+  position:absolute;top:8px;left:8px;
+  background:rgba(224,104,104,0.9);color:#fff;
+  width:26px;height:26px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.75rem;font-weight:700;
+  opacity:0;transition:opacity 0.15s;
+  z-index:10;
+  backdrop-filter:blur(4px);
+}
+.anime-card:hover .card-delete-btn{opacity:1}
 
 /* ===== FORMAT FILTER PILLS ===== */
 .format-pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
@@ -338,6 +351,14 @@ img{display:block;max-width:100%}
   transition:all 0.15s;
 }
 .detail-btn-secondary:hover{background:rgba(255,255,255,0.16)}
+.detail-btn-danger{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:9px 20px;background:rgba(224,104,104,0.15);color:#e06868;
+  border-radius:8px;font-size:0.85rem;font-weight:600;
+  border:1px solid rgba(224,104,104,0.3);
+  transition:all 0.15s;
+}
+.detail-btn-danger:hover{background:rgba(224,104,104,0.25)}
 
 .detail-body{
   display:grid;grid-template-columns:1fr 280px;gap:32px;
@@ -386,24 +407,6 @@ img{display:block;max-width:100%}
 .info-key{color:var(--muted)}
 .info-val{font-weight:600;text-align:right}
 
-/* Theme songs */
-.songs-list{display:flex;flex-direction:column;gap:8px}
-.song-item{
-  display:flex;align-items:center;gap:10px;
-  padding:8px 10px;border-radius:8px;background:var(--surface2);
-  cursor:pointer;transition:background 0.15s;font-size:0.78rem;
-}
-.song-item:hover{background:var(--surface3)}
-.song-play{
-  width:26px;height:26px;border-radius:50%;background:var(--primary);
-  color:#fff;display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;font-size:0.6rem;
-}
-.song-text{flex:1;min-width:0}
-.song-title{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.song-eps{color:var(--muted);font-size:0.7rem;margin-top:1px}
-.songs-section-title{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:12px 0 8px}
-
 /* Tracking card */
 .tracking-card{
   background:var(--surface);border:1px solid var(--border);
@@ -443,8 +446,17 @@ img{display:block;max-width:100%}
   border-radius:999px;font-size:0.85rem;font-weight:700;
   box-shadow:0 4px 14px rgba(108,92,231,0.3);
   transition:all 0.15s;
+  margin-bottom:8px;
 }
 .tracking-save-btn:hover{filter:brightness(1.1)}
+.tracking-remove-btn{
+  width:100%;padding:8px;background:transparent;color:var(--red);
+  border-radius:999px;font-size:0.82rem;font-weight:600;
+  border:1px solid rgba(224,104,104,0.3);
+  transition:all 0.15s;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.tracking-remove-btn:hover{background:rgba(224,104,104,0.1);border-color:var(--red)}
 .tracking-add-btn{
   width:100%;padding:10px;background:linear-gradient(135deg,#6c5ce7,#a29bfe);color:#fff;
   border-radius:999px;font-size:0.85rem;font-weight:700;
@@ -943,10 +955,8 @@ async function loadGridPage(type, gridId, perPage = 48) {
 async function filterPage(type, fmt, btn) {
   pageFormatFilter[type] = fmt;
   const gridId = type + 'Grid';
-  // Clear cache for this format
   const cacheKey = type + fmt;
   delete pageDataCache[cacheKey];
-  // Update pills
   btn.closest('.format-pills').querySelectorAll('.format-pill').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   await loadGridPage(type, gridId, 48);
@@ -956,7 +966,6 @@ async function filterPage(type, fmt, btn) {
 // HOME
 // ============================================================
 async function loadHome() {
-  // Load popular & seasonal in parallel
   const popGrid = document.getElementById('homePopular');
   const seaGrid = document.getElementById('homeSeasonal');
   if (!popGrid || !seaGrid) return;
@@ -974,7 +983,6 @@ async function loadHome() {
   popGrid.innerHTML = pop.slice(0,12).map(a => renderCard(a)).join('');
   seaGrid.innerHTML = sea.slice(0,12).map(a => renderCard(a)).join('');
 
-  // Hero from top popular
   buildHero(pop.slice(0,5));
 }
 
@@ -1023,6 +1031,24 @@ function goHero(idx) {
 }
 
 // ============================================================
+// REMOVE FROM LIST
+// ============================================================
+function removeFromList(id, titleStr) {
+  if (!confirm('Supprimer "' + (titleStr || 'cet animé') + '" de ta liste ?')) return;
+  animeList = animeList.filter(x => x.id !== id);
+  saveList();
+  toast('success', (titleStr || 'Animé') + ' supprimé de ta liste');
+  // Si on est sur la page de détail, rafraîchir la tracking card
+  const tc = document.getElementById('trackingCard_' + id);
+  if (tc) {
+    const cached = pageDataCache['detail_' + id];
+    if (cached) tc.innerHTML = renderTrackingCard(normalizeMedia(cached));
+  }
+  // Si on est sur Ma Liste, re-render
+  if (currentPage === 'mylist') renderMyList();
+}
+
+// ============================================================
 // DETAIL PAGE
 // ============================================================
 async function openDetail(id) {
@@ -1039,7 +1065,6 @@ async function openDetail(id) {
     const inList = animeList.find(x => x.id === a.id);
     const rankStr = a.popularity ? `#${a.popularity} Ranking` : '';
 
-    // Build next ep string
     let nextEpStr = '';
     if (a.nextAiringEpisode) {
       const s = a.nextAiringEpisode.timeUntilAiring;
@@ -1047,7 +1072,6 @@ async function openDetail(id) {
       nextEpStr = `Ep ${a.nextAiringEpisode.episode} dans ${d>0?d+'j ':''} ${h}h${d===0?m+'m':''}`;
     }
 
-    // Relations as recommendations
     const recs = (raw.relations?.nodes||[]).filter(r=>r.format).slice(0,8).map(r => normalizeMedia(r));
 
     container.innerHTML = `
@@ -1074,7 +1098,10 @@ async function openDetail(id) {
             ${a.genres.length ? `<div class="detail-genres-row">${a.genres.slice(0,6).map(g=>`<span class="detail-genre-tag">${safeText(GENRES_FR[g]||g)}</span>`).join('')}</div>` : ''}
             <div class="detail-cta-row">
               ${inList ?
-                `<button class="detail-btn-secondary" onclick="openDetail(${a.id})">✓ Dans ta liste</button>` :
+                `<button class="detail-btn-danger" onclick="removeFromList(${a.id}, '${safeText(a.title)}')">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+                  Retirer de ma liste
+                </button>` :
                 `<button class="detail-btn-primary" id="detailAddBtn" onclick="quickAddFromDetail(${a.id})">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                   Add to my list
@@ -1207,259 +1234,12 @@ function renderTrackingCard(a) {
       <div class="stars" id="stars_${a.id}">${stars}</div>
     </div>
     <button class="tracking-save-btn" onclick="saveTracking(${a.id});toast('success','Enregistré !')">Enregistrer</button>
+    <button class="tracking-remove-btn" onclick="removeFromList(${a.id}, '${safeText(inList.title||a.title)}')">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>
+      Retirer de ma liste
+    </button>
   `;
 }
 
 function setRating(id, val) {
-  const item = animeList.find(x => x.id === id);
-  if (item) {
-    item.rating = val;
-    saveList();
-    const starsEl = document.getElementById('stars_'+id);
-    if (starsEl) starsEl.innerHTML = [1,2,3,4,5].map(n=>`<span class="star-btn ${val>=n?'on':''}" onclick="setRating(${id},${n})">★</span>`).join('');
-  }
-}
-
-function saveTracking(id) {
-  const item = animeList.find(x => x.id === id);
-  if (!item) return;
-  const statusEl = document.getElementById('status_'+id);
-  const epsEl = document.getElementById('eps_'+id);
-  if (statusEl) item.status = statusEl.value;
-  if (epsEl) {
-    item.watchedEps = parseInt(epsEl.value) || 0;
-    const total = item.totalEps || 0;
-    const pct = total ? Math.min(100,(item.watchedEps/total)*100) : 0;
-    const progEl = document.getElementById('prog_'+id);
-    if (progEl) progEl.style.width = pct + '%';
-  }
-  saveList();
-}
-
-async function quickAddFromDetail(id) {
-  const cached = pageDataCache['detail_'+id];
-  if (cached) {
-    const a = normalizeMedia(cached);
-    if (!animeList.some(x=>x.id===id)) {
-      animeList.push({id,anilistId:id,title:a.title,cover:a.cover,totalEps:a.episodes||0,watchedEps:0,status:'planned',rating:0,addedAt:Date.now()});
-      saveList();
-      toast('success', a.title + ' ajouté !');
-      // Refresh tracking card
-      const tc = document.getElementById('trackingCard_'+id);
-      if (tc) tc.innerHTML = renderTrackingCard(a);
-      const addBtn = document.getElementById('detailAddBtn');
-      if (addBtn) addBtn.outerHTML = `<button class="detail-btn-secondary">✓ Dans ta liste</button>`;
-    } else {
-      toast('info','Déjà dans ta collection');
-    }
-  }
-}
-
-// ============================================================
-// MY LIST
-// ============================================================
-let listFilterCurrent = 'all';
-function setListFilter(f, btn) {
-  listFilterCurrent = f;
-  document.querySelectorAll('.list-tab').forEach(b=>b.classList.remove('active'));
-  if(btn) btn.classList.add('active');
-  renderMyList();
-}
-
-function renderMyList() {
-  // Stats
-  const statsEl = document.getElementById('listStats');
-  const total = animeList.length;
-  const watching = animeList.filter(a=>a.status==='watching').length;
-  const completed = animeList.filter(a=>a.status==='completed').length;
-  const planned = animeList.filter(a=>a.status==='planned').length;
-  const totalEps = animeList.reduce((s,a)=>s+(a.watchedEps||0),0);
-  const avgRating = animeList.filter(a=>a.rating>0).length ? (animeList.filter(a=>a.rating>0).reduce((s,a)=>s+(a.rating||0),0)/animeList.filter(a=>a.rating>0).length).toFixed(1) : '—';
-  if (statsEl) statsEl.innerHTML = [
-    [total,'Titres'],
-    [totalEps,'Épisodes vus'],
-    [watching,'En cours'],
-    [completed,'Terminés'],
-    [planned,'À voir'],
-    [avgRating,'Note /5'],
-  ].map(([v,l])=>`<div class="list-stat"><div class="list-stat-val">${v}</div><div class="list-stat-lbl">${l}</div></div>`).join('');
-
-  const grid = document.getElementById('myListGrid');
-  if (!grid) return;
-  let items = animeList;
-  if (listFilterCurrent !== 'all') items = animeList.filter(a=>a.status===listFilterCurrent);
-  if (!items.length) {
-    grid.innerHTML = `<div style="grid-column:1/-1;padding:40px;text-align:center;color:var(--muted)">
-      ${listFilterCurrent==='all' ? 'Aucun animé dans ta collection.<br><br><button class="nav-btn-primary" onclick="goPage(\'home\')">Explorer le catalogue</button>' : 'Aucun titre dans cette catégorie.'}
-    </div>`;
-    return;
-  }
-  grid.innerHTML = items.map(a => {
-    const fmt = (a.format||'TV').toUpperCase();
-    const fmtClass = fmt==='MOVIE'?'movie':fmt==='ONA'?'ona':fmt==='OVA'?'ova':'tv';
-    const score = a.score ? a.score : null;
-    return `<div class="anime-card" onclick="openDetail(${a.id})">
-      <img class="anime-card-cover" src="${safeText(a.cover)}" alt="${safeText(a.title)}" loading="lazy">
-      ${score ? `<div class="card-score-badge"><span class="star">★</span>${score}</div>` : ''}
-      <div class="card-inlist" style="background:${a.status==='completed'?'var(--green)':a.status==='watching'?'var(--primary)':a.status==='dropped'?'#e06868':'var(--blue)'}">
-        ${a.status==='completed'?'✓':a.status==='watching'?'▶':a.status==='dropped'?'✗':'📅'}
-      </div>
-      <div class="card-info">
-        <div class="card-title">${safeText(a.title)}</div>
-        <div class="card-year" style="display:flex;justify-content:space-between">
-          <span>${a.year||''}</span>
-          ${a.rating ? `<span style="color:var(--gold)">★ ${a.rating}/5</span>` : ''}
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function saveList() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(animeList));
-}
-
-// ============================================================
-// SEARCH
-// ============================================================
-const navSearch = document.getElementById('navSearchInput');
-const navResults = document.getElementById('navSearchResults');
-
-navSearch.addEventListener('input', function() {
-  clearTimeout(searchTimer);
-  const term = this.value.trim();
-  if (!term) { navResults.classList.remove('open'); return; }
-  navResults.innerHTML = '<div class="sr-loading"><span class="spinner"></span></div>';
-  navResults.classList.add('open');
-  searchTimer = setTimeout(() => doSearch(term), 350);
-});
-
-navSearch.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { navResults.classList.remove('open'); navSearch.blur(); }
-});
-
-document.addEventListener('click', e => {
-  if (!e.target.closest('.nav-search-wrap')) navResults.classList.remove('open');
-});
-
-async function doSearch(term) {
-  try {
-    const localHits = animeList.filter(a => (a.title||'').toLowerCase().includes(term.toLowerCase()));
-
-    // AniList search (primary, fast)
-    const anilistSearch = anilistFetch(`query($q:String){Page(perPage:8){media(search:$q,type:ANIME,sort:SEARCH_MATCH){id title{romaji english}coverImage{large}averageScore format seasonYear status}}}`, {q:term});
-
-    // Jikan search (secondary, with timeout)
-    const jikanSearch = new Promise(async (res) => {
-      try {
-        const ac = new AbortController();
-        const t = setTimeout(() => ac.abort(), 4000);
-        const r = await fetch(`${JIKAN}/anime?q=${encodeURIComponent(term)}&limit=5&sfw=false`, {signal:ac.signal});
-        clearTimeout(t);
-        if (!r.ok) { res([]); return; }
-        const d = await r.json();
-        res((d.data||[]).map(a => ({
-          id: a.mal_id, title: a.title_english || a.title || '?',
-          cover: a.images?.webp?.image_url || a.images?.jpg?.image_url,
-          score: a.score ? (a.score).toFixed(2)*1 : null,
-          format: a.type, year: a.year
-        })));
-      } catch { res([]); }
-    });
-
-    const [anilistRes, jikanRes] = await Promise.allSettled([anilistSearch, jikanSearch]);
-
-    const anilistItems = (anilistRes.status==='fulfilled' ? anilistRes.value?.data?.Page?.media||[] : [])
-      .map(m => ({id:m.id,title:m.title?.english||m.title?.romaji||'?',cover:m.coverImage?.large,score:m.averageScore?(m.averageScore/10).toFixed(1)*1:null,format:m.format,year:m.seasonYear}));
-
-    const jikanItems = jikanRes.status==='fulfilled' ? jikanRes.value : [];
-
-    // Dedup
-    const seen = new Set();
-    const merged = [];
-    [...anilistItems].forEach(a => { if(!seen.has('al_'+a.id)){seen.add('al_'+a.id);merged.push({...a,_src:'al'})} });
-    jikanItems.forEach(a => { if(!seen.has('jk_'+a.id)){seen.add('jk_'+a.id);merged.push({...a,_src:'jk'})} });
-
-    if (!merged.length && !localHits.length) {
-      navResults.innerHTML = `<div class="sr-empty">Aucun résultat pour "${safeText(term)}"</div>`;
-      return;
-    }
-
-    let html = '';
-    if (localHits.length) {
-      html += `<div class="sr-section">📚 Ma liste</div>`;
-      html += localHits.slice(0,3).map(a => `
-        <div class="sr-item" onclick="openDetail(${a.id});navResults.classList.remove('open');navSearch.value=''">
-          <img class="sr-cover" src="${safeText(a.cover)}" alt="" loading="lazy">
-          <div class="sr-info">
-            <div class="sr-title">${safeText(a.title)}</div>
-            <div class="sr-meta">${a.format||''} ${a.year?'· '+a.year:''}</div>
-          </div>
-          <span style="font-size:0.7rem;color:var(--green);font-weight:700">✓</span>
-        </div>`).join('');
-    }
-    if (merged.length) {
-      html += `<div class="sr-section">🌐 Résultats</div>`;
-      html += merged.slice(0,8).map(a => `
-        <div class="sr-item" onclick="closeSrAndOpen(${a.id})">
-          <img class="sr-cover" src="${safeText(a.cover)}" alt="" loading="lazy">
-          <div class="sr-info">
-            <div class="sr-title">${safeText(a.title)}</div>
-            <div class="sr-meta">${a.format||''} ${a.year?'· '+a.year:''}</div>
-          </div>
-          ${a.score ? `<span class="sr-score">★ ${a.score}</span>` : ''}
-        </div>`).join('');
-    }
-    navResults.innerHTML = html;
-  } catch(e) {
-    navResults.innerHTML = `<div class="sr-error">Erreur : ${safeText(e.message)}</div>`;
-  }
-}
-
-function closeSrAndOpen(id) {
-  navResults.classList.remove('open');
-  navSearch.value = '';
-  openDetail(id);
-}
-
-// ============================================================
-// TOAST
-// ============================================================
-function toast(type, msg) {
-  const c = document.getElementById('toasts');
-  const el = document.createElement('div');
-  el.className = `toast-item ${type}`;
-  const icons = {success:'✓',error:'✕',info:'ℹ'};
-  el.innerHTML = `<span>${icons[type]||'ℹ'}</span><span>${safeText(msg)}</span>`;
-  c.appendChild(el);
-  setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 250); }, 3000);
-}
-
-// ============================================================
-// THEME
-// ============================================================
-function toggleTheme() {
-  const d = document.documentElement;
-  const isDark = d.getAttribute('data-theme') === 'dark';
-  d.setAttribute('data-theme', isDark ? 'light' : 'dark');
-  document.getElementById('themeIcon').innerHTML = isDark
-    ? '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>'
-    : '<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>';
-  localStorage.setItem('theme', isDark?'light':'dark');
-}
-
-// ============================================================
-// INIT
-// ============================================================
-(function init() {
-  const savedTheme = localStorage.getItem('theme');
-  if (savedTheme) {
-    document.documentElement.setAttribute('data-theme', savedTheme);
-    if (savedTheme === 'light') {
-      document.getElementById('themeIcon').innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
-    }
-  }
-  loadHome();
-  updateNavLinks('popular');
-})();
-</script>
+  co
