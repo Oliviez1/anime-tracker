@@ -237,6 +237,18 @@ img{display:block;max-width:100%}
   margin-bottom:3px;
 }
 .card-year{font-size:0.7rem;color:var(--muted)}
+
+.card-remove-btn{
+  position:absolute;top:8px;left:8px;
+  width:26px;height:26px;border-radius:50%;
+  background:rgba(224,68,68,0.88);color:#fff;
+  font-size:0.7rem;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:opacity 0.15s;z-index:10;
+  backdrop-filter:blur(4px);border:none;
+  cursor:pointer;
+}
+.anime-card:hover .card-remove-btn{opacity:1}
 .card-inlist{
   position:absolute;bottom:52px;right:8px;
   background:var(--green);color:#fff;
@@ -1301,6 +1313,7 @@ function renderMyList() {
     return `<div class="anime-card" onclick="openDetail(${a.id})">
       <img class="anime-card-cover" src="${safeText(a.cover)}" alt="${safeText(a.title)}" loading="lazy">
       ${score ? `<div class="card-score-badge"><span class="star">★</span>${score}</div>` : ''}
+      <button class="card-remove-btn" onclick="removeFromList(${a.id}, event)" title="Retirer de la liste">✕</button>
       <div class="card-inlist" style="background:${a.status==='completed'?'var(--green)':a.status==='watching'?'var(--primary)':a.status==='dropped'?'#e06868':'var(--blue)'}">
         ${a.status==='completed'?'✓':a.status==='watching'?'▶':a.status==='dropped'?'✗':'📅'}
       </div>
@@ -1318,6 +1331,17 @@ function renderMyList() {
 function saveList() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(animeList));
 }
+
+function removeFromList(id, event) {
+  event.stopPropagation();
+  const item = animeList.find(x => x.id === id);
+  const title = item ? item.title : 'Animé';
+  animeList = animeList.filter(x => x.id !== id);
+  saveList();
+  renderMyList();
+  toast('info', title + ' retiré de ta liste');
+}
+
 
 // ============================================================
 // SEARCH
