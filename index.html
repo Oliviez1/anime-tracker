@@ -766,41 +766,31 @@ img { display: block; max-width: 100%; }
 .page-content.active { display: flex; flex-direction: column; gap: 20px; animation: fadeUp 0.3s cubic-bezier(0.16,1,0.3,1); }
 
 /* ===== EXPLORE CARDS ===== */
-.explore-card-wrap {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius-lg); overflow: hidden; cursor: pointer;
-  transition: transform 180ms cubic-bezier(0.16,1,0.3,1), border-color 180ms, box-shadow 180ms;
-  display: flex; flex-direction: column;
-}
-.explore-card-wrap:hover { transform: translateY(-4px); border-color: var(--primary); box-shadow: 0 8px 24px var(--primary-glow); }
-.explore-cover-img { width: 100%; aspect-ratio: 2/3; object-fit: cover; background: var(--surface-3); }
-.explore-card-info { padding: 8px 10px; flex: 1; }
-.explore-card-title { font-weight: 600; font-size: 0.75rem; line-height: 1.3; display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden; }
-.explore-card-score { font-size: 0.7rem; color: var(--gold); font-weight: 700; margin-top: 3px; }
-.explore-add-btn { width: 100%; padding: 5px; background: var(--primary-bg); color: var(--primary); font-size: 0.72rem; font-weight: 700; border: none; cursor: pointer; transition: background 180ms, color 180ms; }
-.explore-add-btn:hover { background: var(--primary); color: #fff; }
-.explore-add-btn.added { background: rgba(46,196,144,0.1); color: var(--green); pointer-events: none; cursor: default; }
+.explore-card-wrap { background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;cursor:pointer;transition:transform 180ms cubic-bezier(0.16,1,0.3,1),border-color 180ms,box-shadow 180ms;display:flex;flex-direction:column; }
+.explore-card-wrap:hover { transform:translateY(-4px);border-color:var(--primary);box-shadow:0 8px 24px var(--primary-glow); }
+.explore-cover-img { width:100%;aspect-ratio:2/3;object-fit:cover;background:var(--surface-3); }
+.explore-card-info { padding:8px 10px;flex:1; }
+.explore-card-title { font-weight:600;font-size:0.75rem;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden; }
+.explore-card-score { font-size:0.7rem;color:var(--gold);font-weight:700;margin-top:3px; }
+.explore-add-btn { width:100%;padding:5px;background:var(--primary-bg);color:var(--primary);font-size:0.72rem;font-weight:700;border:none;cursor:pointer;transition:background 180ms,color 180ms; }
+.explore-add-btn:hover { background:var(--primary);color:#fff; }
+.explore-add-btn.added { background:rgba(46,196,144,0.1);color:var(--green);pointer-events:none;cursor:default; }
 
 /* ===== TOP LIST ===== */
-.top-item {
-  display: flex; align-items: center; gap: 10px;
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius-lg); padding: 10px; cursor: pointer;
-  transition: border-color 180ms, transform 180ms, box-shadow 180ms;
-}
-.top-item:hover { border-color: var(--primary); transform: translateX(4px); box-shadow: var(--shadow); }
-.top-rank { font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem; font-weight: 700; color: var(--text-faint); min-width: 24px; text-align: center; flex-shrink: 0; }
-.top-rank.gold { color: #f0a030; }
-.top-rank.silver { color: #a0aab4; }
-.top-rank.bronze { color: #cd7f32; }
-.top-cover-sm { width: 40px; height: 56px; object-fit: cover; border-radius: 4px; flex-shrink: 0; background: var(--surface-3); }
-.top-info { flex: 1; min-width: 0; }
-.top-title-sm { font-weight: 600; font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.top-meta-sm { font-size: 0.68rem; color: var(--text-muted); margin-top: 2px; }
-.top-score-val { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.78rem; color: var(--gold); flex-shrink: 0; }
-.top-inlist { font-size: 0.68rem; color: var(--green); flex-shrink: 0; }
+.top-item { display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:10px;cursor:pointer;transition:border-color 180ms,transform 180ms,box-shadow 180ms; }
+.top-item:hover { border-color:var(--primary);transform:translateX(4px);box-shadow:var(--shadow); }
+.top-rank { font-family:'Space Grotesk',sans-serif;font-size:0.85rem;font-weight:700;color:var(--text-faint);min-width:24px;text-align:center;flex-shrink:0; }
+.top-rank.gold { color:#f0a030; }
+.top-rank.silver { color:#a0aab4; }
+.top-rank.bronze { color:#cd7f32; }
+.top-cover-sm { width:40px;height:56px;object-fit:cover;border-radius:4px;flex-shrink:0;background:var(--surface-3); }
+.top-info { flex:1;min-width:0; }
+.top-title-sm { font-weight:600;font-size:0.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+.top-meta-sm { font-size:0.68rem;color:var(--text-muted);margin-top:2px; }
+.top-score-val { font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:0.78rem;color:var(--gold);flex-shrink:0; }
+.top-inlist { font-size:0.68rem;color:var(--green);flex-shrink:0; }
 
-@media (max-width: 680px) { #topPageGrid { grid-template-columns: 1fr !important; } }
+@media(max-width:680px) { #topPageGrid { grid-template-columns:1fr !important; } }
 
 </style>
 </head>
@@ -1118,7 +1108,10 @@ async function processJikanQueue() {
   jikanBusy = true;
   const { url, resolve, reject } = jikanQueue.shift();
   try {
-    const r = await fetch(url);
+    const ac = new AbortController();
+    const _t = setTimeout(() => ac.abort(), 5000);
+    const r = await fetch(url, { signal: ac.signal });
+    clearTimeout(_t);
     if (r.status === 429) {
       jikanQueue.unshift({ url, resolve, reject });
       setTimeout(() => { jikanBusy = false; processJikanQueue(); }, 1200);
@@ -1126,9 +1119,10 @@ async function processJikanQueue() {
     }
     if (!r.ok) throw new Error('HTTP ' + r.status);
     resolve(await r.json());
-    } catch (e) {
+  } catch (e) {
     reject(e);
-    setTimeout(() => { jikanBusy = false; processJikanQueue(); }, 350);
+    jikanBusy = false;
+    setTimeout(() => processJikanQueue(), 350);
     return;
   }
   setTimeout(() => { jikanBusy = false; processJikanQueue(); }, 350);
@@ -1218,8 +1212,16 @@ function normalizeAniList(media) {
 }
 
 async function searchJikan(term) {
-  const d = await jikanFetch(`${JIKAN}/anime?q=${encodeURIComponent(term)}&limit=8&sfw=false`);
-  return (d.data || []).map(normalizeJikan);
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000); // 5s max
+    const d = await jikanFetch(`${JIKAN}/anime?q=${encodeURIComponent(term)}&limit=8&sfw=false`, controller.signal);
+    clearTimeout(timeout);
+    return (d.data || []).map(normalizeJikan);
+  } catch(e) {
+    console.warn('Jikan search failed:', e.message);
+    return [];
+  }
 }
 
 async function searchAniList(term) {
@@ -1646,10 +1648,12 @@ async function performSearch(term) {
       (a.title || '').toLowerCase().includes(term.toLowerCase()) ||
       (a.titleRomaji || '').toLowerCase().includes(term.toLowerCase())
     );
-    const [jikan, anilist] = await Promise.all([
+    const [jikanRes, anilistRes] = await Promise.allSettled([
       searchJikan(term),
       searchAniList(term)
     ]);
+    const jikan = jikanRes.status === 'fulfilled' ? jikanRes.value : [];
+    const anilist = anilistRes.status === 'fulfilled' ? anilistRes.value : [];
     const merged = mergeSearchResults(local, jikan, anilist);
     box.innerHTML = '';
 
@@ -1781,7 +1785,6 @@ async function openModalById(id) {
           AniList
         </a>` : ''}
       </div>
-
       <div class="modal-meta-row">
         ${data.score ? `<span class="modal-chip score">⭐ ${data.score}/10</span>` : ''}
         ${data.statusApi === 'RELEASING' ? `<span class="modal-chip airing">🟢 En cours</span>` : data.statusApi === 'FINISHED' ? `<span class="modal-chip finished">✓ Terminé</span>` : data.statusApi === 'NOT_YET_RELEASED' ? `<span class="modal-chip not-started">⏳ À venir</span>` : ''}
@@ -1790,14 +1793,11 @@ async function openModalById(id) {
         ${data.studio ? `<span class="modal-chip">🎬 ${safeText(data.studio)}</span>` : ''}
         ${data.nextAiringEpisode ? (()=>{ const s=data.nextAiringEpisode.timeUntilAiring; const d=Math.floor(s/86400),h=Math.floor((s%86400)/3600),m=Math.floor((s%3600)/60); return `<span class="modal-chip airing">⏰ Ep ${data.nextAiringEpisode.episode} dans ${d>0?d+'j ':''} ${h}h${d===0?m+'m':''}</span>`;})() : ''}
       </div>
-
       ${data.genres?.length ? `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:2px">${data.genres.map(g=>`<span class="modal-genre">${safeText(GENRES_FR[g]||g)}</span>`).join('')}</div>` : ''}
-
       <div>
         <div class="modal-section-title">Synopsis</div>
         <div class="modal-synopsis">${safeText(data.synopsis || 'Aucun synopsis disponible.')}</div>
       </div>
-
       <div>
         <div class="modal-section-title">Informations</div>
         <div class="modal-stats-grid">
@@ -1805,22 +1805,19 @@ async function openModalById(id) {
           <div class="modal-stat"><div class="modal-stat-val">${safeText(data.duration)||'?'}</div><div class="modal-stat-lbl">Durée / ep</div></div>
           <div class="modal-stat"><div class="modal-stat-val">${safeText(data.source)||'?'}</div><div class="modal-stat-lbl">Source</div></div>
           <div class="modal-stat"><div class="modal-stat-val">${data.popularity?'#'+Number(data.popularity).toLocaleString('fr'):'?'}</div><div class="modal-stat-lbl">Popularité</div></div>
-          ${data.favourites?`<div class="modal-stat"><div class="modal-stat-val" style="color:#e06ab0">❤️ ${Number(data.favourites).toLocaleString('fr')}</div><div class="modal-stat-lbl">Favoris AniList</div></div>`:''}
+          ${data.favourites?`<div class="modal-stat"><div class="modal-stat-val" style="color:#e06ab0">❤️ ${Number(data.favourites).toLocaleString('fr')}</div><div class="modal-stat-lbl">Favoris</div></div>`:''}
           ${data.averageScore?`<div class="modal-stat"><div class="modal-stat-val" style="color:var(--gold)">📊 ${data.averageScore}%</div><div class="modal-stat-lbl">Score moyen</div></div>`:''}
         </div>
       </div>
-
-      ${data.trailerUrl ? `<a href="${safeText(data.trailerUrl)}" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 24px;background:linear-gradient(135deg,#e53935,#c62828);color:#fff;border-radius:10px;font-size:0.85rem;font-weight:700;text-decoration:none;box-shadow:0 4px 16px rgba(229,57,53,0.38);margin-top:2px">
+      ${data.trailerUrl ? `<a href="${safeText(data.trailerUrl)}" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 24px;background:linear-gradient(135deg,#e53935,#c62828);color:#fff;border-radius:10px;font-size:0.85rem;font-weight:700;text-decoration:none;box-shadow:0 4px 16px rgba(229,57,53,0.38)">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
         Voir le trailer YouTube
       </a>` : ''}
-
       ${local ? buildTrackingSection(local) : `
         <button class="modal-add-btn" onclick='addToList(${JSON.stringify(data).replace(/'/g, "&apos;")}); setTimeout(()=>openModalById(${data.id}), 200)'>
           Ajouter à ma liste
         </button>
       `}
-
       ${recommendations ? `
         <div>
           <div class="modal-section-title">Recommandations</div>
@@ -2071,6 +2068,12 @@ updateStats();
 updateBadges();
 loadTrending();
 
+// ========== showToast alias (compatibility) ==========
+function showToast(msg, type='info') {
+  if (typeof toast === 'function') toast(type, msg);
+  else console.log('[Toast]', type, msg);
+}
+
 // ========== PAGE NAVIGATION ==========
 let exploreTabCache = {};
 let exploreCurrentTab = 'seasonal';
@@ -2102,10 +2105,13 @@ async function loadExplorePage(tab) {
   grid.innerHTML = '<div style="grid-column:1/-1;padding:40px;text-align:center"><span class="search-spinner" style="width:28px;height:28px;display:inline-block;border-width:3px"></span></div>';
   try {
     let media = [];
+    const now = new Date();
+    const seasons = ['WINTER','SPRING','SUMMER','FALL'];
+    const curSeason = seasons[Math.floor(now.getMonth()/3)];
+    const curYear = now.getFullYear();
+    const genreMap = { romance:'Romance', action:'Action', scifi:'Sci-Fi' };
     if (tab === 'seasonal') {
-      const now = new Date(); const seasons = ['WINTER','SPRING','SUMMER','FALL'];
-      const s = seasons[Math.floor(now.getMonth()/3)]; const y = now.getFullYear();
-      const d = await anilistFetch(`query($s:MediaSeason,$y:Int){Page(perPage:24){media(type:ANIME,season:$s,seasonYear:$y,sort:POPULARITY_DESC){id title{romaji english}coverImage{large}averageScore format episodes}}}`, {s, y});
+      const d = await anilistFetch(`query($s:MediaSeason,$y:Int){Page(perPage:24){media(type:ANIME,season:$s,seasonYear:$y,sort:POPULARITY_DESC){id title{romaji english}coverImage{large}averageScore format episodes}}}`, {s:curSeason,y:curYear});
       media = d?.data?.Page?.media || [];
     } else if (tab === 'upcoming') {
       const d = await anilistFetch(`{Page(perPage:24){media(type:ANIME,status:NOT_YET_RELEASED,sort:POPULARITY_DESC){id title{romaji english}coverImage{large}averageScore format episodes}}}`, {});
@@ -2113,21 +2119,16 @@ async function loadExplorePage(tab) {
     } else if (tab === 'popular') {
       const d = await anilistFetch(`{Page(perPage:24){media(type:ANIME,sort:POPULARITY_DESC){id title{romaji english}coverImage{large}averageScore format episodes}}}`, {});
       media = d?.data?.Page?.media || [];
-    } else if (tab === 'romance') {
-      const d = await anilistFetch(`{Page(perPage:24){media(type:ANIME,genre:"Romance",sort:POPULARITY_DESC){id title{romaji english}coverImage{large}averageScore format episodes}}}`, {});
-      media = d?.data?.Page?.media || [];
-    } else if (tab === 'action') {
-      const d = await anilistFetch(`{Page(perPage:24){media(type:ANIME,genre:"Action",sort:POPULARITY_DESC){id title{romaji english}coverImage{large}averageScore format episodes}}}`, {});
-      media = d?.data?.Page?.media || [];
-    } else if (tab === 'scifi') {
-      const d = await anilistFetch(`{Page(perPage:24){media(type:ANIME,genre:"Sci-Fi",sort:POPULARITY_DESC){id title{romaji english}coverImage{large}averageScore format episodes}}}`, {});
+    } else if (genreMap[tab]) {
+      const d = await anilistFetch(`query($g:String){Page(perPage:24){media(type:ANIME,genre:$g,sort:POPULARITY_DESC){id title{romaji english}coverImage{large}averageScore format episodes}}}`, {g:genreMap[tab]});
       media = d?.data?.Page?.media || [];
     }
-    const results = media.map(m => ({ id: m.id, title: m.title?.english || m.title?.romaji || '?', cover: m.coverImage?.large, score: m.averageScore ? (m.averageScore/10).toFixed(1) : null, format: m.format, episodes: m.episodes }));
+    const results = media.map(m => ({id:m.id,title:m.title?.english||m.title?.romaji||'?',cover:m.coverImage?.large,score:m.averageScore?(m.averageScore/10).toFixed(1):null}));
     exploreTabCache[tab] = results;
     renderExploreGrid(results);
   } catch(e) {
-    if (grid) grid.innerHTML = '<div style="grid-column:1/-1;padding:40px;text-align:center;color:var(--text-muted)">Erreur. Réessaie.</div>';
+    console.error('loadExplorePage error:', e);
+    if (grid) grid.innerHTML = '<div style="grid-column:1/-1;padding:40px;text-align:center;color:var(--text-muted)">Erreur. Réessaie dans quelques secondes.</div>';
   }
 }
 
@@ -2136,15 +2137,15 @@ function renderExploreGrid(items) {
   if (!grid) return;
   if (!items.length) { grid.innerHTML = '<div style="grid-column:1/-1;padding:40px;text-align:center;color:var(--text-muted)">Aucun résultat.</div>'; return; }
   grid.innerHTML = items.map(a => {
-    const inList = animeList.some(x => x.anilistId === a.id || x.id === a.id);
+    const inList = animeList.some(x => x.anilistId===a.id||x.id===a.id);
     return `<div class="explore-card-wrap">
       <img class="explore-cover-img" src="${safeText(a.cover)}" alt="${safeText(a.title)}" loading="lazy" onclick="openModalById(${a.id})">
       <div class="explore-card-info" onclick="openModalById(${a.id})">
         <div class="explore-card-title">${safeText(a.title)}</div>
-        ${a.score ? `<div class="explore-card-score">⭐ ${a.score}</div>` : ''}
+        ${a.score?`<div class="explore-card-score">⭐ ${a.score}</div>`:''}
       </div>
-      <button class="explore-add-btn ${inList ? 'added' : ''}" onclick="event.stopPropagation();${inList ? '' : `quickAddAnime(${a.id})`}">
-        ${inList ? '✓ Dans ta liste' : '+ Ajouter'}
+      <button class="explore-add-btn ${inList?'added':''}" onclick="event.stopPropagation();${inList?'':` quickAddAnime(${a.id})`}">
+        ${inList?'✓ Dans ta liste':'+ Ajouter'}
       </button>
     </div>`;
   }).join('');
@@ -2154,12 +2155,12 @@ async function quickAddAnime(anilistId) {
   try {
     const data = await fetchAnimeDetails(anilistId);
     if (!data) return;
-    if (animeList.some(x => x.id === anilistId || x.anilistId === anilistId)) { showToast('Déjà dans ta liste', 'info'); return; }
-    animeList.push({ id: anilistId, anilistId, title: data.title, cover: data.cover, totalEps: data.totalEps || 0, watchedEps: 0, status: 'planned', rating: 0, addedAt: Date.now() });
+    if (animeList.some(x=>x.id===anilistId||x.anilistId===anilistId)) { toast('info','Déjà dans ta liste'); return; }
+    animeList.push({id:anilistId,anilistId,title:data.title,cover:data.cover,totalEps:data.totalEps||0,watchedEps:0,status:'planned',rating:0,addedAt:Date.now()});
     saveList(); renderGrid(); updateStats();
-    showToast(data.title + ' ajouté !', 'success');
+    toast('success', data.title+' ajouté !');
     if (exploreTabCache[exploreCurrentTab]) renderExploreGrid(exploreTabCache[exploreCurrentTab]);
-  } catch(e) { showToast('Erreur lors de l\'ajout', 'error'); }
+  } catch(e) { toast('error','Erreur lors de l\'ajout'); }
 }
 
 async function loadTopPage() {
@@ -2167,18 +2168,18 @@ async function loadTopPage() {
   topPageLoaded = true;
   const topEl = document.getElementById('topAllTime');
   const popEl = document.getElementById('topPopular');
-  if (!topEl || !popEl) return;
-  const skel = Array(15).fill(`<div class="top-item" style="pointer-events:none;opacity:.6"><div style="width:22px;height:12px;background:var(--surface-3);border-radius:3px;flex-shrink:0"></div><div style="width:40px;height:56px;background:var(--surface-3);border-radius:4px;flex-shrink:0"></div><div style="flex:1"><div style="height:10px;background:var(--surface-3);border-radius:3px;margin-bottom:5px"></div><div style="height:9px;width:55%;background:var(--surface-3);border-radius:3px"></div></div></div>`).join('');
+  if (!topEl||!popEl) return;
+  const skel = Array(15).fill(`<div class="top-item" style="pointer-events:none;opacity:.5"><div style="width:22px;height:12px;background:var(--surface-3);border-radius:3px;flex-shrink:0"></div><div style="width:40px;height:56px;background:var(--surface-3);border-radius:4px;flex-shrink:0"></div><div style="flex:1"><div style="height:10px;background:var(--surface-3);border-radius:3px;margin-bottom:5px"></div><div style="height:9px;width:55%;background:var(--surface-3);border-radius:3px"></div></div><div style="width:28px;height:12px;background:var(--surface-3);border-radius:3px;flex-shrink:0"></div></div>`).join('');
   topEl.innerHTML = skel; popEl.innerHTML = skel;
   try {
-    const qS = `{Page(perPage:25){media(type:ANIME,sort:SCORE_DESC){id title{romaji english}coverImage{large}averageScore format episodes seasonYear}}}`;
-    const qP = `{Page(perPage:25){media(type:ANIME,sort:POPULARITY_DESC){id title{romaji english}coverImage{large}averageScore format episodes seasonYear}}}`;
-    const [dS, dP] = await Promise.all([anilistFetch(qS, {}), anilistFetch(qP, {})]);
-    const renderTop = (items, el) => {
-      const rc = ['gold','silver','bronze'];
-      el.innerHTML = items.slice(0,15).map((m,i) => {
-        const inList = animeList.some(x => x.anilistId===m.id || x.id===m.id);
-        const score = m.averageScore ? (m.averageScore/10).toFixed(1) : '?';
+    const qS=`{Page(perPage:25){media(type:ANIME,sort:SCORE_DESC){id title{romaji english}coverImage{large}averageScore format episodes seasonYear}}}`;
+    const qP=`{Page(perPage:25){media(type:ANIME,sort:POPULARITY_DESC){id title{romaji english}coverImage{large}averageScore format episodes seasonYear}}}`;
+    const [dS,dP] = await Promise.all([anilistFetch(qS,{}),anilistFetch(qP,{})]);
+    const renderTop = (items,el) => {
+      const rc=['gold','silver','bronze'];
+      el.innerHTML = items.slice(0,15).map((m,i)=>{
+        const inList = animeList.some(x=>x.anilistId===m.id||x.id===m.id);
+        const score = m.averageScore?(m.averageScore/10).toFixed(1):'?';
         return `<div class="top-item" onclick="openModalById(${m.id})">
           <div class="top-rank ${rc[i]||''}">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div>
           <img class="top-cover-sm" src="${safeText(m.coverImage?.large)}" alt="" loading="lazy">
@@ -2187,15 +2188,16 @@ async function loadTopPage() {
             <div class="top-meta-sm">${m.format||''} ${m.episodes?'· '+m.episodes+' ep':''} ${m.seasonYear?'· '+m.seasonYear:''}</div>
           </div>
           <span class="top-score-val">⭐ ${score}</span>
-          ${inList ? '<span class="top-inlist">✓</span>' : ''}
+          ${inList?'<span class="top-inlist">✓</span>':''}
         </div>`;
       }).join('');
     };
-    renderTop(dS?.data?.Page?.media||[], topEl);
-    renderTop(dP?.data?.Page?.media||[], popEl);
+    renderTop(dS?.data?.Page?.media||[],topEl);
+    renderTop(dP?.data?.Page?.media||[],popEl);
   } catch(e) {
-    topEl.innerHTML = '<p style="color:var(--text-muted);padding:12px">Erreur de chargement.</p>';
-    popEl.innerHTML = '<p style="color:var(--text-muted);padding:12px">Erreur de chargement.</p>';
+    console.error('loadTopPage error:',e);
+    topEl.innerHTML='<p style="color:var(--text-muted);padding:12px">Erreur : '+safeText(e.message)+'</p>';
+    popEl.innerHTML='<p style="color:var(--text-muted);padding:12px">Erreur : '+safeText(e.message)+'</p>';
   }
 }
 
@@ -3241,9 +3243,10 @@ async function processJikanQueue() {
     }
     if (!r.ok) throw new Error('HTTP ' + r.status);
     resolve(await r.json());
-    } catch (e) {
+  } catch (e) {
     reject(e);
-    setTimeout(() => { jikanBusy = false; processJikanQueue(); }, 350);
+    jikanBusy = false;
+    setTimeout(() => processJikanQueue(), 350);
     return;
   }
   setTimeout(() => { jikanBusy = false; processJikanQueue(); }, 350);
@@ -3333,8 +3336,16 @@ function normalizeAniList(media) {
 }
 
 async function searchJikan(term) {
-  const d = await jikanFetch(`${JIKAN}/anime?q=${encodeURIComponent(term)}&limit=8&sfw=false`);
-  return (d.data || []).map(normalizeJikan);
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000); // 5s max
+    const d = await jikanFetch(`${JIKAN}/anime?q=${encodeURIComponent(term)}&limit=8&sfw=false`, controller.signal);
+    clearTimeout(timeout);
+    return (d.data || []).map(normalizeJikan);
+  } catch(e) {
+    console.warn('Jikan search failed:', e.message);
+    return [];
+  }
 }
 
 async function searchAniList(term) {
@@ -3761,10 +3772,12 @@ async function performSearch(term) {
       (a.title || '').toLowerCase().includes(term.toLowerCase()) ||
       (a.titleRomaji || '').toLowerCase().includes(term.toLowerCase())
     );
-    const [jikan, anilist] = await Promise.all([
+    const [jikanRes, anilistRes] = await Promise.allSettled([
       searchJikan(term),
       searchAniList(term)
     ]);
+    const jikan = jikanRes.status === 'fulfilled' ? jikanRes.value : [];
+    const anilist = anilistRes.status === 'fulfilled' ? anilistRes.value : [];
     const merged = mergeSearchResults(local, jikan, anilist);
     box.innerHTML = '';
 
@@ -3891,7 +3904,6 @@ async function openModalById(id) {
           AniList
         </a>` : ''}
       </div>
-
       <div class="modal-meta-row">
         ${data.score ? `<span class="modal-chip score">⭐ ${data.score}/10</span>` : ''}
         ${data.statusApi === 'RELEASING' ? `<span class="modal-chip airing">🟢 En cours</span>` : data.statusApi === 'FINISHED' ? `<span class="modal-chip finished">✓ Terminé</span>` : data.statusApi === 'NOT_YET_RELEASED' ? `<span class="modal-chip not-started">⏳ À venir</span>` : ''}
@@ -3900,14 +3912,11 @@ async function openModalById(id) {
         ${data.studio ? `<span class="modal-chip">🎬 ${safeText(data.studio)}</span>` : ''}
         ${data.nextAiringEpisode ? (()=>{ const s=data.nextAiringEpisode.timeUntilAiring; const d=Math.floor(s/86400),h=Math.floor((s%86400)/3600),m=Math.floor((s%3600)/60); return `<span class="modal-chip airing">⏰ Ep ${data.nextAiringEpisode.episode} dans ${d>0?d+'j ':''} ${h}h${d===0?m+'m':''}</span>`;})() : ''}
       </div>
-
       ${data.genres?.length ? `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:2px">${data.genres.map(g=>`<span class="modal-genre">${safeText(GENRES_FR[g]||g)}</span>`).join('')}</div>` : ''}
-
       <div>
         <div class="modal-section-title">Synopsis</div>
         <div class="modal-synopsis">${safeText(data.synopsis || 'Aucun synopsis disponible.')}</div>
       </div>
-
       <div>
         <div class="modal-section-title">Informations</div>
         <div class="modal-stats-grid">
@@ -3915,22 +3924,19 @@ async function openModalById(id) {
           <div class="modal-stat"><div class="modal-stat-val">${safeText(data.duration)||'?'}</div><div class="modal-stat-lbl">Durée / ep</div></div>
           <div class="modal-stat"><div class="modal-stat-val">${safeText(data.source)||'?'}</div><div class="modal-stat-lbl">Source</div></div>
           <div class="modal-stat"><div class="modal-stat-val">${data.popularity?'#'+Number(data.popularity).toLocaleString('fr'):'?'}</div><div class="modal-stat-lbl">Popularité</div></div>
-          ${data.favourites?`<div class="modal-stat"><div class="modal-stat-val" style="color:#e06ab0">❤️ ${Number(data.favourites).toLocaleString('fr')}</div><div class="modal-stat-lbl">Favoris AniList</div></div>`:''}
+          ${data.favourites?`<div class="modal-stat"><div class="modal-stat-val" style="color:#e06ab0">❤️ ${Number(data.favourites).toLocaleString('fr')}</div><div class="modal-stat-lbl">Favoris</div></div>`:''}
           ${data.averageScore?`<div class="modal-stat"><div class="modal-stat-val" style="color:var(--gold)">📊 ${data.averageScore}%</div><div class="modal-stat-lbl">Score moyen</div></div>`:''}
         </div>
       </div>
-
-      ${data.trailerUrl ? `<a href="${safeText(data.trailerUrl)}" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 24px;background:linear-gradient(135deg,#e53935,#c62828);color:#fff;border-radius:10px;font-size:0.85rem;font-weight:700;text-decoration:none;box-shadow:0 4px 16px rgba(229,57,53,0.38);margin-top:2px">
+      ${data.trailerUrl ? `<a href="${safeText(data.trailerUrl)}" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 24px;background:linear-gradient(135deg,#e53935,#c62828);color:#fff;border-radius:10px;font-size:0.85rem;font-weight:700;text-decoration:none;box-shadow:0 4px 16px rgba(229,57,53,0.38)">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
         Voir le trailer YouTube
       </a>` : ''}
-
       ${local ? buildTrackingSection(local) : `
         <button class="modal-add-btn" onclick='addToList(${JSON.stringify(data).replace(/'/g, "&apos;")}); setTimeout(()=>openModalById(${data.id}), 200)'>
           Ajouter à ma liste
         </button>
       `}
-
       ${recommendations ? `
         <div>
           <div class="modal-section-title">Recommandations</div>
