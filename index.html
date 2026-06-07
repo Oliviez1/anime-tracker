@@ -710,26 +710,61 @@ img{display:block;max-width:100%}
   50%{opacity:0.5;transform:scale(1.3)}
 }
 
-/* ===== RESPONSIVE ===== */
-@media(max-width:900px){
-  .hero-content{left:24px;bottom:40px}
-  .hero-title{font-size:1.7rem}
-  .section{padding:24px 20px}
-  .detail-body{grid-template-columns:1fr;padding:24px 20px}
-  .detail-hero-content{padding:0 20px 24px}
-  .detail-title{font-size:1.5rem}
-  .breadcrumb{padding:12px 20px 0}
-  .page-header{padding:12px 20px 20px}
-  .list-page-body{padding:0 20px 32px}
+
+@media (max-width: 900px){
+  .navbar{padding:0 12px;gap:10px;overflow-x:auto;scrollbar-width:none}
+  .navbar::-webkit-scrollbar{display:none}
+  .nav-logo{margin-right:8px;white-space:nowrap;flex:0 0 auto}
+  .nav-links{display:none}
+  .nav-search-wrap{margin:0 8px;flex:1;min-width:0}
+  .nav-search{width:100%;min-width:120px}
+  .nav-search:focus{width:100%}
+  .nav-right{gap:8px;flex:0 0 auto}
+  .nav-btn-ghost{display:none}
+  .nav-list-btn{padding:7px 12px;font-size:0.78rem}
+  .section{padding:20px 14px}
+  .hero{height:320px}
+  .hero-content{left:16px;right:16px;bottom:20px;max-width:none}
+  .hero-title{font-size:1.45rem}
+  .hero-synopsis{max-width:none;-webkit-line-clamp:2}
+  .hero-cta{padding:10px 18px;font-size:0.82rem}
+  .anime-grid,.catalogue-grid,.list-stats-row,.characters-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
+  .breadcrumb,.page-header,.list-page-body,.catalogue-main,.detail-body{padding-left:14px;padding-right:14px}
+  .page-header-title{font-size:1.2rem}
+  .page-header-sub{font-size:0.8rem}
+  .catalogue-layout{grid-template-columns:1fr}
+  .catalogue-sidebar{display:none}
+  .detail-hero{height:auto;min-height:0}
+  .detail-hero-content{flex-direction:column;align-items:flex-start;gap:14px;padding:24px 14px 18px}
+  .detail-cover{width:110px}
+  .detail-body{grid-template-columns:1fr;gap:18px;padding:18px 14px}
+  .detail-title{font-size:1.35rem}
+  .detail-cta-row{flex-direction:column}
+  .detail-btn-primary,.detail-btn-secondary,.tracking-save-btn,.tracking-add-btn{width:100%;justify-content:center}
+  .tracking-card,.info-card{padding:14px}
+  .toasts{left:12px;right:12px;bottom:12px}
+  .toast-item{max-width:none}
 }
-@media(max-width:600px){
-  .navbar{padding:0 16px}
-  .nav-search{width:160px}
-  .nav-search:focus{width:200px}
-  .hero{height:380px}
-  .detail-cover{width:90px}
-  .detail-title{font-size:1.25rem}
+@media (max-width: 600px){
+  .navbar{padding:0 10px}
+  .nav-theme-btn{width:32px;height:32px}
+  .nav-list-btn{padding:6px 10px}
+  .hero{height:290px}
+  .hero-title{font-size:1.25rem}
+  .hero-subtitle,.hero-meta,.hero-synopsis{font-size:0.78rem}
+  .anime-grid,.catalogue-grid,.list-stats-row,.characters-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .anime-card-cover{aspect-ratio:2.8/4}
+  .card-title{font-size:0.75rem}
+  .card-year{font-size:0.68rem}
+  .format-pills{gap:6px;overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px}
+  .format-pill,.cat-chip,.list-tab{white-space:nowrap;flex:0 0 auto}
+  .page-sort-wrap{width:100%}
+  .page-sort-btn{width:100%;justify-content:space-between}
+  .page-sort-dd{min-width:100%;left:0;right:0}
+  .tracking-ep-row{flex-wrap:wrap}
+  .tracking-ep-input{width:64px}
 }
+
 </style>
 </head>
 <body>
@@ -1031,67 +1066,6 @@ img{display:block;max-width:100%}
 </main>
 <!-- ===== TOASTS ===== -->
 <div class="toasts" id="toasts"></div>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCGY5NcD-5N-jWtmmh2LggafFq34hV4vis",
-  authDomain: "kakusu-38298.firebaseapp.com",
-  projectId: "kakusu-38298",
-  storageBucket: "kakusu-38298.firebasestorage.app",
-  messagingSenderId: "659487918695",
-  appId: "1:659487918695:web:3e26ff752c01d0979aa2c2",
-  measurementId: "G-KRL6K5K41B"
-};
-
-const firebaseApp = initializeApp(firebaseConfig);
-const firebaseDB = getFirestore(firebaseApp);
-const FIRESTORE_REF = doc(firebaseDB, 'meta', 'kakusu');
-
-async function saveListFirestore() {
-  try {
-    await setDoc(FIRESTORE_REF, { animeList: animeList || [], updatedAt: Date.now() }, { merge: true });
-  } catch (e) {}
-}
-
-async function loadListFirestore() {
-  try {
-    const snap = await getDoc(FIRESTORE_REF);
-    if (snap.exists()) {
-      const data = snap.data();
-      if (Array.isArray(data.animeList)) {
-        animeList = data.animeList;
-        localStorage.setItem(STORAGEKEY, JSON.stringify(animeList));
-        if (typeof renderMyList === 'function') renderMyList();
-      }
-    }
-  } catch (e) {}
-}
-
-const _saveList = saveList;
-saveList = function() {
-  _saveList();
-  saveListFirestore();
-};
-
-onSnapshot(FIRESTORE_REF, (snap) => {
-  if (!snap.exists()) return;
-  const data = snap.data();
-  if (Array.isArray(data.animeList)) {
-    animeList = data.animeList;
-    localStorage.setItem(STORAGEKEY, JSON.stringify(animeList));
-    if (typeof renderMyList === 'function') renderMyList();
-    if (typeof updateNavCount === 'function') updateNavCount();
-  }
-});
-
-window.addEventListener('load', () => {
-  loadListFirestore();
-});
-</script>
-
 </body></html><script>
 // ============================================================
 // CONSTANTS & STATE
