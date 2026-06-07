@@ -1031,6 +1031,25 @@ img{display:block;max-width:100%}
 </main>
 <!-- ===== TOASTS ===== -->
 <div class="toasts" id="toasts"></div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+  import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCGY5NcD-5N-jWtmmh2LggafFq34hV4vis",
+    authDomain: "kakusu-38298.firebaseapp.com",
+    projectId: "kakusu-38298",
+    storageBucket: "kakusu-38298.firebasestorage.app",
+    messagingSenderId: "659487918695",
+    appId: "1:659487918695:web:3e26ff752c01d0979aa2c2",
+    measurementId: "G-KRL6K5K41B"
+  };
+
+  window.firebaseApp = initializeApp(firebaseConfig);
+  window.firebaseDB = getFirestore(window.firebaseApp);
+</script>
+
 </body></html><script>
 // ============================================================
 // CONSTANTS & STATE
