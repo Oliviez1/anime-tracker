@@ -1032,22 +1032,76 @@ img{display:block;max-width:100%}
 <!-- ===== TOASTS ===== -->
 <div class="toasts" id="toasts"></div>
 
+
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-  import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, onSnapshot, query, orderBy, serverTimestamp, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyCGY5NcD-5N-jWtmmh2LggafFq34hV4vis",
-    authDomain: "kakusu-38298.firebaseapp.com",
-    projectId: "kakusu-38298",
-    storageBucket: "kakusu-38298.firebasestorage.app",
-    messagingSenderId: "659487918695",
-    appId: "1:659487918695:web:3e26ff752c01d0979aa2c2",
-    measurementId: "G-KRL6K5K41B"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyCGY5NcD-5N-jWtmmh2LggafFq34hV4vis",
+  authDomain: "kakusu-38298.firebaseapp.com",
+  projectId: "kakusu-38298",
+  storageBucket: "kakusu-38298.firebasestorage.app",
+  messagingSenderId: "659487918695",
+  appId: "1:659487918695:web:3e26ff752c01d0979aa2c2",
+  measurementId: "G-KRL6K5K41B"
+};
 
-  window.firebaseApp = initializeApp(firebaseConfig);
-  window.firebaseDB = getFirestore(window.firebaseApp);
+window.firebaseApp = initializeApp(firebaseConfig);
+window.firebaseDB = getFirestore(window.firebaseApp);
+window.listsCol = collection(window.firebaseDB, 'lists');
+
+window.syncListToFirestore = async function() {
+  try {
+    const payload = { animeList: window.animeList || [], updatedAt: Date.now() };
+    await setDoc(doc(window.firebaseDB, 'meta', 'kakusu'), payload, { merge: true });
+  } catch (e) {}
+}
+
+window.loadListFromFirestore = async function() {
+  try {
+    const snap = await getDocs(window.listsCol);
+    const items = [];
+    snap.forEach(d => { const data = d.data(); if (data && data.animeList) items.push(...data.animeList); });
+    if (items.length) {
+      window.animeList = items;
+      localStorage.setItem('kakusu-v1', JSON.stringify(items));
+      if (typeof refreshListUI === 'function') refreshListUI();
+    }
+  } catch (e) {}
+}
+
+window.saveListFirestore = async function() {
+  try {
+    const items = window.animeList || [];
+    await addDoc(window.listsCol, {
+      name: 'snapshot',
+      animeList: items,
+      updatedAt: serverTimestamp()
+    });
+    await setDoc(doc(window.firebaseDB, 'meta', 'kakusu'), { animeList: items, updatedAt: Date.now() }, { merge: true });
+  } catch (e) {}
+}
+
+window.startListListener = function() {
+  try {
+    onSnapshot(doc(window.firebaseDB, 'meta', 'kakusu'), snap => {
+      if (snap.exists()) {
+        const data = snap.data();
+        if (Array.isArray(data.animeList)) {
+          window.animeList = data.animeList;
+          localStorage.setItem('kakusu-v1', JSON.stringify(data.animeList));
+          if (typeof refreshListUI === 'function') refreshListUI();
+        }
+      }
+    });
+  } catch (e) {}
+}
+
+window.addEventListener('load', () => {
+  window.loadListFromFirestore();
+  window.startListListener();
+});
 </script>
 
 </body></html><script>
