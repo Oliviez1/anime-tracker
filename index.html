@@ -730,6 +730,37 @@ img{display:block;max-width:100%}
   .detail-cover{width:90px}
   .detail-title{font-size:1.25rem}
 }
+
+/* ===== CARD LIST OVERLAY (hover infos) ===== */
+.card-list-overlay{
+  position:absolute;bottom:0;left:0;right:0;
+  background:linear-gradient(to top,rgba(5,7,16,0.97) 55%,rgba(5,7,16,0.72) 85%,transparent 100%);
+  padding:10px 10px 46px;
+  transform:translateY(100%);
+  transition:transform 0.22s cubic-bezier(0.16,1,0.3,1);
+  z-index:5;pointer-events:none;
+}
+.anime-card:hover .card-list-overlay{transform:translateY(0)}
+.clo-status{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:0.67rem;font-weight:700;margin-bottom:6px;
+  padding:2px 8px;border-radius:20px;
+}
+.clo-status.watching{background:rgba(124,110,240,0.22);color:#b5abff}
+.clo-status.completed{background:rgba(0,206,201,0.18);color:#00cec9}
+.clo-status.planned{background:rgba(116,185,255,0.18);color:#74b9ff}
+.clo-status.dropped{background:rgba(224,104,104,0.18);color:#e06868}
+.clo-eps{font-size:0.7rem;color:rgba(255,255,255,0.7);margin-bottom:5px}
+.clo-bar-bg{height:3px;background:rgba(255,255,255,0.12);border-radius:2px;margin-bottom:6px;overflow:hidden}
+.clo-bar{height:100%;border-radius:2px;background:linear-gradient(90deg,#e63946,#ff6b6b)}
+.clo-rating{font-size:0.7rem;color:#ffd166;margin-bottom:5px}
+.clo-genres{display:flex;flex-wrap:wrap;gap:3px}
+.clo-genre{
+  font-size:0.6rem;font-weight:600;padding:1px 6px;
+  border-radius:20px;background:rgba(255,255,255,0.08);
+  color:rgba(255,255,255,0.55);border:1px solid rgba(255,255,255,0.1);
+}
+
 </style>
 </head>
 <body>
@@ -2127,7 +2158,6 @@ function setListFilter(f, btn) {
 }
 
 function renderMyList() {
-  // Stats
   const statsEl = document.getElementById('listStats');
   const total = animeList.length;
   const watching = animeList.filter(a=>a.status==='watching').length;
@@ -2158,16 +2188,33 @@ function renderMyList() {
     </div>`;
     return;
   }
+
+  const STATUS_META = {
+    watching:  { icon:'▶', label:'En cours',  cls:'watching'  },
+    completed: { icon:'✓', label:'Terminé',   cls:'completed' },
+    planned:   { icon:'📅', label:'À voir',   cls:'planned'   },
+    dropped:   { icon:'✗', label:'Abandonné', cls:'dropped'   },
+  };
+
   grid.innerHTML = items.map(a => {
-    const fmt = (a.format||'TV').toUpperCase();
-    const fmtClass = fmt==='MOVIE'?'movie':fmt==='ONA'?'ona':fmt==='OVA'?'ova':'tv';
     const score = a.score ? a.score : null;
-    return `<div class="anime-card" onclick="openDetail(${a.id})">
+    const st = STATUS_META[a.status] || STATUS_META['planned'];
+    const watched = a.watchedEps || 0;
+    const totalEp = a.totalEps || 0;
+    const pct = totalEp ? Math.min(100,(watched/totalEp)*100) : 0;
+    const ratingStars = a.rating ? '★'.repeat(a.rating)+'☆'.repeat(5-a.rating) : '';
+    const genresArr = Array.isArray(a.genres) && a.genres.length ? a.genres : [];
+    const bgColor = a.status==='completed'?'var(--green)':a.status==='watching'?'var(--primary)':a.status==='dropped'?'#e06868':'var(--blue)';
+    return `<div class="anime-card" onclick="openDetail(${a.id})" data-id="${a.id}">
       <img class="anime-card-cover" src="${safeText(a.cover)}" alt="${safeText(a.title)}" loading="lazy">
       ${score ? `<div class="card-score-badge"><span class="star">★</span>${score}</div>` : ''}
       <button class="card-remove-btn" onclick="removeFromList(${a.id},event)" title="Retirer">✕</button>
-      <div class="card-inlist" style="background:${a.status==='completed'?'var(--green)':a.status==='watching'?'var(--primary)':a.status==='dropped'?'#e06868':'var(--blue)'}">
-        ${a.status==='completed'?'✓':a.status==='watching'?'▶':a.status==='dropped'?'✗':'📅'}
+      <div class="card-inlist" style="background:${bgColor}">${st.icon}</div>
+      <div class="card-list-overlay">
+        <div class="clo-status ${st.cls}">${st.icon} ${st.label}</div>
+        ${totalEp > 0 ? `<div class="clo-eps">Épisodes : ${watched} / ${totalEp}</div><div class="clo-bar-bg"><div class="clo-bar" style="width:${pct}%"></div></div>` : watched > 0 ? `<div class="clo-eps">${watched} ép. vus</div>` : ''}
+        ${ratingStars ? `<div class="clo-rating">${ratingStars} ${a.rating}/5</div>` : ''}
+        ${genresArr.length ? `<div class="clo-genres">${genresArr.slice(0,3).map(g=>`<span class="clo-genre">${safeText(GENRES_FR[g]||g)}</span>`).join('')}</div>` : ''}
       </div>
       <div class="card-info">
         <div class="card-title">${safeText(a.title)}</div>
