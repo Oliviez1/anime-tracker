@@ -1042,9 +1042,14 @@ img{display:block;max-width:100%}
 <div class="list-stats-row" id="listStats"></div>
 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
   <div style="font-size:0.82rem;color:var(--muted)" id="listCount"></div>
-  <button onclick="exportList()" style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:8px;font-size:0.78rem;font-weight:600;transition:all 0.15s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">
-    ↓ Exporter CSV
-  </button>
+  <div style="display:flex;gap:8px;align-items:center">
+    <button onclick="exportList()" style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:8px;font-size:0.78rem;font-weight:600;transition:all 0.15s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">
+      ↓ Exporter CSV
+    </button>
+    <button onclick="showMyId()" style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;background:linear-gradient(135deg,#e63946,#ff6b6b);color:#fff;border-radius:8px;font-size:0.78rem;font-weight:600;transition:all 0.15s">
+      🔗 Mon lien
+    </button>
+  </div>
 </div><div class="list-tabs" id="listTabs">
 <button class="list-tab active" onclick="setListFilter('all',this)">Tous</button>
 <button class="list-tab" onclick="setListFilter('watching',this)">▶ En cours</button>
@@ -1073,13 +1078,46 @@ const firebaseConfig = {
   projectId: "kakusu-38298",
   storageBucket: "kakusu-38298.firebasestorage.app",
   messagingSenderId: "659487918695",
-  appId: "1:659487918695:web:3e26ff752c01d0979aa2c2",
-  measurementId: "G-KRL6K5K41B"
+  appId: "1:659487918695:web:3e26ff752c01d0979aa2c2"
 };
 
+// ============================================================
+// GESTION DE L'ID UTILISATEUR UNIQUE
+// ============================================================
+function generateId() {
+  return 'kakusu_' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+}
+
+function getUserId() {
+  const hashId = window.location.hash.replace('#', '');
+  if (hashId && hashId.startsWith('kakusu_')) {
+    localStorage.setItem('kakusu_uid', hashId);
+    return hashId;
+  }
+  let stored = localStorage.getItem('kakusu_uid');
+  if (stored && stored.startsWith('kakusu_')) {
+    history.replaceState(null, '', '#' + stored);
+    return stored;
+  }
+  const newId = generateId();
+  localStorage.setItem('kakusu_uid', newId);
+  history.replaceState(null, '', '#' + newId);
+  return newId;
+}
+
+const USER_ID = getUserId();
 const firebaseApp = initializeApp(firebaseConfig);
 const firebaseDB = getFirestore(firebaseApp);
-const FIRESTORE_REF = doc(firebaseDB, 'meta', 'kakusu');
+const FIRESTORE_REF = doc(firebaseDB, 'users', USER_ID);
+
+window.showMyId = function() {
+  const url = window.location.origin + window.location.pathname + '#' + USER_ID;
+  navigator.clipboard.writeText(url).then(() => {
+    if (typeof toast === 'function') toast('success', 'Lien copié ! 🔗');
+  }).catch(() => {
+    prompt('Ton lien personnel Kakusu :', url);
+  });
+};
 
 async function saveListFirestore() {
   try {
@@ -1094,8 +1132,9 @@ async function loadListFirestore() {
       const data = snap.data();
       if (Array.isArray(data.animeList)) {
         animeList = data.animeList;
-        localStorage.setItem(STORAGEKEY, JSON.stringify(animeList));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(animeList));
         if (typeof renderMyList === 'function') renderMyList();
+        if (typeof updateNavCount === 'function') updateNavCount();
       }
     }
   } catch (e) {}
@@ -1112,7 +1151,7 @@ onSnapshot(FIRESTORE_REF, (snap) => {
   const data = snap.data();
   if (Array.isArray(data.animeList)) {
     animeList = data.animeList;
-    localStorage.setItem(STORAGEKEY, JSON.stringify(animeList));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(animeList));
     if (typeof renderMyList === 'function') renderMyList();
     if (typeof updateNavCount === 'function') updateNavCount();
   }
