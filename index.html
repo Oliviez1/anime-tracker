@@ -930,6 +930,440 @@ body{background-image:none!important}
 .kk-confirm .yes{background:#d93636;color:#fff}
 .kk-confirm button:hover{filter:brightness(1.2)}
 .anime-card.kk-out,.lrow.kk-out{opacity:0;transform:scale(.92);transition:all .2s}
+
+/* ===================== SOCIAL — style réseau social pro ===================== */
+#page-friends.tw{--tw-line:rgba(128,128,128,.28);--ink:var(--tw-line);--hard:transparent;--radius:10px;padding:0}
+#page-friends .tw-grid{display:grid;grid-template-columns:270px minmax(0,640px) 330px;justify-content:center;gap:0;min-height:calc(100vh - var(--nav-h));max-width:1300px;margin:0 auto}
+.tw-left{position:sticky;top:var(--nav-h);height:calc(100vh - var(--nav-h));padding:14px 14px 18px;display:flex;flex-direction:column;gap:6px}
+.tw-nav{display:flex;flex-direction:column;gap:4px}
+.tw-nav-i{display:flex;align-items:center;gap:16px;padding:12px 18px;border-radius:999px;font-size:1.05rem;font-weight:600;color:var(--text);text-align:left;transition:background .15s;position:relative}
+.tw-nav-i:hover{background:var(--surface2)}
+.tw-nav-i.active{font-weight:800}
+.tw-nav-i .ic{font-size:1.4rem;width:28px;text-align:center}
+.tw-badge{background:var(--user-accent);color:#fff;border-radius:999px;font-size:.68rem;font-weight:800;padding:1px 7px;display:none;margin-left:auto}
+.tw-postbtn{margin:14px 6px 0;padding:14px;border-radius:999px;background:var(--user-accent);color:#fff;font-weight:800;font-size:1rem;box-shadow:none;transition:filter .15s}
+.tw-postbtn:hover{filter:brightness(1.1)}
+.tw-user{margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:999px;cursor:pointer}
+.tw-user:hover{background:var(--surface2)}
+.tw-user b{display:block;font-size:.9rem}.tw-user span{font-size:.76rem;color:var(--muted)}
+.tw-av{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;flex-shrink:0;overflow:hidden;font-size:1.3rem;border:0;box-shadow:none}
+.tw-av img{width:100%;height:100%;object-fit:cover}
+.tw-main{border-left:1px solid var(--tw-line);border-right:1px solid var(--tw-line);background:var(--surface);min-height:calc(100vh - var(--nav-h));min-width:0}
+.tw-pane{min-width:0}
+.tw-head{position:sticky;top:var(--nav-h);z-index:20;background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--tw-line)}
+.tw-head h2{font-size:1.2rem;font-weight:800;padding:14px 18px 6px;font-family:'Inter',sans-serif}
+.tw-tabs{display:flex;overflow-x:auto;scrollbar-width:none}
+.tw-tabs::-webkit-scrollbar{display:none}
+.tw-tab{flex:1 0 auto;padding:13px 16px;font-weight:700;font-size:.88rem;color:var(--muted);position:relative;white-space:nowrap}
+.tw-tab:hover{background:var(--surface2)}
+.tw-tab.active{color:var(--text);font-weight:800}
+.tw-tab.active::after{content:'';position:absolute;left:25%;right:25%;bottom:0;height:4px;border-radius:4px;background:var(--user-accent)}
+.tw-mtabs{display:none}
+.tw-pad{padding:16px 18px}
+.tw-comp{display:flex;gap:12px;padding:14px 18px;border-bottom:1px solid var(--tw-line)}
+.tw-comp-body{flex:1;min-width:0}
+.tw-comp textarea{width:100%;border:0;background:transparent;color:var(--text);font:inherit;font-size:1.1rem;resize:none;min-height:64px;padding:8px 0;outline:none}
+.tw-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+.tw-chip{padding:4px 12px;border-radius:999px;border:1px solid var(--tw-line);font-size:.76rem;font-weight:700;color:var(--muted)}
+.tw-chip:hover{background:var(--surface2)}
+.tw-chip.on{background:var(--user-accent);border-color:var(--user-accent);color:#fff}
+.tw-tools{display:flex;align-items:center;gap:6px;border-top:1px solid var(--tw-line);padding-top:10px;margin-top:8px;flex-wrap:wrap}
+.tw-tool{padding:6px 11px;border-radius:999px;font-size:.82rem;font-weight:700;color:var(--user-accent)}
+.tw-tool:hover{background:rgba(var(--primary-rgb),.12)}
+.tw-tool.on{background:rgba(var(--primary-rgb),.16)}
+.tw-stars span{font-size:1.25rem;color:var(--gold);opacity:.3;cursor:pointer;user-select:none}
+.tw-stars span.on{opacity:1}
+.tw-ep{width:64px;padding:5px 8px;border-radius:999px;border:1px solid var(--tw-line);background:var(--surface);color:var(--text);font-weight:700;text-align:center}
+.tw-count{margin-left:auto;font-size:.74rem;color:var(--muted)}
+.tw-send{padding:9px 20px;border-radius:999px;background:var(--user-accent);color:#fff;font-weight:800;font-size:.88rem;box-shadow:none}
+.tw-send:disabled{opacity:.5}
+.tw-search{width:100%;padding:11px 16px;border-radius:999px;border:1px solid var(--tw-line);background:var(--surface2);color:var(--text);font-size:.88rem}
+.tw-search:focus{outline:none;border-color:var(--user-accent);background:var(--surface)}
+.tw-sel{display:flex;gap:12px;align-items:center;padding:8px;border:1px solid var(--tw-line);border-radius:14px;margin:6px 0}
+.tw-sel img{width:42px;height:60px;object-fit:cover;border-radius:8px}
+.tw-sel b{flex:1;font-size:.9rem}
+.pick-res{display:flex;flex-direction:column;margin-top:6px;border-radius:12px;overflow:hidden;border:1px solid var(--tw-line)}
+.pick-res:empty{display:none}
+.pick-res .pr{display:flex;gap:10px;align-items:center;padding:8px 10px;background:var(--surface);cursor:pointer;font-size:.84rem;font-weight:700;border:0;border-bottom:1px solid var(--tw-line)}
+.pick-res .pr:hover{background:var(--surface2);color:var(--text)}
+.pick-res img,.mychip img{width:30px;height:42px;object-fit:cover;border-radius:5px;border:0}
+.mychips{display:flex;gap:8px;overflow-x:auto;padding:8px 0 2px;scrollbar-width:thin}
+.mychip{flex:0 0 auto;display:flex;gap:8px;align-items:center;max-width:190px;padding:4px 10px 4px 4px;border:1px solid var(--tw-line);border-radius:999px;font-size:.72rem;font-weight:700;cursor:pointer;background:var(--surface)}
+.mychip:hover{background:var(--surface2);color:var(--text)}
+.mychip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tw-post{display:flex;gap:12px;padding:14px 18px;border-bottom:1px solid var(--tw-line);transition:background .12s}
+.tw-post:hover{background:rgba(128,128,128,.045)}
+.tw-pb{flex:1;min-width:0}
+.tw-top{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;font-size:.92rem}
+.tw-top b{font-weight:800}.tw-dim{color:var(--muted);font-size:.84rem}
+.tw-del{margin-left:auto;opacity:.45;font-size:.85rem}.tw-del:hover{opacity:1;color:#e0524f}
+.tw-rp{font-size:.78rem;font-weight:700;color:var(--muted);margin:0 0 6px 56px;padding-top:10px}
+.tw-text{font-size:.96rem;line-height:1.5;margin:3px 0 8px;word-break:break-word}
+.tw-text.spoil:not(.rev){filter:blur(7px);cursor:pointer;user-select:none}
+.tw-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:2px}
+.tw-tag{background:rgba(var(--primary-rgb),.14);color:var(--user-accent);padding:2px 10px;border-radius:999px;font-size:.72rem;font-weight:800}
+.tw-stars-s{color:var(--gold);letter-spacing:1px}
+.tw-spoil{font-size:.7rem;font-weight:800;color:#e0524f}
+.tw-card{display:flex;border:1px solid var(--tw-line);border-radius:16px;overflow:hidden;cursor:pointer;margin:4px 0 6px;transition:background .12s;background:var(--surface)}
+.tw-card:hover{background:var(--surface2)}
+.tw-card img{width:84px;height:118px;object-fit:cover;flex-shrink:0}
+.tw-card div{padding:12px 14px;min-width:0}
+.tw-card b{display:block;font-size:.95rem;margin-bottom:4px}
+.tw-card span{font-size:.78rem;color:var(--muted)}
+.tw-quote{border:1px solid var(--tw-line);border-radius:16px;padding:10px 14px;margin-top:6px}
+.tw-quote .q{font-weight:800;font-size:.84rem;margin-bottom:4px}
+.tw-acts{display:flex;justify-content:space-between;max-width:380px;margin-top:6px}
+.tw-act{display:flex;align-items:center;gap:6px;padding:6px 10px;margin-left:-10px;border-radius:999px;font-size:.84rem;color:var(--muted);font-weight:600;transition:all .12s}
+.tw-act:hover{background:rgba(var(--primary-rgb),.12);color:var(--user-accent)}
+.tw-act.like:hover,.tw-act.like.on{background:rgba(249,24,128,.12);color:#f91880}
+.tw-act.rt:hover,.tw-act.rt.on{background:rgba(0,186,124,.12);color:#00ba7c}
+.tw-cm{margin-top:6px;border-top:1px solid var(--tw-line);padding-top:8px}
+.tw-cmi{padding:6px 0;font-size:.86rem;line-height:1.45}
+.tw-cmi span{color:var(--muted);font-size:.72rem;margin-left:6px}
+.tw-cmi button{margin-left:6px;color:var(--muted);font-size:.72rem}
+.tw-cmnew{display:flex;gap:8px;margin-top:6px}
+.tw-cmnew input{flex:1;padding:9px 14px;border-radius:999px;border:1px solid var(--tw-line);background:var(--surface);color:var(--text);font-size:.85rem}
+.tw-cmnew input:focus{outline:none;border-color:var(--user-accent)}
+.tw-more{display:block;width:100%;padding:16px;color:var(--user-accent);font-weight:700}
+.tw-more:hover{background:var(--surface2)}
+.tw-empty{text-align:center;padding:50px 24px;color:var(--muted);font-size:.9rem}
+.tw-empty b{display:block;color:var(--text);font-size:1.1rem;margin-bottom:6px}
+.tw-right{position:sticky;top:var(--nav-h);height:calc(100vh - var(--nav-h));overflow-y:auto;padding:12px 18px;display:flex;flex-direction:column;gap:14px;scrollbar-width:none}
+.tw-box{background:var(--surface2);border-radius:18px;overflow:hidden}
+.tw-box h3{font-size:1.15rem;font-weight:800;padding:14px 16px 8px;font-family:'Inter',sans-serif}
+.tw-tr{display:block;width:100%;text-align:left;padding:10px 16px;transition:background .12s}
+.tw-tr:hover{background:rgba(128,128,128,.12)}
+.tw-tr small{display:block;color:var(--muted);font-size:.72rem}
+.tw-tr b{font-size:.9rem}
+.tw-fr{display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer}
+.tw-fr:hover{background:rgba(128,128,128,.12)}
+.tw-fr .tw-av{width:38px;height:38px;font-size:1.05rem}
+.tw-fr div{flex:1;min-width:0;font-size:.88rem;font-weight:700}
+.tw-fr button{padding:5px 12px;border-radius:999px;border:1px solid var(--tw-line);font-size:.76rem;font-weight:700}
+.tw-fr button:hover{background:var(--user-accent);color:#fff;border-color:var(--user-accent)}
+.tw-boxpad{padding:10px 16px 14px;font-size:.84rem;color:var(--muted)}
+/* messages */
+.chat-shell{display:grid;grid-template-columns:290px 1fr;height:calc(100vh - var(--nav-h));min-height:480px;background:var(--surface)}
+.chat-list{border-right:1px solid var(--tw-line);overflow-y:auto}
+.chat-list-h{padding:14px 18px;font-size:1.2rem;font-weight:800;border-bottom:1px solid var(--tw-line);position:sticky;top:0;background:var(--surface)}
+.ci{display:flex;gap:10px;align-items:center;padding:12px 16px;cursor:pointer;border-right:3px solid transparent}
+.ci:hover{background:var(--surface2)}.ci.on{background:rgba(var(--primary-rgb),.08);border-right-color:var(--user-accent)}
+.ci .tw-av{width:46px;height:46px;font-size:1.2rem}
+.ci-main{flex:1;min-width:0}.ci-main b{display:block;font-size:.9rem}
+.ci-main span{display:block;font-size:.8rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ci-r{display:flex;flex-direction:column;align-items:flex-end;gap:4px;font-size:.68rem;color:var(--muted)}
+.ci-un{background:var(--user-accent);color:#fff;border-radius:999px;padding:0 7px;font-weight:800}
+.chat-thread{display:flex;flex-direction:column;min-width:0;min-height:0}
+.ct-empty{margin:auto;text-align:center;color:var(--muted);padding:20px}
+.ct-head{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--tw-line)}
+.ct-head .tw-av{width:36px;height:36px;font-size:1.05rem}.ct-head b{flex:1}
+.ct-back{display:none;font-size:1.3rem;padding:0 8px;font-weight:800}
+.msgs{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.daysep{text-align:center;margin:12px 0 6px;color:var(--muted);font-size:.72rem;font-weight:700;text-transform:capitalize}
+.msg{display:flex;flex-direction:column;max-width:76%;outline:none}
+.msg.me{align-self:flex-end;align-items:flex-end}.msg.ot{align-self:flex-start;align-items:flex-start}
+.bubble{padding:9px 14px;font-size:.92rem;line-height:1.45;word-break:break-word;border-radius:20px 20px 20px 4px;background:var(--surface3)}
+.msg.me .bubble{background:var(--user-accent);color:#fff;border-radius:20px 20px 4px 20px}
+.mt{font-size:.62rem;opacity:.65;margin-top:3px;text-align:right}
+.mtools{display:flex;gap:2px;opacity:0;transition:opacity .12s;margin-top:2px;background:var(--surface);border:1px solid var(--tw-line);border-radius:999px;padding:1px 6px}
+.msg:hover .mtools,.msg:focus-within .mtools{opacity:1}.mtools button{font-size:.85rem;padding:0 3px}
+.rxs{display:flex;gap:4px;margin-top:3px}
+.rx{border:1px solid var(--tw-line);background:var(--surface);padding:0 7px;font-size:.72rem;font-weight:700;border-radius:999px;cursor:pointer}
+.rx.me{background:rgba(var(--primary-rgb),.15);border-color:var(--user-accent)}
+.seen{font-size:.66rem;color:var(--muted);font-weight:700;margin-top:2px}
+.ct-share{border-top:1px solid var(--tw-line);padding:10px 16px;background:var(--surface2);max-height:240px;overflow-y:auto}
+.ct-input{display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--tw-line);align-items:flex-end}
+.ct-input textarea{flex:1;resize:none;max-height:120px;padding:10px 16px;border:1px solid var(--tw-line);background:var(--surface2);color:var(--text);font:inherit;font-size:.92rem;border-radius:22px;outline:none}
+.ct-input textarea:focus{border-color:var(--user-accent)}
+#page-friends .tool-btn{border-radius:999px;box-shadow:none;border:1px solid var(--tw-line)}
+#page-friends .tool-btn.primary{background:var(--user-accent);border-color:var(--user-accent);color:#fff}
+#page-friends .tool-btn:hover{transform:none;box-shadow:none}
+#page-friends .friend-card,#page-friends .panel,#page-friends .lb-row,#page-friends .feed-item,#page-friends .add-friend-box,#page-friends .req-card,#page-friends .compat{border-width:1px;border-radius:14px;box-shadow:none}
+#page-friends .friend-avatar{border-radius:50%;box-shadow:none;border-width:0}
+#page-friends .format-pill,#page-friends .list-tab{border-width:1px;border-radius:999px;box-shadow:none}
+@media(max-width:1100px){#page-friends .tw-grid{grid-template-columns:84px minmax(0,640px)}.tw-right{display:none}.tw-nav-i span.lb,.tw-user div,.tw-postbtn span{display:none}.tw-nav-i{justify-content:center;padding:12px}.tw-postbtn{padding:12px}}
+@media(max-width:700px){
+  #page-friends .tw-grid{grid-template-columns:1fr}.tw-left{display:none}.tw-main{border:0}
+  .tw-mtabs{display:flex;border-bottom:1px solid var(--tw-line);position:sticky;top:var(--nav-h);background:var(--surface);z-index:25}
+  .tw-mtabs button{flex:1;padding:12px 4px;font-weight:700;font-size:.82rem;color:var(--muted);position:relative}
+  .tw-mtabs button.active{color:var(--user-accent);box-shadow:inset 0 -3px 0 var(--user-accent)}
+  .tw-head{top:calc(var(--nav-h) + 44px)}
+  .chat-shell{grid-template-columns:1fr;height:calc(100vh - var(--nav-h) - 110px)}
+  .chat-shell .chat-thread{display:none}.chat-shell.open .chat-list{display:none}.chat-shell.open .chat-thread{display:flex}
+  .ct-back{display:block}.msg{max-width:90%}
+}
+
+/* ===================== CATALOGUE — style plateforme anime ===================== */
+#page-catalogue .cat-hero{position:relative;padding:54px 40px 58px;margin-top:calc(var(--nav-h)*-1);padding-top:calc(var(--nav-h) + 46px);color:#fff;overflow:hidden;
+  background:radial-gradient(900px 340px at 85% 0%,rgba(255,255,255,.18),transparent 60%),linear-gradient(120deg,#12101f 0%,var(--user-accent) 130%)}
+#page-catalogue .cat-hero::after{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.1) 1px,transparent 1.6px);background-size:14px 14px;pointer-events:none}
+#page-catalogue .cat-hero-in{position:relative;z-index:1;max-width:980px;margin:0 auto}
+#page-catalogue .cat-hero h1{font-family:var(--serif);font-size:2.8rem;line-height:1.1;margin-bottom:8px;color:#fff}
+#page-catalogue .cat-hero p{font-size:1rem;opacity:.82;margin-bottom:24px}
+.cat-searchbar{display:flex;align-items:center;gap:12px;background:#fff;color:#15131a;border-radius:16px;padding:6px 8px 6px 20px;box-shadow:0 18px 50px rgba(0,0,0,.35)}
+.cat-searchbar svg{flex-shrink:0;opacity:.55}
+.cat-searchbar input{flex:1;border:0;outline:0;background:transparent;font-size:1.05rem;padding:14px 0;color:#15131a;font-family:'Inter',sans-serif}
+.cat-searchbar button{padding:12px 22px;border-radius:12px;background:var(--user-accent);color:#fff;font-weight:800;font-size:.9rem}
+.cat-bar{position:sticky;top:var(--nav-h);z-index:40;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:12px 40px 10px}
+.cat-selects{display:flex;gap:10px;flex-wrap:wrap;max-width:1500px;margin:0 auto 10px}
+.cat-sel{display:flex;flex-direction:column;gap:3px;font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+.cat-sel select{min-width:128px;padding:9px 12px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:.84rem;font-weight:600;text-transform:none;letter-spacing:0;cursor:pointer;font-family:'Inter',sans-serif}
+.cat-sel select:hover,.cat-sel select:focus{border-color:var(--user-accent);outline:none}
+.cat-genres{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;max-width:1500px;margin:0 auto;padding:2px 0}
+.cat-genres::-webkit-scrollbar{display:none}
+#page-catalogue .cat-genres .cat-chip{flex-shrink:0;border-radius:999px;border:1px solid var(--border);box-shadow:none;padding:6px 14px;font-size:.78rem}
+#page-catalogue .cat-genres .cat-chip.active{background:var(--user-accent);color:#fff;border-color:var(--user-accent)}
+.cat-wrap{padding:22px 40px 60px;max-width:1580px;margin:0 auto}
+.cat-meta{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.cat-tags{display:flex;gap:8px;flex-wrap:wrap}
+.cat-tag{padding:5px 12px;border-radius:999px;background:rgba(var(--primary-rgb),.14);color:var(--user-accent);font-size:.76rem;font-weight:800}
+.cat-tag:hover{background:var(--user-accent);color:#fff}
+.cat-right{display:flex;align-items:center;gap:14px;font-size:.8rem;color:var(--muted)}
+.cat-right label{display:flex;gap:6px;align-items:center;cursor:pointer;font-weight:600}
+.cat-right button{color:var(--user-accent);font-weight:800}
+#page-catalogue .catalogue-grid{grid-template-columns:repeat(auto-fill,minmax(172px,1fr));gap:26px 18px}
+#page-catalogue .anime-card{border:0;background:transparent;box-shadow:none;border-radius:12px;overflow:hidden;transition:transform .2s}
+#page-catalogue .anime-card:hover{transform:translateY(-6px);box-shadow:none}
+#page-catalogue .anime-card-cover{border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.22);transition:box-shadow .2s}
+#page-catalogue .anime-card:hover .anime-card-cover{box-shadow:0 16px 36px rgba(var(--primary-rgb),.45)}
+#page-catalogue .card-info{border:0;background:transparent;padding:10px 2px 0}
+#page-catalogue .card-title{font-size:.88rem;white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.3}
+#page-catalogue .card-score-badge{top:8px;left:8px;border:0;border-radius:8px;background:rgba(12,11,15,.82);color:var(--gold);backdrop-filter:blur(6px);font-family:'Inter',sans-serif}
+#page-catalogue .card-type-badge,#page-catalogue .card-airing-badge{top:8px;right:8px;border:0;border-radius:6px}
+#page-catalogue .card-inlist{border:0;border-radius:6px;top:38px}
+#page-catalogue .card-quick-add{border:0;border-radius:50%;box-shadow:0 6px 16px rgba(0,0,0,.4);bottom:64px}
+@media(max-width:900px){#page-catalogue .cat-hero{padding:40px 20px 44px;padding-top:calc(var(--nav-h) + 30px)}#page-catalogue .cat-hero h1{font-size:2rem}.cat-bar{padding:10px 16px 8px}.cat-wrap{padding:18px 16px 60px}.cat-sel select{min-width:110px}#page-catalogue .catalogue-grid{grid-template-columns:repeat(auto-fill,minmax(136px,1fr));gap:20px 12px}}
+.list-io{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+
+:root{--tw-line:var(--ink)}
+.navbar{height:58px}
+.nav-logo{font-size:1.2rem;letter-spacing:.02em;margin-right:30px;text-transform:uppercase}
+.hanko{border-radius:0;width:32px;height:32px;transform:none}
+.nav-links{gap:0}
+.nav-link{font-size:.8rem;text-transform:uppercase;letter-spacing:.07em;font-weight:800;padding:10px 16px;border-radius:0;display:inline-flex;align-items:center;gap:8px}
+.nav-link.active{box-shadow:none;border:2px solid var(--ink)}
+.nav-search{border-radius:0;width:190px;padding-left:34px}
+.nav-search:focus{width:260px}
+.nav-icon-btn,.nav-avatar-btn{border-radius:0}
+.sub-tabs{display:flex;justify-content:center;padding:0 40px;border-bottom:3px solid var(--ink);background:var(--bg);overflow-x:auto;scrollbar-width:none}
+.sub-tabs::-webkit-scrollbar{display:none}
+.sub-tabs a{padding:16px 26px;font-weight:800;font-size:.84rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border-bottom:5px solid transparent;margin-bottom:-3px;white-space:nowrap}
+.sub-tabs a:hover{color:var(--text)}
+.sub-tabs a.on{color:var(--text);border-bottom-color:var(--user-accent)}
+#page-popular .page-header,#page-seasonal .page-header,#page-upcoming .page-header{text-align:center;padding:34px 40px 18px}
+#page-popular .page-header-inner,#page-seasonal .page-header-inner,#page-upcoming .page-header-inner{justify-content:center}
+#page-popular .page-header-sub,#page-seasonal .page-header-sub,#page-upcoming .page-header-sub{margin-left:0}
+.pv2-pad{max-width:1580px;margin:0 auto}
+.pv2-pad > div:first-child{justify-content:center!important;gap:16px!important}
+.pv2-pad > div:nth-child(2){text-align:center}
+.pv2-pad .load-more-btn{margin:0 auto}
+.cat-head{max-width:1580px;margin:0 auto;padding:30px 40px 10px;text-align:center}
+.cat-head .page-header-title{margin-bottom:20px;text-align:center}
+.cat-tool{display:flex;gap:14px;align-items:flex-end;justify-content:center;flex-wrap:wrap;text-align:left}
+.cat-search{position:relative;flex:1 1 320px;min-width:240px;max-width:520px}
+.cat-search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);opacity:.55;pointer-events:none}
+.cat-search input{width:100%}
+.cat-sel select{min-width:160px;border:2px solid var(--ink);border-radius:2px;background:var(--surface);color:var(--text);padding:11px 12px;font-weight:600;font-size:.86rem}
+.cat-sel select:focus{outline:none;box-shadow:3px 3px 0 var(--user-accent)}
+.cat-adv{display:none;margin:16px auto 0;padding:16px 18px;border:2px solid var(--ink);background:var(--surface);gap:14px;flex-wrap:wrap;align-items:flex-end;justify-content:center;text-align:left}
+.cat-adv.open{display:flex}
+.cat-adv label.chk{display:flex;gap:8px;align-items:center;font-size:.84rem;font-weight:700;cursor:pointer;padding-bottom:11px}
+#catAdvBtn{padding:12px 20px}
+#catAdvBtn.active{background:var(--hl);color:#15131a}
+.cat-wrap{max-width:1580px;margin:0 auto}
+.cat-meta{justify-content:center;gap:24px}
+.cat-tags{justify-content:center}
+#page-catalogue .anime-card{border:2px solid var(--ink);border-radius:2px;background:var(--surface);overflow:hidden;transition:transform .12s,box-shadow .12s}
+#page-catalogue .anime-card:hover{transform:translate(-3px,-3px);box-shadow:6px 6px 0 var(--hard)}
+#page-catalogue .anime-card-cover{border-radius:0;box-shadow:none}
+#page-catalogue .card-info{border-top:2px solid var(--ink);background:var(--surface);padding:10px 11px 12px}
+#page-catalogue .card-score-badge{background:var(--hl);color:#15131a;border-radius:0;border-right:2px solid var(--ink);border-bottom:2px solid var(--ink);backdrop-filter:none;top:0;left:0}
+#page-catalogue .card-type-badge,#page-catalogue .card-airing-badge{border:1.5px solid var(--ink);border-radius:2px;top:8px;right:8px}
+#page-catalogue .card-inlist{border:2px solid var(--ink);border-radius:2px;top:34px}
+#page-catalogue .card-quick-add{border:2px solid var(--ink);border-radius:2px;box-shadow:none;bottom:58px}
+#page-catalogue .catalogue-grid{gap:22px 18px}
+.cat-tag{border-radius:0;background:var(--hl);color:#15131a;border:2px solid var(--ink)}
+#page-friends.tw{--ink:unset;--hard:unset;--radius:unset;--tw-line:var(--ink)}
+#page-friends .tw-grid{max-width:1500px;grid-template-columns:270px minmax(0,860px) 330px;justify-content:center}
+.tw-main{background:var(--bg);border-left:2px solid var(--ink);border-right:2px solid var(--ink)}
+.tw-head{background:var(--bg);backdrop-filter:none;border-bottom:3px solid var(--ink);top:58px}
+.tw-head h2{font-family:var(--serif);font-size:1.6rem;font-weight:400;padding:18px 22px 6px}
+.tw-tabs{padding:0 8px}
+.tw-tab{padding:14px 18px;font-weight:800;font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.tw-tab:hover{background:none;color:var(--text)}
+.tw-tab.active{color:var(--text);box-shadow:inset 0 -4px 0 var(--user-accent)}
+.tw-tab.active::after{display:none}
+.tw-left{padding:18px 16px 22px}
+.tw-nav-i{border-radius:0;font-size:.94rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;padding:14px 16px;border:2px solid transparent;color:var(--text);gap:0}
+.tw-nav-i .ic{display:none}
+.tw-nav-i:hover{background:var(--surface3)}
+.tw-nav-i.active{background:var(--hl);color:#15131a;border-color:var(--ink)}
+.tw-badge,.fbadge{border-radius:0;background:var(--user-accent);color:#fff}
+.tw-postbtn,.tw-send{background:var(--user-accent);color:#fff;border:2px solid var(--ink);border-radius:2px;box-shadow:3px 3px 0 var(--ink);font-weight:800;text-transform:uppercase;letter-spacing:.08em;font-size:.84rem;padding:12px 24px;transition:transform .1s,box-shadow .1s}
+.tw-postbtn{margin:16px 0 0;width:100%;padding:15px}
+.tw-postbtn:hover,.tw-send:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--ink);filter:none}
+.tw-postbtn:active,.tw-send:active{transform:translate(2px,2px);box-shadow:none}
+.tw-user{border-radius:0;padding:12px}.tw-user:hover{background:var(--surface3)}
+.tw-user b{font-size:.98rem}.tw-user span{font-size:.8rem}
+.tw-av{width:46px;height:46px;border-radius:2px;border:2px solid var(--ink);box-shadow:2px 2px 0 var(--ink)}
+.tw-comp{border-bottom:2px solid var(--ink);padding:16px 22px}
+.tw-comp textarea{font-size:1.05rem;min-height:80px}
+.tw-chip{border:2px solid var(--ink);border-radius:2px;background:var(--surface);color:var(--text);font-weight:800;font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;padding:6px 13px}
+.tw-chip:hover{background:var(--surface3)}
+.tw-chip.on{background:var(--user-accent);color:#fff}
+.tw-tools{border-top:2px solid var(--ink)}
+.tw-tool{border-radius:2px;font-size:.76rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--text);border:2px solid transparent;padding:8px 12px}
+.tw-tool:hover{background:var(--surface3)}
+.tw-tool.on{background:var(--hl);color:#15131a;border-color:var(--ink)}
+.tw-ep,.tw-search,.tw-cmnew input,.ct-input textarea{border:2px solid var(--ink);border-radius:2px;background:var(--surface);color:var(--text)}
+.tw-search{padding:12px 15px;font-size:.94rem}
+.tw-search:focus,.tw-cmnew input:focus,.ct-input textarea:focus,.tw-ep:focus{box-shadow:3px 3px 0 var(--user-accent);border-color:var(--ink);outline:none}
+.tw-sel,.tw-card,.pick-res,.mychip{border:2px solid var(--ink);border-radius:2px;background:var(--surface)}
+.pick-res .pr{border-bottom:2px solid var(--ink)}
+.tw-card:hover{background:var(--surface3)}
+.tw-quote{border:2px dashed var(--ink);border-radius:2px}
+.tw-post{border-bottom:2px solid var(--ink);padding:16px 22px}
+.tw-post:hover{background:var(--surface)}
+.tw-top{font-size:.98rem}
+.tw-text{font-size:1rem;line-height:1.55}
+.tw-tag{background:var(--hl);color:#15131a;border:1.5px solid var(--ink);border-radius:2px;padding:2px 10px;text-transform:uppercase;letter-spacing:.05em;font-size:.68rem}
+.tw-rp{margin-left:70px}
+.tw-act{border-radius:2px;font-size:.76rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;padding:7px 12px}
+.tw-act:hover,.tw-act.like:hover,.tw-act.rt:hover{background:var(--surface3);color:var(--text)}
+.tw-act.like.on,.tw-act.rt.on{background:var(--hl);color:#15131a}
+.tw-more{font-weight:800;text-transform:uppercase;letter-spacing:.08em;font-size:.78rem;border-bottom:2px solid var(--ink)}
+.tw-empty b{font-family:var(--serif);font-weight:400;font-size:1.35rem}
+.tw-right{padding:16px 20px}
+.tw-box{background:var(--surface);border:2px solid var(--ink);border-radius:2px;box-shadow:4px 4px 0 var(--ink)}
+.tw-box h3{font-family:var(--serif);font-size:1.1rem;font-weight:400;padding:14px 16px 8px;border-bottom:2px solid var(--ink);margin-bottom:4px}
+.tw-tr{padding:11px 16px}.tw-tr b{font-size:.93rem}
+.tw-tr:hover,.tw-fr:hover{background:var(--surface3)}
+.tw-fr{padding:11px 16px}
+.tw-fr > div:not(.tw-av){flex:1;min-width:0;font-size:.93rem}
+.tw-fr .tw-av{width:38px;height:38px;font-size:1rem;flex:0 0 38px}
+.tw-fr button{border:2px solid var(--ink);border-radius:2px;font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;font-weight:800;background:var(--surface);padding:6px 10px}
+.tw-fr button:hover{background:var(--user-accent);color:#fff}
+#page-friends .tool-btn{border-radius:2px;border:2px solid var(--ink);box-shadow:none;font-weight:800;text-transform:uppercase;letter-spacing:.06em;font-size:.74rem}
+#page-friends .tool-btn:hover{background:var(--surface3);transform:none}
+#page-friends .tool-btn.primary{background:var(--user-accent);color:#fff}
+.chat-shell{background:var(--bg);grid-template-columns:310px 1fr;height:calc(100vh - 58px - 6px);min-height:520px}
+.chat-list{border-right:2px solid var(--ink)}
+.chat-list-h{font-family:var(--serif);font-size:1.4rem;font-weight:400;background:var(--bg);border-bottom:3px solid var(--ink);padding:18px 22px}
+.ci{padding:14px 18px;gap:13px}
+.ci .tw-av{width:48px;height:48px;font-size:1.2rem}
+.ci-main b{font-size:1rem}.ci-main span{font-size:.86rem}
+.ci.on{background:var(--hl);color:#15131a;border-right:0}
+.ci.on .ci-main span{color:#4a4528}
+.ci-un{border-radius:0;background:var(--user-accent)}
+.ct-head{border-bottom:2px solid var(--ink);padding:13px 20px;font-size:1.05rem;gap:13px}
+.ct-head .tw-av{width:42px;height:42px;font-size:1.1rem}
+.msgs{padding:20px 22px;gap:7px}
+.msg{max-width:76%}
+.bubble{border:2px solid var(--ink);border-radius:2px;background:var(--surface2);font-size:1rem;line-height:1.5;padding:11px 15px}
+.msg.me .bubble{background:var(--user-accent);border-radius:2px;color:#fff}
+.mtools{border:2px solid var(--ink);border-radius:2px}
+.rx{border:2px solid var(--ink);border-radius:2px;font-size:.8rem;padding:1px 8px}.rx.me{background:var(--hl);color:#15131a}
+.ct-input{border-top:2px solid var(--ink);padding:14px 20px;gap:11px;align-items:stretch}
+.ct-input textarea{min-height:54px;font-size:1rem;padding:14px 16px;min-width:0}
+.ct-input .tw-tool{border:2px solid var(--ink);padding:0 16px;font-size:.78rem}
+.ct-input .tw-send{padding:0 26px;font-size:.88rem}
+.ct-share{border-top:2px solid var(--ink)}
+.daysep{font-weight:800;text-transform:uppercase;letter-spacing:.08em;font-size:.76rem}
+#tw-amis .tw-pad{padding:22px}
+#tw-amis .friend-card{padding:18px 22px;gap:18px;margin-bottom:12px}
+#tw-amis .friend-avatar{width:60px;height:60px;font-size:1.5rem}
+#tw-amis .friend-name{font-size:1.2rem}
+#tw-amis .friend-meta{font-size:.88rem}
+#tw-amis .add-friend-box{padding:22px}
+#tw-amis .add-friend-title{font-size:1.1rem}
+#tw-amis .add-friend-input{padding:14px 16px;font-size:1rem}
+#tw-amis .add-friend-btn{padding:14px 28px;font-size:.9rem}
+#tw-amis .profile-section-title{font-size:1.25rem}
+#tw-amis .lb-row{padding:14px 18px}
+#tw-amis .lb-row .friend-avatar{width:48px!important;height:48px!important}
+#tw-amis .feed-item{padding:12px 16px}
+#tw-amis .feed-txt{font-size:.95rem}
+#tw-amis .req-card{padding:18px 22px}
+.tw-mtabs{border-bottom:3px solid var(--ink);background:var(--bg)}
+.tw-mtabs button{font-weight:800;text-transform:uppercase;letter-spacing:.06em;font-size:.78rem}
+.tw-mtabs button.active{color:var(--text);box-shadow:inset 0 -4px 0 var(--user-accent)}
+@media(max-width:1250px){#page-friends .tw-grid{grid-template-columns:84px minmax(0,1fr)}.tw-right{display:none}.tw-nav-i{padding:14px 10px;justify-content:center;font-size:.7rem}}
+@media(max-width:700px){#page-friends .tw-grid{grid-template-columns:1fr}.tw-head{top:calc(58px + 46px)}.sub-tabs{padding:0 8px;justify-content:flex-start}.cat-head{padding:22px 16px 6px}.chat-shell{grid-template-columns:1fr;height:calc(100vh - 58px - 120px)}.msg{max-width:90%}}
+
+.gd{display:grid;grid-template-columns:190px 1fr;gap:26px;align-items:start}
+.gd-menu{display:flex;flex-direction:column;gap:6px;position:sticky;top:0}
+.gd-menu .list-tab{width:100%;text-align:left;padding:11px 14px;font-size:.78rem}
+.gd-body h3{font-family:var(--serif);font-size:1.7rem;font-weight:400;line-height:1.1;margin-bottom:8px}
+.gd-lead{color:var(--muted);font-size:.95rem;line-height:1.65;margin-bottom:14px;max-width:640px}
+.gd-body h5{font-size:.74rem;text-transform:uppercase;letter-spacing:.14em;font-weight:800;color:var(--muted);margin:22px 0 8px}
+.g-fig{border:2px solid var(--ink);background:var(--bg);padding:16px;margin:10px 0 16px;pointer-events:none;user-select:none;overflow:hidden;position:relative}
+.g-fig::before{content:'APERÇU';position:absolute;top:0;right:0;background:var(--surface3);font-size:.58rem;font-weight:800;letter-spacing:.14em;padding:3px 9px;color:var(--muted)}
+.g-n{display:inline-grid;place-items:center;min-width:20px;height:20px;background:var(--hl);color:#15131a;border:2px solid var(--ink);font-size:.68rem;font-weight:800;margin-left:7px;vertical-align:middle;line-height:1}
+.g-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.g-nav{display:flex;gap:2px;align-items:center;flex-wrap:wrap;padding-bottom:12px;border-bottom:3px solid var(--ink)}
+.g-nav .nav-link{padding:8px 12px;font-size:.7rem}
+.g-input{display:inline-flex;align-items:center;border:2px solid var(--ink);background:var(--surface);padding:9px 12px;font-size:.78rem;color:var(--muted);min-width:150px}
+.g-sel{display:inline-flex;align-items:center;gap:6px;border:2px solid var(--ink);background:var(--surface);padding:9px 12px;font-size:.78rem;font-weight:600}
+.g-sel small{display:block;font-size:.58rem;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);font-weight:800;margin-bottom:2px}
+.g-poster{width:74px;height:106px;border:2px solid var(--ink);position:relative;flex-shrink:0}
+.g-poster b{position:absolute;top:0;left:0;background:var(--hl);color:#15131a;font-size:.62rem;padding:2px 6px;border-right:2px solid var(--ink);border-bottom:2px solid var(--ink)}
+.g-poster.big{width:110px;height:158px}
+.g-p1{background:linear-gradient(160deg,#ff7a59,#7a1f5c)}.g-p2{background:linear-gradient(160deg,#3dd6d0,#1b3b8f)}.g-p3{background:linear-gradient(160deg,#ffd166,#c1440e)}.g-p4{background:linear-gradient(160deg,#a78bfa,#1f1147)}.g-p5{background:linear-gradient(160deg,#4fd1a5,#0b3d2e)}
+.g-pill{display:inline-block;padding:5px 11px;border:2px solid var(--ink);font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;background:var(--surface)}
+.g-lg{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-bottom:1px dashed var(--faint);font-size:.9rem;line-height:1.55}
+.g-lg .g-n{margin:2px 0 0;flex-shrink:0}
+.g-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:10px 0 16px}
+.g-step{border:2px solid var(--ink);background:var(--surface);padding:14px 16px}
+.g-step i{font-style:normal;font-family:var(--serif);font-size:2rem;line-height:1;color:var(--user-accent);display:block;margin-bottom:6px}
+.g-step b{display:block;font-size:.95rem;margin-bottom:3px}
+.g-step span{font-size:.82rem;color:var(--muted);line-height:1.5}
+.g-key{display:inline-block;border:2px solid var(--ink);border-bottom-width:5px;background:var(--surface2);padding:6px 13px;font-weight:800;font-size:.85rem;margin-right:6px}
+.g-kr{display:flex;gap:16px;align-items:center;padding:12px 0;border-bottom:1px dashed var(--faint);font-size:.92rem}
+.g-kr>div:first-child{min-width:190px}
+.g-tip{border-left:5px solid var(--user-accent);background:var(--surface);padding:12px 16px;font-size:.88rem;line-height:1.6;margin:14px 0}
+.g-st{display:inline-flex;align-items:center;gap:6px;border:2px solid var(--ink);padding:4px 10px;font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;background:var(--surface)}
+.g-st::before{content:'';width:9px;height:9px;background:var(--c)}
+@media(max-width:760px){.gd{grid-template-columns:1fr}.gd-menu{flex-direction:row;overflow-x:auto;position:static}.gd-menu .list-tab{width:auto;white-space:nowrap}}
+
+/* ===== PROFIL ===== */
+.profile-hero{height:auto;min-height:300px}
+.profile-hero::after{display:none}
+.profile-hero-content{height:auto;min-height:300px;max-width:1280px;margin:0 auto;padding:calc(var(--nav-h) + 24px) 40px 34px;align-items:center;gap:32px}
+.profile-avatar-large{width:132px;height:132px;font-size:3.6rem;flex-shrink:0}
+.profile-info{margin-bottom:0;flex:1}
+.profile-pseudo{font-size:2.8rem;line-height:1;margin-bottom:10px}
+.profile-level{font-size:.82rem;padding:6px 14px}
+.profile-xp{width:320px;margin-top:12px}
+.profile-xp-txt{font-size:.74rem;color:var(--muted);margin-top:6px;font-weight:600}
+.profile-bio-text{font-size:.95rem;max-width:520px;margin-top:12px;color:var(--text)}
+.profile-actions{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:14px}
+.profile-actions .profile-save-btn{padding:13px 26px}
+.profile-data{display:flex;gap:6px;align-items:center;font-size:.7rem;color:var(--muted);flex-wrap:wrap;justify-content:flex-end}
+.profile-data button,.profile-data label{font-size:.7rem;font-weight:700;color:var(--muted);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:2px 4px}
+.profile-data button:hover,.profile-data label:hover{color:var(--user-accent)}
+.profile-body{max-width:1280px;margin:0 auto;padding:30px 40px 70px;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:26px}
+.profile-body>*{grid-column:span 12;min-width:0}
+.profile-body>.pb-5{grid-column:span 5}.profile-body>.pb-7{grid-column:span 7}
+.pb-5,.pb-7,.pb-12{background:var(--surface);border:2px solid var(--ink);padding:22px 24px;margin-bottom:0!important}
+.profile-body .profile-section-title{font-size:1.15rem;margin-bottom:16px}
+.profile-stats-grid{grid-template-columns:repeat(7,minmax(0,1fr));gap:14px;margin-bottom:0}
+.profile-stat{padding:20px 8px;border-top:5px solid var(--user-accent)}
+.profile-stat-val{font-size:1.7rem}
+.profile-stat-lbl{font-size:.74rem;margin-top:6px}
+.profile-grid2{margin-bottom:0;gap:26px}
+.profile-grid2 .panel{padding:22px 24px}
+.top3{gap:22px}
+.top3-item{width:132px}
+.badge-grid{grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}
+.activity-item{margin-bottom:10px}
+/* panneau Personnalisation (tiroir à droite) */
+.pe-overlay{position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.45);display:none;justify-content:flex-end}
+.pe-overlay.open{display:flex;animation:fadeIn .15s}
+.pe-box{width:min(560px,100%);height:100%;overflow-y:auto;background:var(--surface);border-left:3px solid var(--ink);box-shadow:-12px 0 40px rgba(0,0,0,.5);animation:peIn .2s ease}
+@keyframes peIn{from{transform:translateX(40px);opacity:0}to{transform:none;opacity:1}}
+.pe-box .modal-header{position:sticky;top:0;background:var(--surface);z-index:2}
+.pe-box .profile-edit-card{border:0;box-shadow:none;background:transparent;padding:22px 24px 40px}
+@media(max-width:1000px){.profile-body>.pb-5,.profile-body>.pb-7{grid-column:span 12}.profile-stats-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.profile-hero-content{flex-wrap:wrap;padding:calc(var(--nav-h) + 20px) 20px 26px}.profile-actions{margin-left:0;align-items:flex-start}.profile-body{padding:22px 16px 60px}.profile-xp{width:100%}}
 </style>
 </head>
 <body>
@@ -974,13 +1408,10 @@ body{background-image:none!important}
   <a class="nav-logo" href="#home"><span class="hanko">隠</span><span class="txt">Kakusu</span></a>
   <div class="nav-links">
     <a class="nav-link active" href="#home" id="navlink-home">Accueil</a>
-    <a class="nav-link" href="#catalogue" id="navlink-catalogue">Catalogue</a>
-    <a class="nav-link" href="#popular" id="navlink-popular">Populaire</a>
-    <a class="nav-link" href="#seasonal" id="navlink-seasonal">Saison</a>
-    <a class="nav-link" href="#upcoming" id="navlink-upcoming">À venir</a>
+    <a class="nav-link" href="#catalogue" id="navlink-catalogue">Découvrir</a>
     <a class="nav-link" href="#schedule" id="navlink-schedule">Planning</a>
     <a class="nav-link" href="#mylist" id="navlink-mylist">Ma liste</a>
-    <a class="nav-link" href="#friends" id="navlink-friends">Amis <span id="navFriendNotifBadge" style="display:none;background:var(--user-accent);color:#fff;border-radius:999px;padding:1px 6px;font-size:.63rem;font-weight:800;margin-left:3px"></span></a>
+    <a class="nav-link" href="#friends" id="navlink-friends">Social <span id="navFriendNotifBadge" style="display:none;background:var(--user-accent);color:#fff;padding:1px 6px;font-size:.63rem;font-weight:800"></span></a>
   </div>
   <div class="nav-search-wrap">
     <span class="nav-search-icon"><svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></span>
@@ -989,23 +1420,20 @@ body{background-image:none!important}
     <div class="nav-search-results" id="navSearchResults"></div>
   </div>
   <div class="nav-right">
-    <button class="nav-icon-btn" onclick="openPalette()" title="Palette de commandes (Ctrl+K)">⌘</button>
-    <button class="nav-icon-btn" onclick="surpriseMe()" title="Surprends-moi !">🎲</button>
-    <button class="nav-icon-btn" onclick="toggleTheme()" title="Basculer le thème">
-      <svg fill="none" height="16" id="themeIcon" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="16"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-    </button>
-    <button class="nav-list-btn" onclick="goPage('mylist')">📚 Ma liste <span class="nav-list-count" id="navListCount">0</span></button>
+    <button class="nav-icon-btn" onclick="openGuide()" title="Guide du site" style="font-weight:800">?</button>
+    <svg id="themeIcon" style="display:none"></svg>
     <div class="nav-user-menu" id="navUserMenu" style="display:none">
       <div style="position:relative">
         <button class="nav-avatar-btn" id="navAvatarBtn" onclick="toggleUserMenu()"><span id="navAvatarContent">?</span></button>
-        <span id="navFriendNotifDot" style="display:none;position:absolute;top:-2px;right:-2px;width:11px;height:11px;border-radius:50%;background:#e63946;border:2px solid var(--bg)"></span>
+        <span id="navFriendNotifDot" style="display:none;position:absolute;top:-4px;right:-4px;width:11px;height:11px;background:#e63946;border:2px solid var(--bg)"></span>
       </div>
       <div class="nav-user-dd" id="navUserDd">
         <div class="nav-user-dd-header"><div class="nav-user-dd-pseudo" id="navPseudoLabel">?</div><div class="nav-user-dd-sub">Compte Kakusu</div></div>
         <div class="nav-user-dd-item" onclick="goPage('profile');toggleUserMenu(false)">👤 Mon profil</div>
-        <div class="nav-user-dd-item" onclick="goPage('mylist');toggleUserMenu(false)">📚 Ma liste</div>
-        <div class="nav-user-dd-item" onclick="goPage('friends');toggleUserMenu(false)">👥 Amis <span id="ddFriendBadge" style="display:none;background:#e63946;color:#fff;border-radius:999px;padding:0 6px;font-size:.63rem;font-weight:800;margin-left:auto"></span></div>
-        <div class="nav-user-dd-item" onclick="copyMyPseudo();toggleUserMenu(false)">🔗 Copier mon pseudo</div>
+        <div class="nav-user-dd-item" onclick="openPalette();toggleUserMenu(false)">⌘ Recherche rapide</div>
+        <div class="nav-user-dd-item" onclick="pickForMe();toggleUserMenu(false)">🎬 Que regarder ce soir ?</div>
+        <div class="nav-user-dd-item" onclick="surpriseMe();toggleUserMenu(false)">🎲 Surprends-moi</div>
+        <div class="nav-user-dd-item" onclick="copyMyPseudo();toggleUserMenu(false)">🔗 Copier mon pseudo <span id="ddFriendBadge" style="display:none;background:#e63946;color:#fff;padding:0 6px;font-size:.63rem;font-weight:800;margin-left:auto"></span></div>
         <div class="nav-user-dd-sep"></div>
         <div class="nav-user-dd-item danger" onclick="doLogout()">⏻ Se déconnecter</div>
       </div>
@@ -1018,7 +1446,7 @@ body{background-image:none!important}
   <a class="bn-item active" id="bn-home" href="#home"><span class="bn-ic">🏠</span>Accueil</a>
   <a class="bn-item" id="bn-catalogue" href="#catalogue"><span class="bn-ic">🧭</span>Explorer</a>
   <a class="bn-item" id="bn-mylist" href="#mylist"><span class="bn-ic">📚</span>Ma liste</a>
-  <a class="bn-item" id="bn-friends" href="#friends"><span class="bn-ic">👥</span>Amis</a>
+  <a class="bn-item" id="bn-friends" href="#friends"><span class="bn-ic">💬</span>Social</a>
   <a class="bn-item" id="bn-profile" href="#profile"><span class="bn-ic">👤</span>Profil</a>
 </div>
 
@@ -1033,6 +1461,11 @@ body{background-image:none!important}
   <section class="section reveal" id="continueSection" style="display:none">
     <div class="section-header"><div class="section-title-wrap"><div class="section-icon" style="background:rgba(167,139,250,.14);color:var(--purple)">▶</div><span class="section-title">Continuer à regarder</span></div><a class="section-view-all" href="#mylist">Ma liste →</a></div>
     <div class="continue-row" id="continueRow"></div>
+  </section>
+
+  <section class="section reveal in" id="homeFriendsSec" style="display:none">
+    <div class="section-header"><div class="section-title-wrap"><span class="section-title">Chez tes amis</span></div><a class="section-view-all" href="#friends">Ouvrir le fil →</a></div>
+    <div class="continue-row" id="homeFriendsRow"></div>
   </section>
 
   <section class="section reveal">
@@ -1081,6 +1514,7 @@ body{background-image:none!important}
 
 <!-- POPULAR / SEASONAL / UPCOMING -->
 <div class="page" id="page-popular">
+  <div class="sub-tabs"><a href="#catalogue">Catalogue</a><a href="#popular" class="on">Populaires</a><a href="#seasonal">Cette saison</a><a href="#upcoming">À venir</a></div>
   <div class="breadcrumb"><a href="#home">Accueil</a><span class="breadcrumb-sep">/</span><span>Les + Populaires</span></div>
   <div class="page-header"><div class="page-header-inner"><div class="page-header-icon">人</div><h1 class="page-header-title">Les + Populaires</h1></div><p class="page-header-sub">Les incontournables du monde anime</p></div>
   <div style="padding:0 40px 40px" class="pv2-pad">
@@ -1111,6 +1545,7 @@ body{background-image:none!important}
 </div>
 
 <div class="page" id="page-seasonal">
+  <div class="sub-tabs"><a href="#catalogue">Catalogue</a><a href="#popular">Populaires</a><a href="#seasonal" class="on">Cette saison</a><a href="#upcoming">À venir</a></div>
   <div class="breadcrumb"><a href="#home">Accueil</a><span class="breadcrumb-sep">/</span><span>Saisonnier</span></div>
   <div class="page-header"><div class="page-header-inner"><div class="page-header-icon">今</div><h1 class="page-header-title">Cette saison</h1></div><p class="page-header-sub" id="seasonalSubtitle">Les séries qui animent la saison actuelle</p></div>
   <div style="padding:0 40px 40px" class="pv2-pad">
@@ -1139,6 +1574,7 @@ body{background-image:none!important}
 </div>
 
 <div class="page" id="page-upcoming">
+  <div class="sub-tabs"><a href="#catalogue">Catalogue</a><a href="#popular">Populaires</a><a href="#seasonal">Cette saison</a><a href="#upcoming" class="on">À venir</a></div>
   <div class="breadcrumb"><a href="#home">Accueil</a><span class="breadcrumb-sep">/</span><span>À venir</span></div>
   <div class="page-header"><div class="page-header-inner"><div class="page-header-icon">近</div><h1 class="page-header-title">À venir</h1></div><p class="page-header-sub">Les prochaines sorties à ne pas manquer</p></div>
   <div style="padding:0 40px 40px" class="pv2-pad">
@@ -1177,53 +1613,29 @@ body{background-image:none!important}
 
 <!-- CATALOGUE -->
 <div class="page" id="page-catalogue">
-  <div class="catalogue-layout">
-    <aside class="catalogue-sidebar">
-      <div class="sidebar-section">
-        <div class="sidebar-section-title">Format</div>
-        <button class="sidebar-filter-btn active" data-group="format" data-val="" onclick="setCat('format','')"><span class="filter-dot"></span>Tous</button>
-        <button class="sidebar-filter-btn" data-group="format" data-val="TV" onclick="setCat('format','TV')"><span class="filter-dot"></span>Série TV</button>
-        <button class="sidebar-filter-btn" data-group="format" data-val="MOVIE" onclick="setCat('format','MOVIE')"><span class="filter-dot"></span>Film</button>
-        <button class="sidebar-filter-btn" data-group="format" data-val="OVA" onclick="setCat('format','OVA')"><span class="filter-dot"></span>OVA</button>
-        <button class="sidebar-filter-btn" data-group="format" data-val="ONA" onclick="setCat('format','ONA')"><span class="filter-dot"></span>ONA</button>
-        <button class="sidebar-filter-btn" data-group="format" data-val="SPECIAL" onclick="setCat('format','SPECIAL')"><span class="filter-dot"></span>Spécial</button>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-section-title">Trier par</div>
-        <button class="sidebar-filter-btn active" data-group="sort" data-val="POPULARITY_DESC" onclick="setCat('sort','POPULARITY_DESC')"><span class="filter-dot"></span>Popularité</button>
-        <button class="sidebar-filter-btn" data-group="sort" data-val="SCORE_DESC" onclick="setCat('sort','SCORE_DESC')"><span class="filter-dot"></span>Meilleure note</button>
-        <button class="sidebar-filter-btn" data-group="sort" data-val="TRENDING_DESC" onclick="setCat('sort','TRENDING_DESC')"><span class="filter-dot"></span>Tendances</button>
-        <button class="sidebar-filter-btn" data-group="sort" data-val="START_DATE_DESC" onclick="setCat('sort','START_DATE_DESC')"><span class="filter-dot"></span>Plus récents</button>
-        <button class="sidebar-filter-btn" data-group="sort" data-val="FAVOURITES_DESC" onclick="setCat('sort','FAVOURITES_DESC')"><span class="filter-dot"></span>Favoris</button>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-section-title">Genres</div>
-        <input class="sidebar-genre-search" id="genreSearchInput" placeholder="Filtrer…" oninput="filterGenreList(this.value)">
-        <div id="genreFilterList"></div>
-      </div>
-    </aside>
-    <div class="catalogue-main">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
-        <h1 class="page-header-title">Catalogue</h1>
-        <div style="display:flex;align-items:center;gap:10px">
-          <span id="catResultsInfo" style="font-size:.77rem;color:var(--muted)"></span>
-          <button id="catClearBtn" onclick="clearCatalogueFilters()" style="display:none;font-size:.77rem;color:var(--user-accent);font-weight:700">Effacer ✕</button>
-        </div>
-      </div>
-      <div style="position:relative;margin-bottom:14px">
-        <span class="search-ic"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></span>
-        <input id="catalogueSearchInput" class="search-input" placeholder="Rechercher un titre…" oninput="onCatalogueSearch(this.value)" autocomplete="off">
-      </div>
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;flex-wrap:wrap">
-        <span style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)">Statut</span>
-        <button class="cat-chip active" data-group="status" data-val="" onclick="setCat('status','')">Tous</button>
-        <button class="cat-chip" data-group="status" data-val="RELEASING" onclick="setCat('status','RELEASING')">🟢 En diffusion</button>
-        <button class="cat-chip" data-group="status" data-val="FINISHED" onclick="setCat('status','FINISHED')">✅ Terminé</button>
-        <button class="cat-chip" data-group="status" data-val="NOT_YET_RELEASED" onclick="setCat('status','NOT_YET_RELEASED')">⏳ À venir</button>
-      </div>
-      <div class="catalogue-grid" id="catalogueGrid"></div>
-      <div style="display:flex;justify-content:center;margin-top:28px"><button class="load-more-btn" id="loadMoreBtn" onclick="loadMoreCatalogue()" style="display:none"><span id="loadMoreSpinner"></span>Charger plus</button></div>
+  <div class="sub-tabs"><a href="#catalogue" class="on">Catalogue</a><a href="#popular">Populaires</a><a href="#seasonal">Cette saison</a><a href="#upcoming">À venir</a></div>
+  <section class="cat-head">
+    <h1 class="page-header-title">Catalogue</h1>
+    <div class="cat-tool">
+      <div class="cat-search"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input id="catalogueSearchInput" class="search-input" placeholder="Rechercher un titre…" oninput="onCatalogueSearch(this.value)" autocomplete="off"></div>
+      <label class="cat-sel">Trier par<select id="catSort" onchange="setCat('sort',this.value)"><option value="POPULARITY_DESC">Popularité</option><option value="TRENDING_DESC">Tendances</option><option value="SCORE_DESC">Meilleure note</option><option value="START_DATE_DESC">Plus récents</option><option value="FAVOURITES_DESC">Favoris</option></select></label>
+      <label class="cat-sel">Genre<select id="catGenre" onchange="setCat('genre',this.value)"><option value="">Tous</option><option value="Action">Action</option><option value="Adventure">Aventure</option><option value="Comedy">Comédie</option><option value="Drama">Drame</option><option value="Fantasy">Fantasy</option><option value="Horror">Horreur</option><option value="Mecha">Mecha</option><option value="Mystery">Mystère</option><option value="Psychological">Psychologique</option><option value="Romance">Romance</option><option value="Sci-Fi">Science-Fiction</option><option value="Sports">Sport</option><option value="Supernatural">Surnaturel</option><option value="Thriller">Thriller</option><option value="Slice of Life">Tranche de vie</option><option value="Ecchi">Ecchi</option><option value="Harem">Harem</option><option value="Gore">Gore</option></select></label>
+      <button class="tool-btn" id="catAdvBtn" onclick="toggleCatAdv()">Filtres ▾</button>
     </div>
+    <div class="cat-adv" id="catAdv">
+      <label class="cat-sel">Format<select id="catFormat" onchange="setCat('format',this.value)"><option value="">Tous</option><option value="TV">Série TV</option><option value="MOVIE">Film</option><option value="OVA">OVA</option><option value="ONA">ONA</option><option value="SPECIAL">Spécial</option></select></label>
+      <label class="cat-sel">Année<select id="catYear" onchange="setCat('year',this.value)"><option value="">Toutes</option><option value="2027">2027</option><option value="2026">2026</option><option value="2025">2025</option><option value="2024">2024</option><option value="2023">2023</option><option value="2022">2022</option><option value="2021">2021</option><option value="2020">2020</option><option value="2019">2019</option><option value="2018">2018</option><option value="2017">2017</option><option value="2016">2016</option><option value="2015">2015</option><option value="2014">2014</option><option value="2013">2013</option><option value="2012">2012</option><option value="2011">2011</option><option value="2010">2010</option><option value="2009">2009</option><option value="2008">2008</option><option value="2007">2007</option><option value="2006">2006</option><option value="2005">2005</option><option value="2004">2004</option><option value="2003">2003</option><option value="2002">2002</option><option value="2001">2001</option><option value="2000">2000</option><option value="1999">1999</option><option value="1998">1998</option><option value="1997">1997</option><option value="1996">1996</option><option value="1995">1995</option><option value="1994">1994</option><option value="1993">1993</option><option value="1992">1992</option><option value="1991">1991</option><option value="1990">1990</option></select></label>
+      <label class="cat-sel">Saison<select id="catSeason" onchange="setCat('season',this.value)"><option value="">Toutes</option><option value="WINTER">Hiver</option><option value="SPRING">Printemps</option><option value="SUMMER">Été</option><option value="FALL">Automne</option></select></label>
+      <label class="cat-sel">Statut<select id="catStatus" onchange="setCat('status',this.value)"><option value="">Tous</option><option value="RELEASING">En diffusion</option><option value="FINISHED">Terminé</option><option value="NOT_YET_RELEASED">À venir</option></select></label>
+      <label class="cat-sel">Note min.<select id="catScore" onchange="setCat('minScore',this.value)"><option value="">Toutes</option><option value="60">6+</option><option value="70">7+</option><option value="75">7.5+</option><option value="80">8+</option><option value="85">8.5+</option></select></label>
+      <label class="chk"><input type="checkbox" id="catHide" onchange="setCat('hide',this.checked?'1':'')"> Masquer ma liste</label>
+    </div>
+  </section>
+  <div class="cat-wrap">
+    <div class="cat-meta"><div class="cat-tags" id="catTags"></div>
+      <div class="cat-right"><span id="catResultsInfo"></span><button id="catClearBtn" onclick="clearCatalogueFilters()" style="display:none">Réinitialiser</button></div></div>
+    <div class="catalogue-grid" id="catalogueGrid"></div><div id="catSentinel" style="height:1px"></div>
+    <div style="display:flex;justify-content:center;margin-top:28px"><button class="load-more-btn" id="loadMoreBtn" onclick="loadMoreCatalogue()" style="display:none"><span id="loadMoreSpinner"></span>Charger plus</button></div>
   </div>
 </div>
 
@@ -1244,7 +1656,7 @@ body{background-image:none!important}
             <button class="list-sort-opt" onclick="setListSort('progress',this,'Progression')">📊 Progression</button>
           </div>
         </div>
-        <button class="tool-btn" onclick="exportList()">↓ CSV</button>
+        
         <button class="tool-btn" id="viewToggleBtn" onclick="toggleListView()">☰ Vue compacte</button>
         <button class="tool-btn" onclick="pickForMe()">🎲 Que regarder ?</button>
         <button class="tool-btn primary" onclick="copyMyPseudo()">🔗 Mon pseudo</button>
@@ -1262,10 +1674,23 @@ body{background-image:none!important}
 <div class="page" id="page-profile"><div id="profileContent"></div></div>
 
 <!-- FRIENDS -->
-<div class="page" id="page-friends">
-  <div class="page-header"><div class="page-header-inner"><div class="page-header-icon">友</div><h1 class="page-header-title">Amis</h1></div><p class="page-header-sub">Suis tes amis, explore leurs collections et compare vos goûts</p></div>
-  <div class="list-page-body">
-    <div style="display:flex;align-items:center;gap:10px;background:rgba(var(--primary-rgb),.08);border:1px solid rgba(var(--primary-rgb),.22);border-radius:var(--radius-lg);padding:12px 18px;margin-bottom:18px;flex-wrap:wrap">
+<div class="page tw" id="page-friends">
+ <div class="tw-grid">
+  <aside class="tw-left">
+    <div class="tw-nav" id="twNav"></div>
+    <button class="tw-postbtn" onclick="kkFocusComposer()"><span>Poster</span></button>
+    <div class="tw-user" id="twUser" onclick="goPage('profile')"></div>
+  </aside>
+  <main class="tw-main">
+    <div class="tw-mtabs" id="twMtabs"></div>
+    <section class="tw-pane" id="tw-feed">
+      <div class="tw-head"><h2>Accueil</h2><div class="tw-tabs" id="feedFilters"></div></div>
+      <div id="feedComposer"></div><div id="feedList"></div>
+    </section>
+    <section class="tw-pane" id="tw-chat" style="display:none"><div class="chat-shell" id="chatShell"></div></section>
+    <section class="tw-pane" id="tw-amis" style="display:none">
+      <div class="tw-head"><h2>Amis</h2></div>
+      <div class="tw-pad"><div style="display:flex;align-items:center;gap:10px;background:rgba(var(--primary-rgb),.08);border:1px solid rgba(var(--primary-rgb),.22);border-radius:var(--radius-lg);padding:12px 18px;margin-bottom:18px;flex-wrap:wrap">
       <span style="font-size:.82rem;color:var(--muted);flex:1">Partage ton pseudo pour que tes amis t'ajoutent</span>
       <button class="tool-btn primary" onclick="copyMyPseudo()">📋 Copier mon pseudo</button>
     </div>
@@ -1282,8 +1707,15 @@ body{background-image:none!important}
       <div style="margin-top:8px;font-size:.72rem;color:var(--muted)">L'ami recevra une notification et pourra accepter ou refuser.</div>
     </div>
     <div id="friendsList"></div>
-    <div id="friendProfile" style="display:none"></div>
-  </div>
+    <div id="friendProfile" style="display:none"></div></div>
+    </section>
+  </main>
+  <aside class="tw-right">
+    <div><input class="tw-search" id="twSearch" placeholder="Rechercher un animé" oninput="kkPickSearch('tw',this.value)" autocomplete="off"><div id="twRes" class="pick-res"></div></div>
+    <div class="tw-box"><h3>Tendances anime</h3><div id="twTrends"></div></div>
+    <div class="tw-box"><h3>Tes amis</h3><div id="twFriends"></div></div>
+  </aside>
+ </div>
 </div>
 
 <div class="page" id="page-detail"><div id="detailContent"></div></div>
@@ -1562,7 +1994,7 @@ window.renderFriendsList=async function(){
       `<div class="profile-section"><div class="profile-section-title"><div class="profile-section-bar"></div>${friends.length} ami${friends.length>1?'s':''}</div>`+
       entries.filter(e=>!e.me).map(e=>{
         const tg=e.st.topGenres[0];
-        return`<div class="friend-card" style="border-left:8px solid ${kkAccentColor(e.profile)}" onclick="openFriendProfile('${safeText(e.uid)}','${safeText(e.pseudo)}')"><div class="friend-avatar" style="background:${kkAccentColor(e.profile)}">${avatarHTML(e.profile,e.pseudo)}</div><div class="friend-info"><div class="friend-name">@${safeText(e.pseudo)}<span class="lvl-chip">Niv. ${e.st.level} · ${safeText(e.st.title)}</span></div>${e.profile.mood?`<div class="friend-meta">💬 ${safeText(e.profile.mood)}</div>`:''}<div class="friend-meta">${e.st.total} titres · ${e.st.completed} terminés · ${e.st.eps} épisodes${tg?' · aime '+safeText(GENRES_FR[tg[0]]||tg[0]):''}</div></div><button class="friend-remove" onclick="event.stopPropagation();removeFriend('${safeText(e.uid)}','${safeText(e.pseudo)}')" title="Retirer">✕</button></div>`;
+        return`<div class="friend-card" style="border-left:8px solid ${kkAccentColor(e.profile)}" onclick="openFriendProfile('${safeText(e.uid)}','${safeText(e.pseudo)}')"><div class="friend-avatar" style="background:${kkAccentColor(e.profile)}">${avatarHTML(e.profile,e.pseudo)}</div><div class="friend-info"><div class="friend-name">@${safeText(e.pseudo)}<span class="lvl-chip">Niv. ${e.st.level} · ${safeText(e.st.title)}</span></div>${e.profile.mood?`<div class="friend-meta">💬 ${safeText(e.profile.mood)}</div>`:''}<div class="friend-meta">${e.st.total} titres · ${e.st.completed} terminés · ${e.st.eps} épisodes${tg?' · aime '+safeText(GENRES_FR[tg[0]]||tg[0]):''}</div></div><button class="friend-remove" style="margin-right:6px" onclick="event.stopPropagation();kkChatWith('${safeText(e.uid)}')" title="Envoyer un message">Message</button><button class="friend-remove" onclick="event.stopPropagation();removeFriend('${safeText(e.uid)}','${safeText(e.pseudo)}')" title="Retirer">✕</button></div>`;
       }).join('')+'</div>';
     window.renderLeaderboard('xp');
   }catch(e){container.innerHTML=`<div style="padding:20px;text-align:center;color:#e0524f">${safeText(e.message)}</div>`}
@@ -1592,7 +2024,7 @@ window.openFriendProfile=async function(friendUid,friendPseudo){
       if(!f.length)return'<div style="padding:30px;text-align:center;color:var(--muted)">Aucun animé dans cette catégorie.</div>';
       return'<div class="anime-grid">'+f.map(a=>`<div class="anime-card" onclick="openDetail(${+a.id})"><img class="anime-card-cover" src="${safeText(a.cover||'')}" alt="${safeText(a.title||'')}" loading="lazy" decoding="async"><div class="card-info"><div class="card-title">${safeText(a.title||'')}</div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:3px"><span style="font-size:.67rem;font-weight:800;color:${_STCOL[a.status]||'var(--muted)'}">${_STLBL[a.status]||a.status}</span>${a.rating>0?`<span style="font-size:.65rem;color:var(--gold)">${'★'.repeat(a.rating)}</span>`:''}</div></div></div>`).join('')+'</div>';
     }
-    profileDiv.innerHTML=`<button onclick="renderFriendsList()" class="tool-btn" style="margin-bottom:18px">← Retour aux amis</button>
+    profileDiv.innerHTML=`<button onclick="renderFriendsList()" class="tool-btn" style="margin-bottom:18px">← Retour aux amis</button> <button class="tool-btn primary" style="margin-bottom:18px" onclick="kkChatWith('${safeText(friendUid)}')">Envoyer un message</button>
     <div class="panel" style="margin-bottom:18px;display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap;border-left:8px solid ${col}">
       <div class="friend-avatar" style="width:72px;height:72px;font-size:2rem;background:${col}">${avatarHTML(prof,pseudo)}</div>
       <div style="flex:1;min-width:0">
@@ -1766,6 +2198,7 @@ function updateNavLinks(page){
   document.querySelectorAll('.nav-link,.bn-item').forEach(l=>l.classList.remove('active'));
   const a=document.getElementById('navlink-'+page);if(a)a.classList.add('active');
   const b=document.getElementById('bn-'+page);if(b)b.classList.add('active');
+  if(['popular','seasonal','upcoming'].includes(page)){const e=document.getElementById('navlink-catalogue');if(e)e.classList.add('active')}
 }
 function renderPage(page){
   if(!document.getElementById('page-'+page)||page==='detail')page='home';
@@ -1929,6 +2362,7 @@ async function renderDetail(id){
               ${inList?`<button class="detail-btn-secondary">✓ Dans ta liste</button>`:`<button class="detail-btn-primary" id="detailAddBtn" onclick="quickAddFromDetail(${a.id})">＋ Ajouter à ma liste</button>`}
               <button class="detail-btn-secondary" onclick="openEpisodesModal(${a.id})">📺 Épisodes</button>
               <button class="detail-btn-franchise" onclick="openFranchiseModal(${a.id})">🗂 Franchise</button>
+              <button class="detail-btn-secondary" onclick="kkShareAnime(${a.id},'${encodeURIComponent(a.title||'').replace(/'/g,'%27')}','${encodeURIComponent(a.cover||'').replace(/'/g,'%27')}',${a.episodes||0})">Partager</button>
               ${a.siteUrl?`<a href="${safeText(a.siteUrl)}" target="_blank" rel="noopener noreferrer" class="detail-btn-secondary">AniList ↗</a>`:''}
             </div>
           </div>
@@ -2194,26 +2628,28 @@ function renderProfile(){
         <div class="profile-info">
           <div class="profile-pseudo">@${safeText(window.USER_PSEUDO)}</div>
           <div class="profile-level">⚡ Niv. ${K.level} · ${K.title} <span style="opacity:.7;font-weight:600">${K.xp} XP</span></div>
-          <div class="profile-xp"><i style="width:${K.xpPct}%"></i></div>
+          <div class="profile-xp"><i style="width:${K.xpPct}%"></i></div><div class="profile-xp-txt">${K.toNext} XP avant le niveau ${K.level+1}</div>
           ${p.mood?`<div class="mood-bubble">💬 ${safeText(p.mood)}</div>`:''}
-          <div class="profile-bio-text">${currentBio?safeText(currentBio):'<span style="opacity:.5;font-style:italic">Aucune bio · modifie-la plus bas</span>'}</div>
+          <div class="profile-bio-text">${currentBio?safeText(currentBio):'<span style="opacity:.5;font-style:italic">Aucune bio · clique sur Personnaliser</span>'}</div>
         </div>
+        <div class="profile-actions"><button class="profile-save-btn" onclick="openProfileEdit()">Personnaliser</button>
+          <div class="profile-data"><span>Ma liste :</span><button onclick="kkExportJSON()">Exporter JSON</button><button onclick="exportList()">Exporter CSV</button><label>Importer<input type="file" accept=".json,application/json" style="display:none" onchange="kkImport(this)"></label></div></div>
       </div>
     </div>
     <div class="profile-body">
       <div class="profile-stats-grid">${[['📚',S.total,'Total'],['▶',S.watching,'En cours'],['✓',S.completed,'Terminés'],['📅',S.planned,'À voir'],['🎬',S.eps,'Éps vus'],['⏱',hours,'Regardé'],['⭐',S.avg,'Note moy.']].map(([ic,v,l])=>`<div class="profile-stat"><div class="profile-stat-val">${ic} ${v}</div><div class="profile-stat-lbl">${l}</div></div>`).join('')}</div>
-      <div class="profile-section"><div class="profile-section-title"><div class="profile-section-bar"></div>Mon top 3</div>${kkTop3HTML(p.top3)}</div>
-      <div class="profile-section"><div class="profile-section-title"><div class="profile-section-bar"></div>Mon bilan</div>${kkInsightsHTML(list)}</div>
+      <div class="profile-section pb-5"><div class="profile-section-title"><div class="profile-section-bar"></div>Mon top 3</div>${kkTop3HTML(p.top3)}</div>
+      <div class="profile-section pb-7"><div class="profile-section-title"><div class="profile-section-bar"></div>Mon bilan</div>${kkInsightsHTML(list)}</div>
       <div class="profile-grid2">
         <div class="panel"><div class="profile-section-title"><div class="profile-section-bar"></div>Répartition</div>
           <div class="donut-wrap">${donutSVG(Object.entries(STATUS_META).map(([k,m])=>({v:S[k],c:m.hex})))}<div class="donut-legend">${Object.entries(STATUS_META).map(([k,m])=>`<span><i style="background:${m.hex}"></i>${m.label} · <b>${S[k]}</b></span>`).join('')}</div></div></div>
         <div class="panel"><div class="profile-section-title"><div class="profile-section-bar"></div>Genres favoris</div>
           ${gc.length?`<div class="genre-chart">${gc.map(([g,c])=>`<div class="genre-bar-row"><div class="genre-bar-label">${safeText(GENRES_FR[g]||g)}</div><div class="genre-bar-track"><div class="genre-bar-fill" style="width:${Math.round(c/maxG*100)}%"></div></div><div class="genre-bar-count">${c}</div></div>`).join('')}</div>`:'<div style="color:var(--muted);font-size:.82rem">Ajoute des animés pour voir tes genres préférés.</div>'}</div>
       </div>
-      <div class="profile-section"><div class="profile-section-title"><div class="profile-section-bar"></div>Succès</div>
+      <div class="profile-section ${recent.length?'pb-7':'pb-12'}"><div class="profile-section-title"><div class="profile-section-bar"></div>Succès</div>
         <div class="badge-grid">${badges.map(([ic,t,d,on])=>`<div class="badge ${on?'on':'off'}"><div class="badge-ic">${ic}</div><div><div class="badge-t">${t}</div><div class="badge-d">${d}</div></div></div>`).join('')}</div></div>
-      ${recent.length?`<div class="profile-section"><div class="profile-section-title"><div class="profile-section-bar"></div>Activité récente</div>${recent.map(a=>`<div class="activity-item" onclick="openDetail(${+a.id})"><img class="activity-cover" src="${safeText(a.cover)}" alt="" loading="lazy" decoding="async"><div class="activity-info"><div class="activity-title">${safeText(a.title)}</div><div class="activity-detail">${STATUS_META[a.status]?.icon||''} ${STATUS_META[a.status]?.label||a.status}${a.totalEps?` · ${a.watchedEps||0}/${a.totalEps} éps`:''}</div></div></div>`).join('')}</div>`:''}
-      <div class="profile-section"><div class="profile-section-title"><div class="profile-section-bar"></div>Personnalisation</div>
+      ${recent.length?`<div class="profile-section pb-5"><div class="profile-section-title"><div class="profile-section-bar"></div>Activité récente</div>${recent.map(a=>`<div class="activity-item" onclick="openDetail(${+a.id})"><img class="activity-cover" src="${safeText(a.cover)}" alt="" loading="lazy" decoding="async"><div class="activity-info"><div class="activity-title">${safeText(a.title)}</div><div class="activity-detail">${STATUS_META[a.status]?.icon||''} ${STATUS_META[a.status]?.label||a.status}${a.totalEps?` · ${a.watchedEps||0}/${a.totalEps} éps`:''}</div></div></div>`).join('')}</div>`:''}
+      <div class="pe-overlay" id="peOverlay" onmousedown="if(event.target===this)closeProfileEdit()"><div class="pe-box"><div class="modal-header"><div class="modal-title">Personnalisation</div><button class="modal-close" onclick="closeProfileEdit()">✕</button></div>
         <div class="profile-edit-card">
           <div class="profile-field"><label class="profile-label">Humeur du moment (visible par tes amis)</label><input class="add-friend-input" style="width:100%" id="profileMoodInput" maxlength="60" placeholder="ex : marathon de Frieren ce soir 🍿" value="${safeText(p.mood||'')}"></div>
           <div class="profile-field"><label class="profile-label">Bio (max 140 caractères)</label><textarea class="profile-textarea" id="profileBioInput" maxlength="140" placeholder="Dis quelque chose sur toi…">${safeText(currentBio)}</textarea></div>
@@ -2228,7 +2664,7 @@ function renderProfile(){
           <div class="profile-field"><label class="profile-label">Motif de ta bannière</label><div class="opt-row" id="patternRow">${PATTERNS.map(([k,l])=>`<button class="format-pill ${(p.pattern||'lines')===k?'active':''}" data-p="${k}" onclick="selectPattern('${k}')" style="margin:0">${l}</button>`).join('')}</div></div>
           <div class="profile-field"><label class="profile-label">Emoji avatar</label><div class="emoji-grid">${AVATAR_EMOJIS.map(e=>`<div class="emoji-opt ${currentEmoji===e?'active':''}" onclick="selectEmoji('${e}')" data-emoji="${e}">${e}</div>`).join('')}</div></div>
           <div style="display:flex;gap:10px;align-items:center;margin-top:6px;flex-wrap:wrap"><button class="profile-save-btn" onclick="saveProfile()">Sauvegarder ✓</button><span style="font-size:.74rem;color:var(--muted)">Les couleurs, la taille et le motif s'aperçoivent en direct.</span></div>
-        </div></div>
+        </div></div></div>
     </div>`;
   let selAccent=currentAccent,selCustom=p.customColor||'',selEmoji=currentEmoji,selDensity=p.density||'normal',selPattern=p.pattern||'lines';
   const preview=()=>window.kkApplyLook({accent:selAccent,customColor:selCustom,density:selDensity});
@@ -2249,35 +2685,59 @@ function renderProfile(){
 
 // ===== CATALOGUE =====
 const CATALOGUE_GENRES=['Action','Adventure','Comedy','Drama','Fantasy','Horror','Mecha','Mystery','Psychological','Romance','Sci-Fi','Sports','Supernatural','Thriller','Slice of Life','Ecchi','Harem','Gore'];
-const catDefault=()=>({format:'',status:'',sort:'POPULARITY_DESC',genre:'',search:'',page:1,hasMore:true,loading:false});
+const catDefault=()=>({format:'',status:'',sort:'POPULARITY_DESC',genre:'',search:'',year:'',season:'',minScore:'',hide:'',page:1,hasMore:true,loading:false});
 let catState=catDefault(),catSearchTimer=null,catForceReload=false;
 
 function initGenreList(){const el=document.getElementById('genreFilterList');if(!el||el.dataset.built)return;el.dataset.built='1';el.innerHTML=CATALOGUE_GENRES.map(g=>`<button class="sidebar-filter-btn" data-group="genre" data-val="${g}" onclick="setCat('genre','${g}')"><span class="filter-dot"></span>${GENRES_FR[g]||g}</button>`).join('')}
 function filterGenreList(q){document.querySelectorAll('#genreFilterList .sidebar-filter-btn').forEach(b=>{b.style.display=(b.textContent||'').toLowerCase().includes(q.toLowerCase())?'':'none'})}
-function syncCatUI(){document.querySelectorAll('[data-group]').forEach(b=>{const g=b.dataset.group,v=b.dataset.val;b.classList.toggle('active',(catState[g]||'')===v)});const inp=document.getElementById('catalogueSearchInput');if(inp&&inp.value!==catState.search)inp.value=catState.search}
+function syncCatUI(){
+  document.querySelectorAll('[data-group]').forEach(b=>{b.classList.toggle('active',(catState[b.dataset.group]||'')===b.dataset.val)});
+  const m={catSort:'sort',catFormat:'format',catGenre:'genre',catYear:'year',catSeason:'season',catStatus:'status',catScore:'minScore'};
+  Object.entries(m).forEach(([i,k])=>{const e=document.getElementById(i);if(e)e.value=catState[k]||''});
+  const hb=document.getElementById('catHide');if(hb)hb.checked=!!catState.hide;
+  const inp=document.getElementById('catalogueSearchInput');if(inp&&inp.value!==catState.search)inp.value=catState.search;
+}
 function setCat(group,val){if(group==='genre'&&catState.genre===val)val='';catState[group]=val;syncCatUI();resetAndLoadCatalogue()}
 function onCatalogueSearch(val){clearTimeout(catSearchTimer);catSearchTimer=setTimeout(()=>{catState.search=val.trim();resetAndLoadCatalogue()},380)}
 function clearCatalogueFilters(){catState=catDefault();initGenreList();syncCatUI();resetAndLoadCatalogue()}
 function openCatalogueGenre(g){catState=catDefault();catState.genre=g;catForceReload=true;goPage('catalogue')}
-function updateCatUI(){const grid=document.getElementById('catalogueGrid'),info=document.getElementById('catResultsInfo'),cb=document.getElementById('catClearBtn');const n=grid?grid.querySelectorAll('.anime-card').length:0;if(info)info.textContent=n?n+' résultats':'';if(cb)cb.style.display=(catState.format||catState.status||catState.genre||catState.search)?'':'none'}
+function clearCatSearch(){catState.search='';syncCatUI();resetAndLoadCatalogue()}
+function updateCatUI(){
+  const grid=document.getElementById('catalogueGrid'),info=document.getElementById('catResultsInfo'),cb=document.getElementById('catClearBtn'),tg=document.getElementById('catTags');
+  const n=grid?grid.querySelectorAll('.anime-card').length:0;if(info)info.textContent=n?n+' résultats':'';
+  const tags=[];
+  if(catState.search)tags.push(['clearCatSearch()','« '+catState.search+' »']);
+  if(catState.format)tags.push(["setCat('format','')",FORMATS_FR[catState.format]||catState.format]);
+  if(catState.genre)tags.push(["setCat('genre','')",GENRES_FR[catState.genre]||catState.genre]);
+  if(catState.year)tags.push(["setCat('year','')",catState.year]);
+  if(catState.season)tags.push(["setCat('season','')",SEASON_FR[catState.season]||catState.season]);
+  if(catState.status)tags.push(["setCat('status','')",STATUS_FR[catState.status]||catState.status]);
+  if(catState.minScore)tags.push(["setCat('minScore','')",'Note ≥ '+(catState.minScore/10)]);
+  if(tg)tg.innerHTML=tags.map(([f,l])=>`<button class="cat-tag" onclick="${f}">${safeText(l)} ✕</button>`).join('');
+  if(cb)cb.style.display=(tags.length||catState.hide)?'':'none';
+}
 async function loadCatalogueItems(replace=false){
   if(catState.loading)return;catState.loading=true;
   const grid=document.getElementById('catalogueGrid'),btn=document.getElementById('loadMoreBtn'),spin=document.getElementById('loadMoreSpinner');
   if(replace&&grid)grid.innerHTML=renderSkeletons(24);
   if(btn)btn.disabled=true;if(spin)spin.innerHTML='<span class="spinner" style="width:16px;height:16px;border-width:2px;margin-right:6px"></span>';
   try{
-    let items=[];
-    if(catState.search){const d=await anilistFetch(`query($s:String,$p:Int){Page(page:$p,perPage:24){media(type:ANIME,search:$s,sort:POPULARITY_DESC,isAdult:false){${MEDIA_FIELDS}}}}`,{s:catState.search,p:catState.page});items=d?.data?.Page?.media||[]}
-    else{
-      const vars={p:catState.page},decl=['$p:Int'],args=['type:ANIME',`sort:${catState.sort}`,'isAdult:false'];
-      if(catState.format)args.push(`format:${catState.format}`);
-      if(catState.status)args.push(`status:${catState.status}`);
-      if(catState.genre){decl.push('$g:String');vars.g=catState.genre;args.push('genre_in:[$g]')}
-      const d=await anilistFetch(`query(${decl.join(',')}){Page(page:$p,perPage:24){media(${args.join(',')}){${MEDIA_FIELDS}}}}`,vars);items=d?.data?.Page?.media||[];
-    }
+    const vars={p:catState.page},decl=['$p:Int'],args=['type:ANIME','isAdult:false'];
+    if(catState.search){decl.push('$s:String');vars.s=catState.search;args.push('search:$s','sort:SEARCH_MATCH')}else args.push(`sort:${catState.sort}`);
+    if(catState.format)args.push(`format:${catState.format}`);
+    if(catState.status)args.push(`status:${catState.status}`);
+    if(catState.genre){decl.push('$g:String');vars.g=catState.genre;args.push('genre_in:[$g]')}
+    if(catState.year){decl.push('$y:Int');vars.y=+catState.year;args.push('seasonYear:$y')}
+    if(catState.season)args.push(`season:${catState.season}`);
+    if(catState.minScore){decl.push('$ms:Int');vars.ms=+catState.minScore;args.push('averageScore_greater:$ms')}
+    const d=await anilistFetch(`query(${decl.join(',')}){Page(page:$p,perPage:24){media(${args.join(',')}){${MEDIA_FIELDS}}}}`,vars);
+    let items=d?.data?.Page?.media||[];
     catState.hasMore=items.length===24;
+    if(catState.hide){const ids=new Set((window.animeList||[]).map(x=>x.id));items=items.filter(m=>!ids.has(m.id))}
     const cards=items.map(m=>renderCard(normalizeMedia(m))).join('');
-    if(replace)grid.innerHTML=cards||`<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted)"><div style="font-size:2rem;margin-bottom:12px">🔍</div><div style="font-weight:700;margin-bottom:8px">Aucun animé trouvé</div><button onclick="clearCatalogueFilters()" class="tool-btn" style="margin-top:12px">Effacer les filtres</button></div>`;
+    if(replace&&grid)grid.innerHTML='';
+    if(!cards&&catState.hasMore){catState.page++;catState.loading=false;if(spin)spin.innerHTML='';return loadCatalogueItems(false)}
+    if(replace&&!cards)grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted)"><div style="font-size:2rem;margin-bottom:12px">🔍</div><div style="font-weight:700;margin-bottom:8px">Aucun animé trouvé</div><button onclick="clearCatalogueFilters()" class="tool-btn" style="margin-top:12px">Effacer les filtres</button></div>`;
     else grid.insertAdjacentHTML('beforeend',cards);
     catState.page++;if(btn){btn.disabled=false;btn.style.display=catState.hasMore?'flex':'none'}updateCatUI();
   }catch(e){if(grid&&replace)grid.innerHTML=`<div style="grid-column:1/-1;padding:20px;text-align:center;color:#e0524f">${safeText(e.message)}</div>`;if(btn)btn.style.display='none'}
@@ -2532,7 +2992,8 @@ function paletteCommands(){return[
   {ic:'🗓️',t:'À venir',run:()=>goPage('upcoming')},
   {ic:'📡',t:'Planning des sorties',run:()=>goPage('schedule')},
   {ic:'📚',t:'Ma liste',run:()=>goPage('mylist')},
-  {ic:'👥',t:'Amis',run:()=>goPage('friends')},
+  {ic:'💬',t:'Social',run:()=>goPage('friends')},
+  {ic:'❓',t:'Guide du site',run:()=>openGuide()},
   {ic:'👤',t:'Mon profil',run:()=>goPage('profile')},
   {ic:'🎲',t:'Surprends-moi',run:()=>surpriseMe()},
   {ic:'🎬',t:'Que regarder ce soir ?',run:()=>pickForMe()},
@@ -2651,5 +3112,562 @@ function removeFromList(id,event){
 }
 window.removeFromList=removeFromList;
 </script>
+
+<script type="module">
+import { collection, doc, addDoc, setDoc, deleteDoc, updateDoc, onSnapshot, query, where, orderBy, limit, arrayUnion, arrayRemove, increment, getDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+const db = window.firebaseDB, auth = getAuth();
+const $ = id => document.getElementById(id);
+const esc = t => safeText(t);
+const nl = t => esc(t).replace(/\n/g, '<br>');
+const ago = t => { const m = Math.floor((Date.now() - t) / 60000); if (m < 1) return "à l'instant"; if (m < 60) return m + ' min'; const h = Math.floor(m / 60); if (h < 24) return h + ' h'; const d = Math.floor(h / 24); return d < 30 ? d + ' j' : Math.floor(d / 30) + ' mois'; };
+const hhmm = t => new Date(t).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+const dayLbl = t => { const d = new Date(t), n = new Date(), y = new Date(Date.now() - 864e5); return d.toDateString() === n.toDateString() ? "Aujourd'hui" : d.toDateString() === y.toDateString() ? 'Hier' : d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' }); };
+const chatId = (a, b) => [a, b].sort().join('_');
+const KIND = { review: { ic: '', lb: 'Avis' }, episode: { ic: '', lb: 'Épisode' }, reco: { ic: '', lb: 'Reco' }, text: { ic: '', lb: 'Libre' }, repost: { ic: '', lb: 'Repost' } };
+const PLACEHOLDER = { review: 'Ton avis sur cet animé ?', episode: "Ton ressenti sur l'épisode ?", reco: 'Pourquoi tu le recommandes ?', text: 'Quoi de neuf dans ton monde anime ?' };
+const RX = { heart: '❤️', lol: '😂', wow: '😮', sad: '😢', fire: '🔥', up: '👍' };
+const emptyComp = () => ({ kind: 'review', anime: null, ep: '', rating: 0, spoiler: false, text: '', pick: false });
+const S = { uid: null, friends: [], prof: {}, friendKey: '', tab: 'feed', filter: 'all', animeFilter: null, limit: 20,
+  comp: emptyComp(), chunkUnsubs: [], chunkData: {}, feedDirty: false, userUnsub: null, chatsUnsub: null, chats: new Map(),
+  active: null, msgUnsub: null, msgs: [], unread: 0, start: Date.now(), openC: new Map(), res: {}, notified: {} };
+const profOf = uid => uid === S.uid ? (window.USER_PROFILE || {}) : (S.prof[uid] || {});
+const avHTML = (uid, ps) => window.avatarHTML ? window.avatarHTML(profOf(uid), ps) : esc((ps || '?').slice(0, 2).toUpperCase());
+const colOf = uid => window.kkAccentColor ? window.kkAccentColor(profOf(uid)) : '#3d4cff';
+const av = (uid, ps) => `<div class="tw-av" style="background:${colOf(uid)}">${avHTML(uid, ps)}</div>`;
+
+/* ----- badges ----- */
+window._reqPending = 0;
+const _origBadge = window.updateFriendNotifBadge;
+function paintBadges() {
+  document.querySelectorAll('.js-chat-badge').forEach(b => { b.textContent = S.unread; b.style.display = S.unread > 0 ? 'inline-block' : 'none'; });
+  document.querySelectorAll('.js-amis-badge').forEach(b => { b.textContent = window._reqPending; b.style.display = window._reqPending > 0 ? 'inline-block' : 'none'; });
+}
+window.updateFriendNotifBadge = function (n) { window._reqPending = n; paintBadges(); if (_origBadge) _origBadge(n + S.unread); };
+function setUnread(n) { S.unread = n; window.updateFriendNotifBadge(window._reqPending || 0); }
+
+/* ----- navigation latérale ----- */
+const NAV = [['feed', '', 'Accueil'], ['chat', '', 'Messages'], ['amis', '', 'Amis']];
+function renderNav() {
+  const n = $('twNav'); if (!n) return;
+  n.innerHTML = NAV.map(([k, ic, lb]) => `<button class="tw-nav-i ${S.tab === k ? 'active' : ''}" onclick="kkTab('${k}')"><span class="ic">${ic}</span><span class="lb">${lb}</span>${k === 'chat' ? '<span class="tw-badge js-chat-badge"></span>' : k === 'amis' ? '<span class="tw-badge js-amis-badge"></span>' : ''}</button>`).join('')
+    + `<button class="tw-nav-i" onclick="goPage('profile')"><span class="ic">👤</span><span class="lb">Profil</span></button>`;
+  const m = $('twMtabs'); if (m) m.innerHTML = NAV.map(([k, ic, lb]) => `<button class="${S.tab === k ? 'active' : ''}" onclick="kkTab('${k}')">${ic} ${lb} ${k === 'chat' ? '<span class="tw-badge js-chat-badge"></span>' : k === 'amis' ? '<span class="tw-badge js-amis-badge"></span>' : ''}</button>`).join('');
+  const u = $('twUser'); if (u) u.innerHTML = S.uid ? `${av(S.uid, window.USER_PSEUDO)}<div><b>@${esc(window.USER_PSEUDO || '')}</b><span>Voir mon profil</span></div>` : '';
+  paintBadges();
+}
+function teardown() {
+  [S.userUnsub, S.chatsUnsub, S.msgUnsub].forEach(u => u && u());
+  S.chunkUnsubs.forEach(u => u()); S.openC.forEach(c => c.unsub && c.unsub());
+  Object.assign(S, { uid: null, friends: [], prof: {}, friendKey: '', chunkUnsubs: [], chunkData: {}, userUnsub: null, chatsUnsub: null, msgUnsub: null, chats: new Map(), active: null, msgs: [], notified: {} });
+  S.openC = new Map(); setUnread(0);
+}
+onAuthStateChanged(auth, user => {
+  teardown();
+  if (!user) { renderAll(); return; }
+  S.uid = user.uid; S.start = Date.now();
+  S.userUnsub = onSnapshot(doc(db, 'users', user.uid), snap => {
+    const d = snap.data() || {};
+    S.friends = (Array.isArray(d.friends) ? d.friends : []).map(f => ({ uid: f.uid, pseudo: f.pseudo }));
+    const key = S.friends.map(f => f.uid).sort().join(',');
+    if (key !== S.friendKey) { S.friendKey = key; loadProfiles(); startFeed(); }
+    renderRightFriends(); if (S.tab === 'chat') renderChatList();
+  });
+  S.chatsUnsub = onSnapshot(query(collection(db, 'chats'), where('members', 'array-contains', user.uid)), snap => {
+    snap.docChanges().forEach(ch => {
+      if (ch.type === 'removed') { S.chats.delete(ch.doc.id); return; }
+      const d = ch.doc.data(); S.chats.set(ch.doc.id, d);
+      const viewing = S.tab === 'chat' && S.active && S.active.id === ch.doc.id && document.visibilityState === 'visible';
+      if (d.lastFrom && d.lastFrom !== S.uid && d.lastAt > S.start && S.notified[ch.doc.id] !== d.lastAt && !viewing) {
+        S.notified[ch.doc.id] = d.lastAt; toast('info', '💬 @' + ((d.pseudos && d.pseudos[d.lastFrom]) || 'ami') + ' : ' + (d.lastMsg || ''));
+      }
+    });
+    let n = 0; S.chats.forEach(d => n += (d['unread_' + S.uid] || 0));
+    setUnread(n); if (S.tab === 'chat') { renderChatList(); markRead(); }
+  }, e => console.error('chats', e));
+  renderAll();
+});
+async function loadProfiles() {
+  await Promise.all(S.friends.map(f => getDoc(doc(db, 'users', f.uid)).then(s => { if (s.exists()) S.prof[f.uid] = s.data().profile || {}; }).catch(() => { })));
+  renderRightFriends(); if (S.tab === 'feed') renderFeedList(); if (S.tab === 'chat') { renderChatList(); paintMsgs(); }
+}
+function startFeed() {
+  S.chunkUnsubs.forEach(u => u()); S.chunkUnsubs = []; S.chunkData = {};
+  const ids = [S.uid, ...S.friends.map(f => f.uid)];
+  for (let i = 0; i < ids.length; i += 10) {
+    const ch = ids.slice(i, i + 10), k = i;
+    S.chunkUnsubs.push(onSnapshot(query(collection(db, 'posts'), where('authorUid', 'in', ch)),
+      snap => { S.chunkData[k] = snap.docs.map(d => ({ id: d.id, ...d.data() })); renderFeedList(); },
+      e => { const el = $('feedList'); if (el) el.innerHTML = `<div class="tw-empty"><b>Fil indisponible</b>${esc(e.message)}<br>Vérifie les règles Firestore (collection « posts »).</div>`; }));
+  }
+}
+const allPosts = () => Object.values(S.chunkData).flat().sort((a, b) => b.createdAt - a.createdAt);
+
+function stars5(n){return n>0?'★'.repeat(n)+'☆'.repeat(5-n):''}
+function renderHomeFeed(){
+  const sec=$('homeFriendsSec'),row=$('homeFriendsRow');if(!sec||!row)return;
+  const list=allPosts().filter(p=>p.kind!=='repost'&&p.authorUid!==S.uid).slice(0,10);
+  if(!S.uid||!list.length){sec.style.display='none';return}
+  sec.style.display='';
+  row.innerHTML=list.map(p=>{
+    const sub=p.spoiler?'Spoiler : ouvre pour voir':(p.text||'').slice(0,70);
+    return `<div class="continue-card" onclick="${p.anime?`openDetail(${+p.anime.id})`:`goPage('friends')`}">
+      ${p.anime?`<img class="cc-cover" src="${esc(p.anime.cover||'')}" alt="" loading="lazy">`:`<div class="cc-cover" style="display:grid;place-items:center;font-size:1.4rem">✍</div>`}
+      <div class="cc-body"><div class="cc-title">@${esc(p.authorPseudo)}${p.anime?' · '+esc(p.anime.title):''}</div>
+      <div class="cc-sub">${p.kind==='episode'&&p.ep?'Épisode '+(+p.ep)+' · ':''}${stars5(p.rating)} ${ago(p.createdAt)}</div>
+      <div class="cc-sub" style="margin:0">${esc(sub)}</div></div></div>`}).join('');
+}
+function reviewsHTML(id){
+  const L=allPosts().filter(p=>p.kind!=='repost'&&p.anime&&p.anime.id===id);
+  const body=L.length?L.map(p=>`<div class="feed-item" style="cursor:default"><div class="friend-avatar" style="width:36px;height:36px;font-size:1rem;background:${colOf(p.authorUid)}">${avHTML(p.authorUid,p.authorPseudo)}</div>
+    <div class="feed-txt"><b>@${esc(p.authorPseudo)}</b>${p.kind==='episode'&&p.ep?' · ép. '+(+p.ep):''} ${p.rating>0?`<span style="color:var(--gold)">${stars5(p.rating)}</span>`:''}<br>${p.spoiler?`<span class="tw-text spoil" style="font-size:inherit" onclick="this.classList.add('rev')" title="Spoiler : clique pour afficher">${nl(p.text||'')}</span>`:nl(p.text||'')}</div><span class="feed-when">${ago(p.createdAt)}</span></div>`).join(''):`<div style="color:var(--muted);font-size:.86rem;padding:4px 0 14px">Aucun avis de tes amis sur cet animé pour l'instant.</div>`;
+  return `<div class="detail-section-title"><div class="detail-section-bar"></div>AVIS DE TES AMIS</div>${body}<button class="tool-btn" style="margin:6px 0 26px" onclick="kkReviewFromDetail(${id})">Donner mon avis</button>`;
+}
+function paintFriendReviews(){
+  if(!S.uid)return;const dc=$('detailContent');if(!dc)return;
+  const col=dc.querySelector('.detail-body > div');if(!col)return;
+  const id=parseInt((location.hash.split('/')[1]||''),10);if(!id)return;
+  let box=$('frReviews');
+  if(!box){box=document.createElement('div');box.id='frReviews';const syn=col.querySelector('.detail-synopsis');if(syn)syn.insertAdjacentElement('afterend',box);else col.appendChild(box)}
+  const h=reviewsHTML(id);if(box.dataset.h!==h){box.innerHTML=h;box.dataset.h=h}
+}
+window.kkReviewFromDetail=function(id){
+  const t=document.querySelector('#detailContent .detail-title'),c=document.querySelector('#detailContent .detail-cover');
+  window.kkShareAnime(id,encodeURIComponent(t?t.textContent:'').replace(/'/g,'%27'),encodeURIComponent(c?c.src:''),0);
+};
+(function(){let raf=0;const dc=document.getElementById('detailContent');if(!dc)return;
+  new MutationObserver(()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(paintFriendReviews)}).observe(dc,{childList:true,subtree:true})})();
+
+
+const _origFriends = window.renderFriendsList;
+window.kkTab = function (t) {
+  S.tab = t;
+  ['feed', 'chat', 'amis'].forEach(k => { const e = $('tw-' + k); if (e) e.style.display = k === t ? '' : 'none'; });
+  renderNav();
+  if (t === 'feed') { renderComposer(); renderFilters(); renderFeedList(); }
+  if (t === 'chat') { buildChat(); markRead(); }
+  if (t === 'amis' && _origFriends) _origFriends();
+  renderTrends(); renderRightFriends();
+};
+window.renderFriendsList = function () { window.kkTab(S.tab); };
+function renderAll() { renderNav(); if (S.tab === 'feed') { renderComposer(); renderFilters(); renderFeedList(); } else if (S.tab === 'chat') buildChat(); renderTrends(); renderRightFriends(); }
+window.kkFocusComposer = function () { window.kkTab('feed'); window.scrollTo({ top: 0, behavior: 'smooth' }); setTimeout(() => { const t = $('cpText'); if (t) t.focus(); }, 250); };
+
+/* ----- sélecteur d'animé ----- */
+let _st = null;
+async function searchAnime(q) {
+  const r = await anilistFetch(`query($s:String){Page(perPage:6){media(search:$s,type:ANIME,sort:SEARCH_MATCH){id title{romaji english} coverImage{large} episodes}}}`, { s: q });
+  return ((r && r.data && r.data.Page && r.data.Page.media) || []).map(m => ({ id: m.id, title: (m.title.english || m.title.romaji || '?'), cover: (m.coverImage && m.coverImage.large) || '', episodes: m.episodes || 0 }));
+}
+function pickerHTML(ctx) {
+  const mine = [...(window.animeList || [])].sort((a, b) => (b.addedAt || 0) - (a.addedAt || 0)).slice(0, 10)
+    .map(a => ({ id: a.id, title: a.title, cover: a.cover || '', episodes: a.totalEps || 0, watched: a.watchedEps || 0, rating: a.rating || 0 }));
+  S.res[ctx + 'my'] = mine;
+  return `<input id="${ctx}Search" class="tw-search" placeholder="Chercher un animé…" oninput="kkPickSearch('${ctx}',this.value)" autocomplete="off"><div id="${ctx}Res" class="pick-res"></div>` +
+    (mine.length ? `<div class="mychips">${mine.map((a, i) => `<div class="mychip" onclick="kkPick('${ctx}','my',${i})"><img src="${esc(a.cover)}" alt=""><span>${esc(a.title)}</span></div>`).join('')}</div>` : '');
+}
+window.kkPickSearch = function (ctx, v) {
+  clearTimeout(_st); const box = $(ctx + 'Res'); if (!box) return;
+  v = v.trim(); if (v.length < 2) { box.innerHTML = ''; return; }
+  _st = setTimeout(async () => {
+    try {
+      const r = await searchAnime(v); S.res[ctx + 'q'] = r;
+      box.innerHTML = r.length ? r.map((a, i) => `<div class="pr" onclick="kkPick('${ctx}','q',${i})"><img src="${esc(a.cover)}" alt=""><span>${esc(a.title)}</span></div>`).join('') : '<div class="pr">Aucun résultat</div>';
+    } catch (e) { box.innerHTML = '<div class="pr">Recherche impossible</div>'; }
+  }, 350);
+};
+window.kkPick = function (ctx, src, i) {
+  const a = (S.res[ctx + src] || [])[i]; if (!a) return;
+  const anime = { id: a.id, title: a.title, cover: a.cover || '', episodes: a.episodes || 0 };
+  if (ctx === 'cp') { S.comp.anime = anime; S.comp.pick = false; if (a.watched) S.comp.ep = a.watched; if (a.rating && !S.comp.rating) S.comp.rating = a.rating; renderComposer(); }
+  else if (ctx === 'ch') { sendMsg('', anime); const p = $('chShare'); if (p) p.style.display = 'none'; }
+  else if (ctx === 'tw') { openDetail(a.id); const r = $('twRes'); if (r) r.innerHTML = ''; const si = $('twSearch'); if (si) si.value = ''; }
+};
+
+/* ----- composer ----- */
+function renderComposer() {
+  const el = $('feedComposer'); if (!el) return;
+  if (!S.uid) { el.innerHTML = '<div class="tw-empty"><b>Connecte-toi</b>pour publier et suivre tes amis.</div>'; return; }
+  const c = S.comp, a = c.anime;
+  const stars = [1, 2, 3, 4, 5].map(n => `<span class="${c.rating >= n ? 'on' : ''}" onclick="kkCpRate(${n})">★</span>`).join('');
+  el.innerHTML = `<div class="tw-comp">${av(S.uid, window.USER_PSEUDO)}<div class="tw-comp-body">
+    <div class="tw-chips">${['review', 'episode', 'reco', 'text'].map(k => `<button class="tw-chip ${c.kind === k ? 'on' : ''}" onclick="kkCpKind('${k}')">${KIND[k].ic} ${KIND[k].lb}</button>`).join('')}</div>
+    <textarea id="cpText" maxlength="500" placeholder="${esc(PLACEHOLDER[c.kind])}" oninput="kkCpField('text',this.value);this.style.height='auto';this.style.height=this.scrollHeight+'px';document.getElementById('cpCount').textContent=this.value.length+'/500'">${esc(c.text)}</textarea>
+    ${a ? `<div class="tw-sel"><img src="${esc(a.cover)}" alt=""><b>${esc(a.title)}${a.episodes ? `<br><small style="font-weight:600;color:var(--muted)">${a.episodes} épisodes</small>` : ''}</b><button class="tw-tool" onclick="kkCpClear()">✕</button></div>` : (c.pick ? pickerHTML('cp') : '')}
+    <div class="tw-tools">
+      <button class="tw-tool ${a || c.pick ? 'on' : ''}" onclick="kkCpPick()" title="Joindre un animé">Animé</button>
+      ${c.kind === 'episode' ? `<input class="tw-ep" type="number" min="1" ${a && a.episodes ? `max="${a.episodes}"` : ''} placeholder="Ép. n°" value="${esc(c.ep)}" oninput="kkCpField('ep',this.value)">` : ''}
+      ${c.kind !== 'text' ? `<span class="tw-stars" id="cpStars">${stars}</span>` : ''}
+      <button class="tw-tool ${c.spoiler ? 'on' : ''}" onclick="kkCpSpoil()">Spoiler</button>
+      <span class="tw-count" id="cpCount">${(c.text || '').length}/500</span>
+      <button class="tw-send" id="cpBtn" onclick="kkPublish()">Publier</button>
+    </div></div></div>`;
+  const t = $('cpText'); if (t) { t.style.height = 'auto'; t.style.height = Math.max(64, t.scrollHeight) + 'px'; }
+}
+window.kkCpKind = k => { S.comp.kind = k; renderComposer(); };
+window.kkCpField = (k, v) => { S.comp[k] = v; };
+window.kkCpPick = () => { S.comp.pick = !S.comp.pick; renderComposer(); };
+window.kkCpSpoil = () => { S.comp.spoiler = !S.comp.spoiler; renderComposer(); };
+window.kkCpRate = n => { S.comp.rating = S.comp.rating === n ? 0 : n; const b = $('cpStars'); if (b) b.querySelectorAll('span').forEach((s, i) => s.classList.toggle('on', S.comp.rating >= i + 1)); };
+window.kkCpClear = () => { S.comp.anime = null; renderComposer(); };
+window.kkPublish = async function () {
+  const c = S.comp, txt = (c.text || '').trim();
+  if (!S.uid) { toast('error', 'Connecte-toi'); return; }
+  if (c.kind !== 'text' && !c.anime) { toast('error', 'Joins un animé (bouton Animé)'); return; }
+  if (c.kind === 'episode' && !(+c.ep > 0)) { toast('error', "Indique le numéro de l'épisode"); return; }
+  if (!txt && !c.anime) { toast('error', 'Écris quelque chose'); return; }
+  const btn = $('cpBtn'); if (btn) btn.disabled = true;
+  try {
+    await addDoc(collection(db, 'posts'), { authorUid: S.uid, authorPseudo: window.USER_PSEUDO || '?', kind: c.kind, text: txt.slice(0, 500),
+      anime: c.anime ? { id: c.anime.id, title: c.anime.title, cover: c.anime.cover || '', episodes: c.anime.episodes || 0 } : null,
+      ep: c.kind === 'episode' ? +c.ep : null, rating: c.kind === 'text' ? 0 : (c.rating || 0), spoiler: !!c.spoiler,
+      createdAt: Date.now(), likes: [], reposts: [], commentsCount: 0, repostOf: null });
+    S.comp = Object.assign(emptyComp(), { kind: c.kind }); toast('success', 'Publié ! 🎉'); renderComposer();
+  } catch (e) { toast('error', 'Publication impossible : ' + e.message); if (btn) btn.disabled = false; }
+};
+window.kkShareAnime = function (id, t, c, eps) {
+  if (!S.uid) { toast('error', 'Connecte-toi pour partager'); return; }
+  const inl = (window.animeList || []).find(x => x.id === id) || {};
+  S.comp = { kind: inl.status === 'watching' ? 'episode' : 'review', anime: { id, title: decodeURIComponent(t), cover: decodeURIComponent(c), episodes: +eps || 0 }, ep: inl.watchedEps || '', rating: inl.rating || 0, spoiler: false, text: '', pick: false };
+  S.tab = 'feed'; const pg = $('page-friends');
+  if (pg && pg.classList.contains('active')) window.kkTab('feed'); else location.hash = '#friends';
+  setTimeout(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); const t = $('cpText'); if (t) t.focus(); }, 300);
+};
+
+/* ----- fil ----- */
+function renderFilters() {
+  const el = $('feedFilters'); if (!el) return;
+  const f = [['all', 'Tout'], ['review', 'Avis'], ['episode', 'Épisodes'], ['reco', 'Recos'], ['repost', 'Reposts'], ['mine', 'Mes posts']];
+  el.innerHTML = f.map(([k, l]) => `<button class="tw-tab ${S.filter === k ? 'active' : ''}" onclick="kkFilter('${k}')">${l}</button>`).join('');
+}
+window.kkFilter = k => { S.filter = k; S.limit = 20; renderFilters(); renderFeedList(); };
+window.kkAnimeFilter = id => { S.animeFilter = id; S.limit = 20; S.tab !== 'feed' ? window.kkTab('feed') : renderFeedList(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+window.kkMore = () => { S.limit += 20; renderFeedList(); };
+function animeCard(a, rating) {
+  if (!a || !a.id) return '';
+  return `<div class="tw-card" onclick="openDetail(${+a.id})"><img src="${esc(a.cover || '')}" alt="" loading="lazy"><div><b>${esc(a.title)}</b><span>${a.episodes ? a.episodes + ' épisodes · ' : ''}Voir la fiche →</span></div></div>`;
+}
+function coreHTML(p) {
+  const kd = KIND[p.kind] || KIND.text;
+  const tag = p.anime && p.kind !== 'text' ? `<span class="tw-tag">${kd.ic} ${p.kind === 'episode' && p.ep ? 'Épisode ' + (+p.ep) : kd.lb}</span>` : '';
+  const st = p.rating > 0 ? `<span class="tw-stars-s">${'★'.repeat(p.rating)}${'☆'.repeat(5 - p.rating)}</span>` : '';
+  const txt = p.text ? `<div class="tw-text ${p.spoiler ? 'spoil' : ''}" ${p.spoiler ? `onclick="this.classList.add('rev')" title="Spoiler : clique pour afficher"` : ''}>${nl(p.text)}</div>` : '';
+  return `${tag || st || p.spoiler ? `<div class="tw-meta">${tag}${st}${p.spoiler ? '<span class="tw-spoil">Spoiler</span>' : ''}</div>` : ''}${txt}${animeCard(p.anime)}`;
+}
+function postHTML(p) {
+  const me = p.authorUid === S.uid, liked = (p.likes || []).includes(S.uid), rp = (p.reposts || []).includes(S.uid);
+  const body = p.kind === 'repost' && p.repostOf
+    ? `${p.text ? `<div class="tw-text">${nl(p.text)}</div>` : ''}<div class="tw-quote"><div class="q">@${esc(p.repostOf.authorPseudo)}</div>${coreHTML(p.repostOf)}</div>` : coreHTML(p);
+  return `${p.kind === 'repost' ? `<div class="tw-rp">@${esc(p.authorPseudo)} a reposté</div>` : ''}<article class="tw-post" id="post_${p.id}" style="${p.kind === 'repost' ? 'padding-top:6px' : ''}">
+    ${av(p.authorUid, p.authorPseudo)}<div class="tw-pb">
+    <div class="tw-top"><b>@${esc(p.authorPseudo)}</b>${me ? '<span class="tw-dim">(toi)</span>' : ''}<span class="tw-dim">· ${ago(p.createdAt)}</span>${me ? `<button class="tw-del" onclick="kkDelPost('${p.id}')" title="Supprimer">✕</button>` : ''}</div>
+    ${body}
+    <div class="tw-acts"><button class="tw-act" onclick="kkToggleC('${p.id}')">Répondre ${p.commentsCount || ''}</button>
+      <button class="tw-act rt ${rp ? 'on' : ''}" onclick="kkRepost('${p.id}')">Reposter ${(p.reposts || []).length || ''}</button>
+      <button class="tw-act like ${liked ? 'on' : ''}" onclick="kkLike('${p.id}')">J'aime ${(p.likes || []).length || ''}</button></div>
+    <div class="tw-cm" id="cm_${p.id}" style="display:none"></div></div></article>`;
+}
+function trendList() {
+  const week = Date.now() - 7 * 864e5, cnt = new Map();
+  allPosts().forEach(p => { const a = p.kind === 'repost' && p.repostOf ? p.repostOf.anime : p.anime; if (a && p.createdAt > week) { const o = cnt.get(a.id) || { a, n: 0 }; o.n++; cnt.set(a.id, o); } });
+  return [...cnt.values()].sort((x, y) => y.n - x.n).slice(0, 5);
+}
+function renderTrends() {
+  const el = $('twTrends'); if (!el) return;
+  const t = trendList();
+  el.innerHTML = t.length ? t.map((o, i) => `<button class="tw-tr" onclick="kkAnimeFilter(${+o.a.id})"><small>${i + 1} · Tendance chez tes amis</small><b>${esc(o.a.title)}</b><small>${o.n} post${o.n > 1 ? 's' : ''}</small></button>`).join('') + (S.animeFilter ? '<button class="tw-tr" onclick="kkAnimeFilter(null)"><b style="color:var(--user-accent)">✕ Retirer le filtre</b></button>' : '') : '<div class="tw-boxpad">Rien pour l\'instant. Poste un avis pour lancer la tendance !</div>';
+}
+function renderRightFriends() {
+  const el = $('twFriends'); if (!el) return;
+  el.innerHTML = S.uid && S.friends.length ? S.friends.slice(0, 6).map(f => `<div class="tw-fr" onclick="kkTab('amis');openFriendProfile('${esc(f.uid)}','${esc(f.pseudo)}')">${av(f.uid, f.pseudo)}<div>@${esc(f.pseudo)}</div><button onclick="event.stopPropagation();kkChatWith('${esc(f.uid)}')">Message</button></div>`).join('') : '<div class="tw-boxpad">Ajoute des amis dans l\'onglet « Amis » pour les retrouver ici.</div>';
+}
+function renderFeedList() {
+  renderTrends(); renderHomeFeed(); paintFriendReviews();
+  const el = $('feedList'); if (!el) return;
+  if (!S.uid) { el.innerHTML = ''; return; }
+  const ae = document.activeElement;
+  if (ae && el.contains(ae) && /INPUT|TEXTAREA/.test(ae.tagName)) { S.feedDirty = true; return; }
+  S.feedDirty = false;
+  let list = allPosts();
+  if (S.filter === 'mine') list = list.filter(p => p.authorUid === S.uid); else if (S.filter !== 'all') list = list.filter(p => p.kind === S.filter);
+  if (S.animeFilter) list = list.filter(p => { const a = p.kind === 'repost' && p.repostOf ? p.repostOf.anime : p.anime; return a && a.id === S.animeFilter; });
+  const total = list.length; list = list.slice(0, S.limit);
+  el.innerHTML = (S.animeFilter ? '<button class="tw-more" onclick="kkAnimeFilter(null)">✕ Afficher tous les posts</button>' : '') +
+    (list.length ? list.map(postHTML).join('') + (total > list.length ? `<button class="tw-more" onclick="kkMore()">Voir plus (${total - list.length})</button>` : '') :
+    `<div class="tw-empty"><b>Bienvenue sur ton fil</b>${S.friends.length ? 'Sois le premier à poster un avis ou un épisode regardé.' : "Ajoute des amis dans l'onglet « Amis » pour voir leurs posts ici."}</div>`);
+  S.openC.forEach((_, id) => paintComments(id));
+}
+document.addEventListener('focusout', () => { setTimeout(() => { if (S.feedDirty) renderFeedList(); }, 150); });
+window.kkLike = async function (id) {
+  const p = allPosts().find(x => x.id === id); if (!p) return; const liked = (p.likes || []).includes(S.uid);
+  try { await updateDoc(doc(db, 'posts', id), { likes: liked ? arrayRemove(S.uid) : arrayUnion(S.uid) }); } catch (e) { toast('error', e.message); }
+};
+window.kkDelPost = async function (id) { if (!confirm('Supprimer ce post ?')) return; try { await deleteDoc(doc(db, 'posts', id)); toast('info', 'Post supprimé'); } catch (e) { toast('error', e.message); } };
+function openModal(title, html) {
+  const o = document.createElement('div'); o.className = 'modal-overlay';
+  o.innerHTML = `<div class="modal-box" style="max-width:520px;border-radius:18px"><div class="modal-header"><div class="modal-title">${title}</div><button class="modal-close" data-x>✕</button></div><div class="modal-body">${html}</div></div>`;
+  o.addEventListener('click', e => { if (e.target === o || e.target.hasAttribute('data-x')) o.remove(); });
+  document.body.appendChild(o); return o;
+}
+window.kkRepost = function (id) {
+  const p = allPosts().find(x => x.id === id); if (!p) return;
+  const root = p.kind === 'repost' && p.repostOf ? p.repostOf : { id: p.id, authorUid: p.authorUid, authorPseudo: p.authorPseudo, kind: p.kind, text: p.text || '', anime: p.anime || null, ep: p.ep || null, rating: p.rating || 0, spoiler: !!p.spoiler };
+  const o = openModal('Reposter', `<div class="tw-quote" style="margin:0 0 12px"><div class="q">@${esc(root.authorPseudo)}</div>${coreHTML(root)}</div>
+    <textarea id="rpText" maxlength="300" class="tw-search" style="border-radius:14px;min-height:80px;resize:vertical" placeholder="Ajoute ton avis (optionnel)…"></textarea>
+    <div style="text-align:right;margin-top:10px"><button class="tw-send" id="rpBtn">Reposter</button></div>`);
+  o.querySelector('#rpBtn').onclick = async () => {
+    const b = o.querySelector('#rpBtn'); b.disabled = true;
+    try {
+      await addDoc(collection(db, 'posts'), { authorUid: S.uid, authorPseudo: window.USER_PSEUDO || '?', kind: 'repost', text: o.querySelector('#rpText').value.trim().slice(0, 300), anime: null, ep: null, rating: 0, spoiler: false, createdAt: Date.now(), likes: [], reposts: [], commentsCount: 0, repostOf: root });
+      await updateDoc(doc(db, 'posts', root.id), { reposts: arrayUnion(S.uid) }).catch(() => { });
+      o.remove(); toast('success', 'Reposté');
+    } catch (e) { toast('error', e.message); b.disabled = false; }
+  };
+};
+window.kkToggleC = function (id) {
+  if (S.openC.has(id)) { S.openC.get(id).unsub(); S.openC.delete(id); const e = $('cm_' + id); if (e) e.style.display = 'none'; return; }
+  const st = { items: [], unsub: null };
+  st.unsub = onSnapshot(query(collection(db, 'posts', id, 'comments'), orderBy('createdAt', 'asc')), snap => { st.items = snap.docs.map(d => ({ id: d.id, ...d.data() })); paintComments(id); }, e => toast('error', e.message));
+  S.openC.set(id, st); paintComments(id); setTimeout(() => { const i = $('cmi_' + id); if (i) i.focus(); }, 50);
+};
+function paintComments(id) {
+  const el = $('cm_' + id), st = S.openC.get(id); if (!el || !st) return;
+  const old = $('cmi_' + id), val = old ? old.value : '', had = old && document.activeElement === old;
+  el.style.display = 'block';
+  el.innerHTML = st.items.map(c => `<div class="tw-cmi"><b>@${esc(c.authorPseudo)}</b> ${nl(c.text)}<span>${ago(c.createdAt)}</span>${c.authorUid === S.uid ? `<button onclick="kkDelC('${id}','${c.id}')">✕</button>` : ''}</div>`).join('') +
+    `<div class="tw-cmnew"><input id="cmi_${id}" maxlength="300" placeholder="Poster ta réponse…" onkeydown="if(event.key==='Enter')kkSendC('${id}')"><button class="tw-send" onclick="kkSendC('${id}')">Répondre</button></div>`;
+  const ni = $('cmi_' + id); if (ni) { ni.value = val; if (had) ni.focus(); }
+}
+window.kkSendC = async function (id) {
+  const i = $('cmi_' + id); if (!i) return; const t = i.value.trim(); if (!t) return; i.value = '';
+  try { await addDoc(collection(db, 'posts', id, 'comments'), { authorUid: S.uid, authorPseudo: window.USER_PSEUDO || '?', text: t.slice(0, 300), createdAt: Date.now() }); await updateDoc(doc(db, 'posts', id), { commentsCount: increment(1) }); } catch (e) { toast('error', e.message); }
+};
+window.kkDelC = async function (pid, cid) { try { await deleteDoc(doc(db, 'posts', pid, 'comments', cid)); await updateDoc(doc(db, 'posts', pid), { commentsCount: increment(-1) }); } catch (e) { toast('error', e.message); } };
+
+/* ----- messages ----- */
+function buildChat() {
+  const sh = $('chatShell'); if (!sh) return;
+  if (!S.uid) { sh.innerHTML = '<div class="ct-empty" style="grid-column:1/-1">🔒 Connecte-toi pour discuter</div>'; return; }
+  if (!sh.querySelector('#chatList')) sh.innerHTML = '<aside class="chat-list" id="chatList"></aside><section class="chat-thread" id="chatThread"><div class="ct-empty"><div style="font-size:2.6rem">💬</div><b style="color:var(--text);font-size:1.2rem">Tes messages</b><br>Choisis un ami pour discuter</div></section>';
+  renderChatList();
+}
+function renderChatList() {
+  const el = $('chatList'); if (!el) return;
+  if (!S.friends.length) { el.innerHTML = `<div class="chat-list-h">Messages</div><div class="tw-empty"><b>Aucun ami</b>Ajoute des amis dans l'onglet « Amis ».</div>`; return; }
+  const rows = S.friends.map(f => ({ f, c: S.chats.get(chatId(S.uid, f.uid)) || null }))
+    .sort((a, b) => ((b.c && b.c.lastAt) || 0) - ((a.c && a.c.lastAt) || 0) || a.f.pseudo.localeCompare(b.f.pseudo));
+  el.innerHTML = '<div class="chat-list-h">Messages</div>' + rows.map(({ f, c }) => {
+    const un = c ? (c['unread_' + S.uid] || 0) : 0, on = S.active && S.active.uid === f.uid;
+    const prev = c && c.lastMsg ? ((c.lastFrom === S.uid ? 'Toi : ' : '') + c.lastMsg) : 'Nouvelle conversation';
+    return `<div class="ci ${on ? 'on' : ''}" onclick="kkOpenChat('${esc(f.uid)}')">${av(f.uid, f.pseudo)}<div class="ci-main"><b>@${esc(f.pseudo)}</b><span>${esc(prev)}</span></div><div class="ci-r">${c && c.lastAt ? ago(c.lastAt) : ''}${un ? `<span class="ci-un">${un}</span>` : ''}</div></div>`;
+  }).join('');
+}
+window.kkChatWith = function (uid) { S.tab = 'chat'; window.kkTab('chat'); window.kkOpenChat(uid); window.scrollTo(0, 0); };
+window.kkChatBack = function () { $('chatShell').classList.remove('open'); if (S.msgUnsub) { S.msgUnsub(); S.msgUnsub = null; } S.active = null; renderChatList(); };
+window.kkOpenChat = function (uid) {
+  const f = S.friends.find(x => x.uid === uid); if (!f) return;
+  if (S.msgUnsub) { S.msgUnsub(); S.msgUnsub = null; }
+  const id = chatId(S.uid, uid); S.active = { uid, pseudo: f.pseudo, id, marked: false }; S.msgs = [];
+  $('chatShell').classList.add('open');
+  $('chatThread').innerHTML = `<div class="ct-head"><button class="ct-back" onclick="kkChatBack()">←</button>${av(uid, f.pseudo)}<b>@${esc(f.pseudo)}</b><button class="tool-btn" onclick="kkTab('amis');openFriendProfile('${esc(uid)}','${esc(f.pseudo)}')">Profil</button></div>
+    <div class="msgs" id="msgs"></div><div class="ct-share" id="chShare" style="display:none"></div>
+    <div class="ct-input"><button class="tw-tool" onclick="kkChShare()" title="Partager un animé" style="font-size:.74rem">Animé</button><textarea id="chInput" rows="1" maxlength="1000" placeholder="Écrire un message" oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();kkSend()}"></textarea><button class="tw-send" onclick="kkSend()">Envoyer</button></div>`;
+  setDoc(doc(db, 'chats', id), { members: [S.uid, uid], pseudos: { [S.uid]: window.USER_PSEUDO || '?', [uid]: f.pseudo } }, { merge: true }).catch(() => { }).then(() => {
+  if (!S.active || S.active.id !== id) return;
+  S.msgUnsub = onSnapshot(query(collection(db, 'chats', id, 'messages'), orderBy('createdAt', 'desc'), limit(150)),
+    snap => { S.msgs = snap.docs.map(d => ({ id: d.id, ...d.data() })).reverse(); paintMsgs(); markRead(); },
+    e => { const m = $('msgs'); if (m) m.innerHTML = `<div class="tw-empty"><b>Messages indisponibles</b>${esc(e.message)}</div>`; });
+  });
+  renderChatList(); markRead(); setTimeout(() => { const i = $('chInput'); if (i) i.focus(); }, 60);
+};
+function paintMsgs() {
+  const el = $('msgs'); if (!el || !S.active) return;
+  const near = !el.dataset.init || el.scrollHeight - el.scrollTop - el.clientHeight < 140;
+  const chat = S.chats.get(S.active.id) || {}, seenAt = chat['readAt_' + S.active.uid] || 0;
+  const lastMine = [...S.msgs].reverse().find(m => m.from === S.uid);
+  let h = '', lastDay = '';
+  if (!S.msgs.length) h = `<div class="tw-empty"><b>Dis bonjour à @${esc(S.active.pseudo)}</b>Partage un animé avec le bouton Animé</div>`;
+  S.msgs.forEach(m => {
+    const day = new Date(m.createdAt).toDateString();
+    if (day !== lastDay) { h += `<div class="daysep">${esc(dayLbl(m.createdAt))}</div>`; lastDay = day; }
+    const mine = m.from === S.uid;
+    const rx = Object.entries(m.reactions || {}).filter(([k, u]) => RX[k] && u && u.length).map(([k, u]) => `<span class="rx ${u.includes(S.uid) ? 'me' : ''}" onclick="kkReact('${m.id}','${k}')">${RX[k]} ${u.length}</span>`).join('');
+    h += `<div class="msg ${mine ? 'me' : 'ot'}" tabindex="0"><div class="bubble">${m.anime ? animeCard(m.anime) : ''}${m.text ? `<div>${nl(m.text)}</div>` : ''}<div class="mt">${hhmm(m.createdAt)}</div></div>
+      <div class="mtools">${Object.entries(RX).map(([k, e]) => `<button onclick="kkReact('${m.id}','${k}')">${e}</button>`).join('')}${mine ? `<button onclick="kkDelMsg('${m.id}')" title="Supprimer">✕</button>` : ''}</div>
+      ${rx ? `<div class="rxs">${rx}</div>` : ''}${mine && lastMine && lastMine.id === m.id && seenAt >= m.createdAt ? '<div class="seen">Vu ✓</div>' : ''}</div>`;
+  });
+  el.innerHTML = h; el.dataset.init = 1; if (near) el.scrollTop = el.scrollHeight;
+}
+async function sendMsg(text, anime) {
+  const a = S.active; if (!a || (!text && !anime)) return; const now = Date.now();
+  try {
+    await setDoc(doc(db, 'chats', a.id), { members: [S.uid, a.uid], pseudos: { [S.uid]: window.USER_PSEUDO || '?', [a.uid]: a.pseudo },
+      lastMsg: (text || ('Animé : ' + anime.title)).slice(0, 80), lastFrom: S.uid, lastAt: now, ['unread_' + a.uid]: increment(1), ['unread_' + S.uid]: 0, ['readAt_' + S.uid]: now }, { merge: true });
+    await addDoc(collection(db, 'chats', a.id, 'messages'), { from: S.uid, fromPseudo: window.USER_PSEUDO || '?', text: text || '', anime: anime || null, createdAt: now, reactions: {} });
+  } catch (e) { toast('error', 'Envoi impossible : ' + e.message); }
+}
+window.kkSend = function () { const i = $('chInput'); if (!i) return; const t = i.value.trim(); if (!t) return; i.value = ''; i.style.height = 'auto'; sendMsg(t.slice(0, 1000), null); };
+window.kkChShare = function () { const p = $('chShare'); if (!p) return; if (p.style.display === 'none') { p.innerHTML = pickerHTML('ch'); p.style.display = ''; const i = $('chSearch'); if (i) i.focus(); } else p.style.display = 'none'; };
+window.kkReact = async function (mid, key) {
+  if (!S.active) return; const m = S.msgs.find(x => x.id === mid); if (!m) return;
+  const has = ((m.reactions || {})[key] || []).includes(S.uid);
+  try { await updateDoc(doc(db, 'chats', S.active.id, 'messages', mid), { ['reactions.' + key]: has ? arrayRemove(S.uid) : arrayUnion(S.uid) }); } catch (e) { toast('error', e.message); }
+};
+window.kkDelMsg = async function (mid) { if (!S.active || !confirm('Supprimer ce message ?')) return; try { await deleteDoc(doc(db, 'chats', S.active.id, 'messages', mid)); } catch (e) { toast('error', e.message); } };
+function markRead() {
+  if (!S.active || S.tab !== 'chat') return;
+  const c = S.chats.get(S.active.id); if (!c) return;
+  if (!((c['unread_' + S.uid] || 0) > 0 || !S.active.marked)) return;
+  S.active.marked = true;
+  updateDoc(doc(db, 'chats', S.active.id), { ['unread_' + S.uid]: 0, ['readAt_' + S.uid]: Date.now() }).catch(() => { });
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') markRead(); });
+</script>
+<script>
+function kkDownload(txt,name,type){const b=new Blob([txt],{type}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+function kkExportJSON(){if(!(window.animeList||[]).length){toast('error','Ta liste est vide');return}kkDownload(JSON.stringify(window.animeList,null,2),'kakusu-liste.json','application/json');toast('success','Liste exportée (JSON)')}
+function kkExportCSV(){const L=window.animeList||[];if(!L.length){toast('error','Ta liste est vide');return}
+  const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"',cols=['id','title','status','watchedEps','totalEps','rating'];
+  kkDownload('\ufeff'+cols.join(',')+'\n'+L.map(a=>cols.map(c=>q(a[c])).join(',')).join('\n'),'kakusu-liste.csv','text/csv;charset=utf-8');toast('success','Liste exportée (CSV)')}
+function kkImport(inp){
+  const f=inp.files&&inp.files[0];if(!f)return;
+  if(f.size>5e6){toast('error','Fichier trop gros');inp.value='';return}
+  const r=new FileReader();
+  r.onload=()=>{try{
+    const arr=JSON.parse(r.result);if(!Array.isArray(arr))throw new Error('Format invalide');
+    const ST=['watching','completed','planned','dropped'],cur=new Map((window.animeList||[]).map(a=>[a.id,a]));let add=0;
+    arr.forEach(x=>{if(!x||!Number.isInteger(x.id)||typeof x.title!=='string'||cur.has(x.id))return;
+      cur.set(x.id,{id:x.id,title:x.title.slice(0,200),cover:typeof x.cover==='string'&&/^https:\/\//.test(x.cover)?x.cover:'',status:ST.includes(x.status)?x.status:'planned',watchedEps:Math.max(0,+x.watchedEps||0),totalEps:Math.max(0,+x.totalEps||0),rating:Math.min(5,Math.max(0,+x.rating||0)),addedAt:+x.addedAt||Date.now()});add++});
+    window.animeList=[...cur.values()];localStorage.setItem(window.STORAGE_KEY,JSON.stringify(window.animeList));
+    if(window.saveListFirestore)window.saveListFirestore();if(window.refreshView)window.refreshView();toast('success',add+' animé(s) importé(s)');
+  }catch(e){toast('error','Import impossible : '+e.message)}inp.value=''};
+  r.readAsText(f);
+}
+(function(){
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting&&currentPage==='catalogue'&&!catState.loading&&catState.hasMore&&document.querySelector('#catalogueGrid .anime-card'))loadMoreCatalogue()})},{rootMargin:'800px'});
+  const s=document.getElementById('catSentinel');if(s)io.observe(s);
+})();
+</script>
+
+
+<script>
+const N=n=>`<span class="g-n">${n}</span>`;
+const LG=a=>a.map((x,i)=>`<div class="g-lg">${N(i+1)}<div><b>${x[0]}</b> : ${x[1]}</div></div>`).join('');
+const GUIDE=[
+ {id:'start',t:'Présentation',h:()=>`<h3>Bienvenue sur Kakusu</h3>
+  <p class="gd-lead">Un carnet pour suivre tes animés : tu les trouves, tu les ajoutes à ta liste, tu notes où tu en es, et tu en parles avec tes amis. Le site ne diffuse aucun épisode.</p>
+  <div class="g-3">
+   <div class="g-step"><i>1</i><b>Trouve</b><span>Catalogue, populaires, saison en cours, prochaines sorties.</span></div>
+   <div class="g-step"><i>2</i><b>Ajoute</b><span>Mets-le dans ta liste avec un statut et une note.</span></div>
+   <div class="g-step"><i>3</i><b>Partage</b><span>Poste un avis et discute avec tes amis.</span></div>
+  </div>
+  <h5>La barre du haut</h5>
+  <div class="g-fig"><div class="g-nav"><span class="hanko">隠</span><b style="margin:0 10px 0 6px">KAKUSU</b>
+   <span class="nav-link active">Accueil${N(1)}</span><span class="nav-link">Découvrir${N(2)}</span><span class="nav-link">Planning${N(3)}</span><span class="nav-link">Ma liste${N(4)}</span><span class="nav-link">Social${N(5)}</span>
+   <span class="g-input" style="margin-left:auto;min-width:110px">Rechercher…${N(6)}</span><span class="g-pill">?${N(7)}</span><span class="g-pill" style="background:var(--user-accent);color:#fff">${N(8)}</span></div></div>
+  ${LG([['Accueil','tes animés en cours, les tendances et les posts de tes amis.'],['Découvrir','catalogue, populaires, saison en cours, à venir.'],['Planning','les sorties jour par jour.'],['Ma liste','toute ta collection.'],['Social','fil d\'actu, messages privés, amis.'],['Recherche','tape un titre, ou appuie sur la touche /.'],['?','rouvre ce guide.'],['Ton avatar','profil, recherche rapide, tirage au sort, déconnexion.']])}`},
+ {id:'explore',t:'Découvrir',h:()=>`<h3>Trouver un animé</h3>
+  <p class="gd-lead">« Découvrir » regroupe quatre pages. Tu passes de l'une à l'autre avec les onglets en haut.</p>
+  <div class="g-fig">
+   <div class="sub-tabs" style="padding:0;justify-content:flex-start"><a class="on">Catalogue${N(1)}</a><a>Populaires</a><a>Cette saison</a><a>À venir</a></div>
+   <div class="g-row" style="margin:16px 0 12px;align-items:flex-end"><span class="g-input" style="flex:1">Rechercher un titre…${N(2)}</span><span class="g-sel"><span><small>Trier par</small>Popularité ▾</span>${N(3)}</span><span class="g-sel"><span><small>Genre</small>Tous ▾</span>${N(4)}</span><span class="g-pill">Filtres ▾${N(5)}</span></div>
+   <div class="g-row" style="gap:12px">${[1,2,3,4,5,6].map(i=>`<div class="g-poster g-p${(i%5)+1}"><b>★ 8.${i}</b></div>`).join('')}</div></div>
+  ${LG([['Onglets','Catalogue (tout), Populaires, Cette saison, À venir.'],['Recherche','tape un titre.'],['Trier par','popularité, tendances, meilleure note, plus récents, favoris.'],['Genre','action, comédie, romance…'],['Filtres','format, année, saison, statut, note minimale, et « masquer ma liste » pour ne voir que de nouveaux titres.']])}
+  <h5>Planning et raccourcis</h5>
+  <div class="g-lg"><div><b>Planning</b> : les sorties du jour avec un compte à rebours avant l'épisode (dans la barre du haut).</div></div>
+  <div class="g-lg"><div><b>Que regarder ce soir ?</b> tire au sort un titre de ta liste « À voir » (menu de ton avatar).</div></div>
+  <div class="g-lg"><div><b>Surprends-moi</b> ouvre un animé populaire au hasard (menu de ton avatar).</div></div>`},
+ {id:'list',t:'Ma liste',h:()=>`<h3>Ta liste d'animés</h3>
+  <p class="gd-lead">Chaque animé de ta liste a un statut, un nombre d'épisodes vus et une note.</p>
+  <h5>Les 4 statuts</h5>
+  <div class="g-row" style="margin-bottom:14px"><span class="g-st" style="--c:#74b9ff">À voir</span><span class="g-st" style="--c:#a78bfa">En cours</span><span class="g-st" style="--c:#2ee6c5">Terminé</span><span class="g-st" style="--c:#e0524f">Abandonné</span></div>
+  <h5>Une carte de ta liste</h5>
+  <div class="g-fig"><div class="g-row" style="gap:16px;align-items:flex-start">
+   <div class="g-poster big g-p2"></div>
+   <div style="flex:1;min-width:200px"><b style="font-size:1.05rem">Nom de l'animé</b>${N(1)}
+    <div class="g-row" style="margin:8px 0"><span class="g-st" style="--c:#a78bfa">En cours</span>${N(2)}</div>
+    <div class="cc-bar" style="width:100%;margin:6px 0"><i style="width:42%"></i></div><div style="font-size:.78rem;color:var(--muted)">Épisode 5 sur 12${N(3)}</div>
+    <div class="g-row" style="margin-top:10px"><span class="g-pill">− 1</span><span class="g-pill" style="background:var(--user-accent);color:#fff">+ 1</span>${N(4)}<span style="color:var(--gold);letter-spacing:2px;font-size:1.1rem">★★★★☆</span>${N(5)}</div></div></div></div>
+  ${LG([['Titre','clique dessus pour ouvrir la fiche.'],['Statut','change-le quand tu commences ou finis.'],['Progression','la barre se remplit à chaque épisode.'],['+1 / −1','avance ou recule d\'un épisode.'],['Note','de 1 à 5 étoiles.']])}
+  <div class="g-tip"><b>Sauvegarde :</b> ta liste est enregistrée dans ton compte, donc retrouvée sur tous tes appareils. L'export et l'import (JSON ou CSV) sont dans ton profil.</div>`},
+ {id:'detail',t:'Fiche animé',h:()=>`<h3>La fiche d'un animé</h3>
+  <p class="gd-lead">Clique sur une affiche pour l'ouvrir.</p>
+  <div class="g-fig"><div class="g-row" style="gap:18px;align-items:flex-start">
+   <div class="g-poster big g-p4"></div>
+   <div style="flex:1;min-width:210px"><b style="font-size:1.15rem;font-family:var(--serif);font-weight:400">NOM DE L'ANIMÉ</b>
+    <div style="font-size:.76rem;color:var(--muted);margin:4px 0 10px">Série TV · 12 épisodes · Hiver 2024${N(1)}</div>
+    <div class="g-row"><span class="g-pill" style="background:var(--user-accent);color:#fff">＋ Ajouter à ma liste</span>${N(2)}<span class="g-pill">Épisodes</span>${N(3)}<span class="g-pill">Franchise</span>${N(4)}<span class="g-pill">Partager</span>${N(5)}</div>
+    <div class="g-tip" style="margin:12px 0 0;padding:8px 12px;font-size:.78rem">Prochain épisode : Ép. 6 dans 2j 04:12:33 ${N(6)}</div></div></div></div>
+  ${LG([['Infos','type, nombre d\'épisodes, saison, note, studio.'],['Ajouter','met l\'animé dans ta liste.'],['Épisodes','liste à cocher, un par un.'],['Franchise','suites, préquelles et spin-offs, ajoutables d\'un clic.'],['Partager','ouvre le fil Social pour publier ton avis.'],['Prochain épisode','compte à rebours en direct, pour une série en cours.']])}
+  <div class="g-lg"><div>Plus bas : synopsis, bande-annonce, personnages, <b>avis de tes amis</b> et recommandations.</div></div>`},
+ {id:'social',t:'Social',h:()=>`<h3>Le Social</h3>
+  <p class="gd-lead">Trois onglets à gauche : Accueil (le fil), Messages, Amis.</p>
+  <h5>Un post du fil</h5>
+  <div class="g-fig">
+   <div class="g-row" style="gap:8px;margin-bottom:10px"><span class="tw-chip on">Avis</span><span class="tw-chip">Épisode</span><span class="tw-chip">Reco</span><span class="tw-chip">Libre</span>${N(1)}</div>
+   <div class="g-row" style="gap:12px;align-items:flex-start"><div class="tw-av" style="background:var(--user-accent);width:42px;height:42px">TH</div>
+    <div style="flex:1;min-width:200px"><b>@pseudo</b> <span style="color:var(--muted);font-size:.8rem">· 5 min</span>
+     <div class="g-row" style="margin:6px 0"><span class="tw-tag">Épisode 5</span><span style="color:var(--gold)">★★★★☆</span>${N(2)}</div>
+     <div style="font-size:.9rem;margin-bottom:6px">Super épisode, la fin m'a surpris.</div>
+     <div class="tw-text spoil" style="font-size:.9rem;margin:0 0 8px">Spoiler : le héros se fait trahir par son frère.</div>${N(3)}
+     <div class="tw-card" style="display:flex"><div class="g-poster g-p3" style="width:50px;height:70px;border:0"></div><div style="padding:8px 12px"><b style="font-size:.85rem">Nom de l'animé</b><br><span style="font-size:.72rem;color:var(--muted)">Voir la fiche →</span></div></div>${N(4)}
+     <div class="g-row" style="margin-top:8px;gap:6px"><span class="tw-act">Répondre</span><span class="tw-act">Reposter</span><span class="tw-act like">J'aime</span>${N(5)}</div></div></div></div>
+  ${LG([['Type de post','avis, épisode vu, reco ou message libre.'],['Note et épisode','les étoiles et le numéro d\'épisode s\'affichent sur le post.'],['Spoiler','le texte est flouté chez les autres, ils cliquent pour le lire.'],['Animé joint','clique la carte pour ouvrir sa fiche.'],['Actions','répondre en commentaire, reposter (avec ton avis) ou aimer.']])}
+  <h5>Messages et Amis</h5>
+  <div class="g-fig"><div class="g-row" style="flex-direction:column;align-items:stretch;gap:6px">
+   <div class="bubble" style="align-self:flex-start;max-width:70%">Tu as vu le dernier épisode ?</div>
+   <div class="bubble" style="align-self:flex-end;max-width:70%;background:var(--user-accent);color:#fff">Oui, incroyable !</div>
+   <div class="seen" style="align-self:flex-end">Vu ✓</div></div></div>
+  <div class="g-lg"><div><b>Messages</b> : discussion privée en direct avec chaque ami. Tu peux envoyer une carte d'animé avec le bouton « Animé » et réagir à un message avec les emojis au survol.</div></div>
+  <div class="g-lg"><div><b>Amis</b> : ajoute quelqu'un avec son pseudo (le tien se copie depuis le menu de ton avatar). Une fois accepté, tu vois sa collection, votre compatibilité et le classement.</div></div>`},
+ {id:'xp',t:'Profil et XP',h:()=>`<h3>Profil, XP et niveaux</h3>
+  <p class="gd-lead">Ton niveau monte tout seul à partir de ta liste. Rien à faire de plus.</p>
+  <div class="g-3">
+   <div class="g-step"><i>+10</i><b>XP</b><span>par épisode regardé</span></div>
+   <div class="g-step"><i>+50</i><b>XP</b><span>par animé terminé</span></div>
+   <div class="g-step"><i>+5</i><b>XP</b><span>par animé ajouté à ta liste</span></div>
+  </div>
+  <div class="g-fig"><div class="g-row" style="gap:14px;margin-bottom:10px"><span class="lvl-chip" style="font-size:.8rem;padding:3px 12px">Niv. 7</span><b>Titre du niveau</b>${N(1)}</div>
+   <div class="profile-xp" style="width:100%"><i style="width:62%"></i></div><div style="font-size:.76rem;color:var(--muted);margin-top:6px">Il te manque un peu d'XP pour le niveau suivant ${N(2)}</div></div>
+  ${LG([['Niveau et titre','ils changent quand tu atteins un nouveau palier.'],['Barre d\'XP','elle se remplit jusqu\'au niveau suivant.']])}
+  <div class="g-tip">Ton profil montre aussi tes statistiques, tes badges, ton bilan par genre et ton top 3. Le bouton <b>Personnaliser</b> ouvre un panneau pour changer l'avatar, la bio, l'humeur, la couleur d'accent, la taille des affiches et le motif de la bannière. L'export et l'import de ta liste sont en petit sous ce bouton.</div>`},
+ {id:'keys',t:'Raccourcis',h:()=>`<h3>Raccourcis clavier</h3>
+  <p class="gd-lead">Pour aller plus vite sans la souris.</p>
+  <div class="g-kr"><div><span class="g-key">/</span></div><div>Aller dans la barre de recherche</div></div>
+  <div class="g-kr"><div><span class="g-key">Ctrl</span><span class="g-key">K</span></div><div>Recherche rapide : pages, commandes et animés (<b>⌘ K</b> sur Mac)</div></div>
+  <div class="g-kr"><div><span class="g-key">↑</span><span class="g-key">↓</span><span class="g-key">Entrée</span></div><div>Choisir et valider dans la recherche rapide</div></div>
+  <div class="g-kr"><div><span class="g-key">Échap</span></div><div>Fermer une fenêtre, un menu ou ce guide</div></div>
+  <div class="g-kr"><div><span class="g-key">Entrée</span></div><div>Envoyer un message. <b>Maj + Entrée</b> pour aller à la ligne.</div></div>`}
+];
+function guideSel(id){
+  const g=GUIDE.find(x=>x.id===id)||GUIDE[0];
+  document.querySelectorAll('#guideTabs .list-tab').forEach(b=>b.classList.toggle('active',b.dataset.id===g.id));
+  const m=document.getElementById('guideBody');if(m){m.innerHTML=g.h();const bx=m.closest('.modal-body');if(bx)bx.scrollTop=0}
+}
+function openGuide(id){
+  if(document.getElementById('guideOv'))return;
+  const o=document.createElement('div');o.className='modal-overlay';o.id='guideOv';
+  o.innerHTML=`<div class="modal-box" style="max-width:1000px"><div class="modal-header"><div class="modal-title">Guide du site</div><button class="modal-close" onclick="closeGuide()">✕</button></div><div class="modal-body"><div class="gd"><div class="gd-menu" id="guideTabs">${GUIDE.map(g=>`<button class="list-tab" data-id="${g.id}" onclick="guideSel('${g.id}')">${g.t}</button>`).join('')}</div><div class="gd-body" id="guideBody"></div></div></div></div>`;
+  o.addEventListener('mousedown',e=>{if(e.target===o)closeGuide()});document.body.appendChild(o);guideSel(id||'start');
+}
+function closeGuide(){const o=document.getElementById('guideOv');if(o){o.remove();try{localStorage.setItem('kakusu_guide_seen','1')}catch(e){}}}
+window.openGuide=openGuide;window.closeGuide=closeGuide;
+function openProfileEdit(){const o=document.getElementById('peOverlay');if(o){o.classList.add('open');document.body.style.overflow='hidden'}}
+function closeProfileEdit(){const o=document.getElementById('peOverlay');if(o)o.classList.remove('open');document.body.style.overflow=''}
+window.openProfileEdit=openProfileEdit;window.closeProfileEdit=closeProfileEdit;
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeGuide();closeProfileEdit()}});
+(function(){let n=0;const iv=setInterval(()=>{n++;let seen=false;try{seen=localStorage.getItem('kakusu_guide_seen')}catch(e){}
+  if(seen||n>40){clearInterval(iv);return}
+  if(window.CURRENT_USER&&window.USER_PSEUDO){clearInterval(iv);setTimeout(()=>openGuide('start'),1200)}},500)})();
+function toggleCatAdv(){const p=document.getElementById('catAdv');if(p)p.classList.toggle('open');syncAdvBtn()}
+function syncAdvBtn(){
+  const b=document.getElementById('catAdvBtn'),p=document.getElementById('catAdv');if(!b||!p)return;
+  const n=['format','year','season','status','minScore','hide'].filter(k=>catState[k]).length;
+  b.textContent='Filtres'+(n?' ('+n+')':'')+(p.classList.contains('open')?' ▴':' ▾');
+  b.classList.toggle('active',n>0);
+}
+(function(){const o=updateCatUI;updateCatUI=function(){o();syncAdvBtn()}})();
+</script>
+
 </body>
 </html>
