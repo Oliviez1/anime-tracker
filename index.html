@@ -2246,7 +2246,7 @@ const MEDIA_FIELDS=`id idMal title{romaji english native}coverImage{large extraL
 
 async function fetchAnimeById(id){
   const ck='detail_'+id;if(pageDataCache[ck])return pageDataCache[ck];
-  const q=`query($id:Int){Media(id:$id,type:ANIME){${MEDIA_FIELDS} characters(sort:ROLE,perPage:12){nodes{id name{full}image{medium}}} relations{edges{relationType(version:2) node{id title{romaji english}coverImage{large}format episodes status}}} recommendations(perPage:8,sort:RATING_DESC){nodes{mediaRecommendation{id title{romaji english}coverImage{large}format episodes status averageScore seasonYear genres}}} tags{name rank isMediaSpoiler}}}`;
+  const q=`query($id:Int){Media(id:$id,type:ANIME){${MEDIA_FIELDS} characters(sort:ROLE,perPage:12){nodes{id name{full}image{medium}}} relations{edges{relationType(version:2) node{id type title{romaji english}coverImage{large}format episodes status}}} recommendations(perPage:8,sort:RATING_DESC){nodes{mediaRecommendation{id title{romaji english}coverImage{large}format episodes status averageScore seasonYear genres}}} tags{name rank isMediaSpoiler}}}`;
   const d=await anilistFetch(q,{id});const item=d?.data?.Media;if(item)pageDataCache[ck]=item;return item;
 }
 async function fetchEpisodes(id){
@@ -2256,10 +2256,10 @@ async function fetchEpisodes(id){
 }
 async function fetchFranchise(id){
   const ck='franchise_'+id;if(pageDataCache[ck])return pageDataCache[ck];
-  const q=`query($id:Int){Media(id:$id,type:ANIME){relations{edges{relationType(version:2) node{id title{romaji english}coverImage{large}format episodes status averageScore}}}}}`;
+  const q=`query($id:Int){Media(id:$id,type:ANIME){relations{edges{relationType(version:2) node{id type title{romaji english}coverImage{large}format episodes status averageScore}}}}}`;
   try{
     const d=await anilistFetch(q,{id});const edges=d?.data?.Media?.relations?.edges||[];
-    const f=edges.filter(e=>['SEQUEL','PREQUEL','SIDE_STORY','ALTERNATIVE','SPIN_OFF'].includes(e.relationType)&&e.node&&e.node.format).map(e=>({...e.node,relationType:e.relationType,relationLabel:RELATION_FR[e.relationType]||e.relationType}));
+    const f=edges.filter(e=>['SEQUEL','PREQUEL','SIDE_STORY','ALTERNATIVE','SPIN_OFF'].includes(e.relationType)&&e.node&&e.node.format&&e.node.type==='ANIME').map(e=>({...e.node,relationType:e.relationType,relationLabel:RELATION_FR[e.relationType]||e.relationType}));
     pageDataCache[ck]=f;return f;
   }catch(e){return[]}
 }
@@ -2480,7 +2480,7 @@ async function renderDetail(id){
     const raw=await fetchAnimeById(id);if(!raw)throw new Error('Animé introuvable');
     const a=normalizeMedia(raw);
     const inList=window.animeList.find(x=>x.id===a.id);
-    const relNodes=(raw.relations?.edges||[]).map(e=>({...normalizeMedia(e.node),relationLabel:RELATION_FR[e.relationType]||e.relationType})).filter(r=>r.format);
+    const relNodes=(raw.relations?.edges||[]).filter(e=>e.node&&e.node.type==='ANIME').map(e=>({...normalizeMedia(e.node),relationLabel:RELATION_FR[e.relationType]||e.relationType})).filter(r=>r.format);
     const recNodes=(raw.recommendations?.nodes||[]).map(n=>n.mediaRecommendation).filter(Boolean).map(normalizeMedia);
     let nextEpStr='';
     if(a.nextAiringEpisode){nextEpStr=`<span class="cd" data-ep="${a.nextAiringEpisode.episode}" data-t="${Date.now()+a.nextAiringEpisode.timeUntilAiring*1000}"></span>`}
@@ -2554,7 +2554,7 @@ async function renderDetail(id){
       </div>`;
     tickCd();dxSpy();
   }catch(e){
-    container.innerHTML=`<div style="padding:120px 20px;text-align:center"><p style="color:var(--muted);margin-bottom:16px">Erreur : ${safeText(e.message)}</p><button style="padding:9px 22px;background:var(--grad);color:#fff;border-radius:999px;font-size:.84rem;font-weight:700" onclick="openDetail(${id})">Réessayer</button></div>`;
+    container.innerHTML=`<div style="padding:120px 20px;text-align:center"><p style="color:var(--muted);margin-bottom:16px">${/404/.test(e.message)?'Cette fiche n\'existe pas dans la base des animés (c\'est peut-être un manga ou un roman).':'Erreur : '+safeText(e.message)}</p><button style="padding:9px 22px;background:var(--grad);color:#fff;border-radius:999px;font-size:.84rem;font-weight:700" onclick="openDetail(${id})">Réessayer</button></div>`;
   }
 }
 
